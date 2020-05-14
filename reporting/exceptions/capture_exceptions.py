@@ -42,7 +42,9 @@ class Class:
     def __call__(decorator_self, *args, **kwargs):
         target_instance_ref = decorator_self.target_class(*args, **kwargs)
         for attribute in dir(target_instance_ref):
-            if isinstance(getattr(decorator_self.target_class,attribute), FunctionType):
+            print(">>>",decorator_self.target_class)
+            print(">>>",attribute)
+            if isinstance(getattr(decorator_self.target_class, attribute), FunctionType):
                 func_name = attribute
                 function_ref = getattr(target_instance_ref,attribute)
                 #apply_wrapper is a separate method to break the reference to wrapper() on each cycle of this loop
