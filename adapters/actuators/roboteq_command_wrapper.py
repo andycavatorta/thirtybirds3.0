@@ -94,7 +94,7 @@ class Motor(threading.Thread):
         self.bit_offset = self.channel * 16
         self.queue = queue.Queue()
         self.start()
-        self.status_receiver("starting motor instance", self.names)
+        self.status_receiver("starting motor instance", self.name)
 
     ##############################################
     #    MOTOR REAL TIME                         #

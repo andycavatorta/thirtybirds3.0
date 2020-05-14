@@ -19,6 +19,16 @@ config = {
             "channel":"2",
         }
     }
+    "motors":{
+        "bow_height":{
+            "mcu_id":"300:1058:3014688:1429493507:540422710",
+            "channel":"1",
+        },
+        "bow_rotation":{
+            "mcu_id":"300:1058:3014688:1429493507:540422710",
+            "channel":"2",
+        }
+    }
 }
 
 class Status_Receiver(threading.Thread):
