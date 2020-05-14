@@ -41,6 +41,7 @@ class Class:
 
     def __call__(decorator_self, *args, **kwargs):
         target_instance_ref = decorator_self.target_class(*args, **kwargs)
+        print(dir(target_instance_ref))
         for attribute in dir(target_instance_ref):
             print(">>>",decorator_self.target_class)
             print(">>>",attribute)
