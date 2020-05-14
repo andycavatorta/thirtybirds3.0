@@ -10,6 +10,8 @@ import capture_exceptions
 def callback_for_capture_exceptions(class_ref,exception_details):
     # in a real use case, this data could be passed to a parent script,
     # recorded in a log file, or sent over a network to another process.
+    print("time_epoch:", exception_details["time_epoch"])
+    print("time_local:", exception_details["time_local"])
     print("hostname:", exception_details["hostname"])
     print("path:", exception_details["path"])
     print("script_name:", exception_details["script_name"])

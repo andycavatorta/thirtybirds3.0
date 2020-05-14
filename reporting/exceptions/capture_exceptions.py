@@ -21,6 +21,7 @@ import functools
 import os
 import socket 
 import sys
+import time
 import traceback
 from types import FunctionType
 
@@ -57,6 +58,8 @@ class Class:
             except:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 exception_details = {
+                    "time_epoch":time.time(),
+                    "time_local":time.localtime(),
                     "hostname":socket.gethostname(),
                     "path":os.getcwd(),
                     "script_name":__file__,
@@ -85,6 +88,8 @@ class Function:
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             exception_details = {
+                "time_epoch":time.time(),
+                "time_local":time.localtime(),
                 "hostname":socket.gethostname(),
                 "path":os.getcwd(),
                 "script_name":__file__,
