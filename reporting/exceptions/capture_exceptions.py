@@ -42,7 +42,7 @@ class Class:
 
     def __call__(decorator_self, *args, **kwargs):
         target_instance_ref = decorator_self.target_class(*args, **kwargs)
-        print(inspect.getmembers(decorator_self.target_class, predicate=inspect.ismethod))
+        print(inspect.getmembers(decorator_self.target_class, predicate=inspect.isfunction))
         target_instance_dir = dir(target_instance_ref)
         for attribute in target_instance_dir:
             if isinstance(getattr(decorator_self.target_class, attribute, ""), FunctionType):
