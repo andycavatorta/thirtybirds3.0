@@ -55,7 +55,7 @@ class Class:
                 setattr(target_instance_ref, func_name, wrapper)
             else:
                 if isinstance(getattr(decorator_self.target_class, attribute, ""), FunctionType):
-                    print("####",FunctionType)
+                    print("####",attribute)
         return target_instance_ref
     def apply_wrapper(decorator_self, function_ref, target_instance_ref, *args, **kwargs):
         @functools.wraps(function_ref)
