@@ -25,6 +25,7 @@ import sys
 import time
 import traceback
 from types import FunctionType
+from types import BuiltinFunctionType
 
 class Class:
     """
@@ -42,11 +43,11 @@ class Class:
 
     def __call__(decorator_self, *args, **kwargs):
         target_instance_ref = decorator_self.target_class(*args, **kwargs)
-        print(inspect.getmembers(decorator_self.target_class, predicate=inspect.isfunction))
+        #print(inspect.getmembers(decorator_self.target_class, predicate=inspect.isfunction))
         target_instance_dir = dir(target_instance_ref)
         for attribute in target_instance_dir:
-            if isinstance(getattr(decorator_self.target_class, attribute, ""), FunctionType):
-                #print("---",attribute)
+            if isinstance(getattr(decorator_self.target_class, attribute, ""), BuiltinFunctionType):
+                print("---",attribute)
                 func_name = attribute
                 function_ref = getattr(target_instance_ref,attribute)
                 #apply_wrapper is a separate method to break the reference to wrapper() on each cycle of this loop
