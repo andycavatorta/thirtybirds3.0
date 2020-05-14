@@ -36,11 +36,14 @@ class Board(threading.Thread):
 
     def read_mcu_id(self, callback=None):
         serial_command = "?UID"
-        self.add_to_queue(serial_command)
+        self.add_to_queue(serial_command, callback)
 
     ##############################################
     #    CLASS INTERNALS                         #
     ##############################################
+
+    def read_internal_mcu_id(self):
+        return self.mcu_id
 
     def add_mcu_id(self,mcu_id):
         self.mcu_id = mcu_id
@@ -53,18 +56,32 @@ class Board(threading.Thread):
         resp_str = ""
         while ord(resp_char) != 13:
             resp_char = self.serial.read(1)
-            resp_str += resp_char
-        return resp_str
+            print(resp_char)
+            resp_str += resp_char.decode('utf-8')
+        resp_str = resp_str[:-1] # trim /r from end
+        resp_l = resp_str.split('=')
+        if len(resp_l) == 1:
+            return resp_str
+        else:
+            return resp_l[1]
+        #resp_str = resp_str.split('=')[1]
+        #return resp_str[:-1]
 
     def run(self):
         while True:
             serial_command, callback = self.queue.get(True)
             time.sleep(0.05)
-            self.serial.write(serial_command +'\r')
+            self.serial.write(str.encode(serial_command +'\r'))
             echo_str = self._readSerial() # for serial echo
-            #print("echo_str=", echo_str)
+            print("echo_str=", echo_str)
             resp_str = self._readSerial()
-            #self.add_to_controller_queue(self.serial_device_path, serial_command, resp_str, callback) 
+            print("resp_str=", resp_str)
+            print("callback",callback)
+            try:
+                callback(self.serial_device_path,resp_str)
+            except TypeError as e: #if callback == None
+                pass
+            #self.add_to_controller_queue(self.serial_device_path, serial_command, resp_str, callback)
 
 @capture_exceptions.Class
 class Motor(threading.Thread):
@@ -121,32 +138,33 @@ class Controllers(threading.Thread):
         self.queue = queue.Queue()
         self.boards = {}
         self.motors = {}
-        self.motors = {}
         self.mcu_serial_device_paths = self.get_device_id_list()
-
         self.status_receiver("self.mcu_serial_device_paths",self.mcu_serial_device_paths)
 
         # create board objects and read their mcu_ids
         for mcu_serial_device_path in self.mcu_serial_device_paths:
             self.match_mcu_id(mcu_serial_device_path)
-        
         self.status_receiver("self.boards",self.boards)
 
         # are physical boards found for all boards defined in config?
-        mcu_ids_from_boards = [board.mcu_id for board in self.boards]
+        mcu_ids_from_boards = [board.read_internal_mcu_id() for board in self.boards.values()]
         mcu_ids_in_config = self.config["boards"].keys()
 
-        if not (set(mcu_ids_from_boards).issubset(set(mcu_ids_in_config))):
+        if not (set(mcu_ids_in_config).issubset(set(mcu_ids_from_boards))):
             self.status_receiver("missing board", set(mcu_ids_in_config).difference(set(mcu_ids_from_boards)))
         else:
             # map mcu_ids to mcu_serial_device_paths
-            device_path_by_mcu_id = {board.mcu_id:board.serial_device_path for board in self.boards}
+            #device_path_by_mcu_id = {board.mcu_id:board.serial_device_path for board in self.boards}
+            device_path_by_mcu_id = {}
+            for serial_id in self.boards:
+                device_path_by_mcu_id[self.boards[serial_id].read_internal_mcu_id()] = serial_id
+
             # create motor instances
             for motor_name in self.config["motors"]:
                 self.motors[motor_name] = Motor(
-                    motor_name, 
-                    self.boards[device_path_by_mcu_id[self.config["motors"][motor_name][mcu_id]]],
-                    self.config["motors"][motor_name][channel]
+                    motor_name,
+                    self.boards[device_path_by_mcu_id[self.config["motors"][motor_name]["mcu_id"]]],
+                    self.config["motors"][motor_name]["channel"]
                 )
             self.start()
 
@@ -158,11 +176,11 @@ class Controllers(threading.Thread):
 
     def match_mcu_id(self, mcu_serial_device_path):
         self.boards[mcu_serial_device_path] = Board(mcu_serial_device_path, self.add_to_queue)
-        board.read_mcu_id(self._match_mcu_id)
+        self.boards[mcu_serial_device_path].read_mcu_id(self._match_mcu_id)
+        #self.match_mcu_id_temp_serial_device_path = mcu_serial_device_path
 
-    def _match_mcu_id(self, mcu_serial_device_path, serial_command, resp_str):
-        print(mcu_serial_device_path, serial_command, resp_str)
-        self.boards[mcu_serial_device_path].add_mcu_id(mcu_serial_device_path)
+    def _match_mcu_id(self, mcu_serial_device_path, resp_str):
+        self.boards[mcu_serial_device_path].add_mcu_id(resp_str)
         # handle exceptions:
         #   not a Roboteq device
         #   no response
@@ -170,7 +188,7 @@ class Controllers(threading.Thread):
 
         # search config file for matching mcu_ids
 
-        # if match found, create Motor instances, bind to Board instance
+        # if match found, create Motor instances, bind to Board instances
         # store reference to this mcu in Controllers
         
     def add_to_queue(self, mcu_serial_device_path, serial_command, resp_str, callback):
@@ -181,7 +199,7 @@ class Controllers(threading.Thread):
             mcu_serial_device_path, serial_command, resp_str, callback = self.queue.get(True)
             try:
                 callback(mcu_serial_device_path, serial_command, resp_str)
-            except TypeError:#if callback == None
+            except TypeError: #if callback == None
                 pass
 
 @capture_exceptions.Function
@@ -189,24 +207,3 @@ def init(data_receiver, status_receiver, exception_receiver, config):
     capture_exceptions.init(exception_receiver)
     controllers = Controllers(data_receiver, status_receiver, config)
     return controllers
-
-"""
-macros
-homing 
-    by limit switch
-    by encoder index
-    by end of progress
-    by current spike
-
-report motion started
-report motion target reached
-
-report divergence from expected position/speed
-
-sync motors
-
-freeze all motors on error
-
-read config from eeprom
-write config to eeprom
-"""
