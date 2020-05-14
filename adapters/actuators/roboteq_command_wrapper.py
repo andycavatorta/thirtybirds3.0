@@ -94,6 +94,7 @@ class Motor(threading.Thread):
         self.bit_offset = self.channel * 16
         self.queue = queue.Queue()
         self.start()
+        self.status_receiver("starting motor instance", self.name)
 
     ##############################################
     #    MOTOR REAL TIME                         #
@@ -146,12 +147,12 @@ class Controllers(threading.Thread):
         for mcu_serial_device_path in self.mcu_serial_device_paths:
             self.match_mcu_id(mcu_serial_device_path)
         self.status_receiver("self.boards",self.boards)
-
+        # This is brittle.  But an async method would rely on the serial timeout for each board. 
         time.sleep(5) 
         # are physical boards found for all boards defined in config?
         mcu_ids_from_boards = [board.read_internal_mcu_id() for board in self.boards.values()]
         self.status_receiver("mcu_ids_from_boards",mcu_ids_from_boards)
-        # This is brittle.  But an async method would rely on the serial timeout for each board. 
+        
         # So it's not functionally different except that it always takes the max time.
         mcu_ids_in_config = self.config["boards"].keys()
         self.status_receiver("mcu_ids_in_config",mcu_ids_in_config)
