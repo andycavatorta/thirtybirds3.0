@@ -73,10 +73,10 @@ class Board(threading.Thread):
             time.sleep(0.05)
             self.serial.write(str.encode(serial_command +'\r'))
             echo_str = self._readSerial() # for serial echo
-            print("echo_str=", echo_str)
+            #print("echo_str=", echo_str)
             resp_str = self._readSerial()
-            print("resp_str=", resp_str)
-            print("callback",callback)
+            #print("resp_str=", resp_str)
+            #print("callback",callback)
             try:
                 callback(self.serial_device_path,resp_str)
             except TypeError as e: #if callback == None
