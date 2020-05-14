@@ -210,7 +210,7 @@ class Controllers(threading.Thread):
             except TypeError: #if callback == None
                 pass
 
-#@capture_exceptions.Function
+@capture_exceptions.Function
 def init(data_receiver, status_receiver, exception_receiver, config):
     capture_exceptions.init(exception_receiver)
     controllers = Controllers(data_receiver, status_receiver, config)
