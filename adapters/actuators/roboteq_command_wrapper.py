@@ -149,6 +149,7 @@ class Controllers(threading.Thread):
         # are physical boards found for all boards defined in config?
         mcu_ids_from_boards = [board.read_internal_mcu_id() for board in self.boards.values()]
         self.status_receiver("mcu_ids_from_boards",mcu_ids_from_boards)
+        time.sleep(3)
         mcu_ids_in_config = self.config["boards"].keys()
         self.status_receiver("mcu_ids_in_config",mcu_ids_in_config)
 
