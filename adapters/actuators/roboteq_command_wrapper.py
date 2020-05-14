@@ -56,7 +56,7 @@ class Board(threading.Thread):
         resp_str = ""
         while ord(resp_char) != 13:
             resp_char = self.serial.read(1)
-            print(resp_char)
+            #print(resp_char)
             resp_str += resp_char.decode('utf-8')
         resp_str = resp_str[:-1] # trim /r from end
         resp_l = resp_str.split('=')
