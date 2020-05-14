@@ -13,7 +13,7 @@ root_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(root_path[0:root_path.find("/thirtybirds")])
 from thirtybirds3.reporting.exceptions import capture_exceptions
 
-@capture_exceptions.Class
+#@capture_exceptions.Class
 class Board(threading.Thread):
     def __init__(self,path, add_to_controller_queue):
         threading.Thread.__init__(self)
@@ -83,7 +83,7 @@ class Board(threading.Thread):
                 pass
             #self.add_to_controller_queue(self.serial_device_path, serial_command, resp_str, callback)
 
-@capture_exceptions.Class
+#@capture_exceptions.Class
 class Motor(threading.Thread):
     def __init__(self,name,board,channel):
         threading.Thread.__init__(self)
@@ -127,7 +127,7 @@ class Motor(threading.Thread):
         while True:
             serial_command, value, callback = self.queue.get(True)
 
-@capture_exceptions.Class
+#@capture_exceptions.Class
 class Controllers(threading.Thread):
     def __init__(self, data_receiver, status_receiver, config, mcu_serial_device_path_patterns=['/dev/serial/by-id/usb-FTDI*','/dev/serial/by-id/usb-Roboteq*']):
         threading.Thread.__init__(self)
@@ -202,7 +202,7 @@ class Controllers(threading.Thread):
             except TypeError: #if callback == None
                 pass
 
-@capture_exceptions.Function
+#@capture_exceptions.Function
 def init(data_receiver, status_receiver, exception_receiver, config):
     capture_exceptions.init(exception_receiver)
     controllers = Controllers(data_receiver, status_receiver, config)
