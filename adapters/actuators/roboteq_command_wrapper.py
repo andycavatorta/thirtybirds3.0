@@ -85,11 +85,12 @@ class Board(threading.Thread):
 
 @capture_exceptions.Class
 class Motor(threading.Thread):
-    def __init__(self,name,board,channel):
+    def __init__(self,name,board,channel,status_receiver):
         threading.Thread.__init__(self)
         self.board = board
         self.name = name
         self.channel = channel
+        self.status_receiver = status_receiver
         self.bit_offset = self.channel * 16
         self.queue = queue.Queue()
         self.start()
@@ -146,12 +147,14 @@ class Controllers(threading.Thread):
             self.match_mcu_id(mcu_serial_device_path)
         self.status_receiver("self.boards",self.boards)
 
+        mcu_ids_in_config = self.config["boards"].keys()
+        self.status_receiver("mcu_ids_in_config",mcu_ids_in_config)
         # are physical boards found for all boards defined in config?
         mcu_ids_from_boards = [board.read_internal_mcu_id() for board in self.boards.values()]
         self.status_receiver("mcu_ids_from_boards",mcu_ids_from_boards)
-        time.sleep(3)
-        mcu_ids_in_config = self.config["boards"].keys()
-        self.status_receiver("mcu_ids_in_config",mcu_ids_in_config)
+        # This is brittle.  But an async method would rely on the serial timeout for each board. 
+        # So it's not functionally different except that it always takes the max time.
+        time.sleep(len(mcu_ids_in_config))
 
         if not (set(mcu_ids_in_config).issubset(set(mcu_ids_from_boards))):
             self.status_receiver("missing board", set(mcu_ids_in_config).difference(set(mcu_ids_from_boards)))
@@ -167,7 +170,8 @@ class Controllers(threading.Thread):
                 self.motors[motor_name] = Motor(
                     motor_name,
                     self.boards[device_path_by_mcu_id[self.config["motors"][motor_name]["mcu_id"]]],
-                    self.config["motors"][motor_name]["channel"]
+                    self.config["motors"][motor_name]["channel"],
+                    self.status_receiver
                 )
             self.start()
 
