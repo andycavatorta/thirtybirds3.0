@@ -42,6 +42,7 @@ class Send_Queue(threading.Thread):
         while True:
             try:
                 topic, msg = self.queue.get(True)
+                print("Send_Queue",topic, msg)
                 self.socket.send_string("%s %s" % (topic, msg))
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -122,6 +123,7 @@ class Pub_Sub(threading.Thread):
     def run(self):
         while True:
             incoming = self.sub_socket.recv()
+            print("incoming",incoming)
             topic, msg = incoming.split(' ', 1)
             self.receiver_queue.add_to_queue(topic, msg)
 

@@ -125,7 +125,6 @@ class Caller_Recv(threading.Thread):
             msg_json = self.listen_sock.recv()
             msg_d = yaml.safe_load(msg_json)
             msg_d["status"] = "device_discovered"
-            #self.caller_send.set_active(False)
             if self.discovery_update_receiver:
                 self.discovery_update_receiver(msg_d)
 
