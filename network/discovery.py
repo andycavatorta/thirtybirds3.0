@@ -163,8 +163,8 @@ class Discovery():
                 self.ip_address,
                 self.discovery_multicast_group,
                 self.discovery_multicast_port, 
-                self.discovery_response_port, 
-                self.status
+                self.discovery_response_port,
+                self.discovery_update_receiver
             )
             self.responder.start()
 
