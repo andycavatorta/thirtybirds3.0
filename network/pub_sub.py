@@ -107,7 +107,8 @@ class Pub_Sub(threading.Thread):
 
     def subscribe_to_topic(self, topic):
         # NOT_THREAD_SAFE
-        self.sub_socket.setsockopt(zmq.SUBSCRIBE, topic, encoding='utf-8')
+        #self.sub_socket.setsockopt(zmq.SUBSCRIBE, b"")
+        self.sub_socket.setsockopt(zmq.SUBSCRIBE, bytes(topic, 'utf-8'))
 
     def unsubscribe_from_topic(self, topic):
         topic = topic.decode('ascii')
