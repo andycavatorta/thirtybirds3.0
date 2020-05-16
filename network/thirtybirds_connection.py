@@ -64,7 +64,7 @@ class Thirtybirds_Connection():
             exception_receiver = self.exception_receiver)
 
     def subscription_message_receiver(self, topic, message):
-        print(topic, message)
+        print("subscription_message_receiver",topic, message)
 
     def discovery_update_receiver(self,message):
         print("discovery_update_receiver",message)
