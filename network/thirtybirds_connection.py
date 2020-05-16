@@ -68,21 +68,21 @@ class Thirtybirds_Connection():
 
     def discovery_update_receiver(self,message):
         print("discovery_update_receiver",message)
-        if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
-            if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
-                if message["hostname"] == self.controller_hostname:
-                    self.controller_ip = message["ip"]
-                    self.discovery.end_caller()
-                    self.pub_sub.connect_to_publisher(
-                        self.controller_hostname, 
-                        self.controller_ip, 
-                        self.pubsub_pub_port)
-                    time.sleep(1)
-                    self.pub_sub.subscribe_to_topic("asdf")
-                    time.sleep(1)
-                    self.pub_sub.send("asdf", self.hostname)
-                else:
-                    print("Wrong controller found?", message["hostname"])
+        #if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
+        if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
+            if message["hostname"] == self.controller_hostname:
+                self.controller_ip = message["ip"]
+                self.discovery.end_caller()
+                self.pub_sub.connect_to_publisher(
+                    self.controller_hostname, 
+                    self.controller_ip, 
+                    self.pubsub_pub_port)
+                time.sleep(1)
+                self.pub_sub.subscribe_to_topic("asdf")
+                time.sleep(1)
+                self.pub_sub.send("asdf", self.hostname)
+            else:
+                print("Wrong controller found?", message["hostname"])
 
 
 
