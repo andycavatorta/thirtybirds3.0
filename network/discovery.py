@@ -59,14 +59,14 @@ class Responder(threading.Thread):
         self.sock.bind((discovery_multicast_group, discovery_multicast_port))
         self.multicast_request = struct.pack("4sl", socket.inet_aton(discovery_multicast_group), socket.INADDR_ANY)
         self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, self.multicast_request)
-        self.last_responese_by_ip = {}
+        #self.last_responese_by_ip = {}
 
     def response(self, remoteIP, msg_json): # response sends the local IP to the remote device
-        if remoteIP in self.last_responese_by_ip.keys():
-            if self.last_responese_by_ip[remoteIP] + (self.caller_period * 2) > time.time():
-                return
-        else:
-            self.last_responese_by_ip[remoteIP] = time.time()
+        #if remoteIP in self.last_responese_by_ip.keys():
+        #    if self.last_responese_by_ip[remoteIP] + (self.caller_period * 2) > time.time():
+        #        return
+        #else:
+        #    self.last_responese_by_ip[remoteIP] = time.time()
         context = zmq.Context()
         socket = context.socket(zmq.PAIR)
         socket.connect("tcp://%s:%s" % (remoteIP,self.discovery_response_port))
