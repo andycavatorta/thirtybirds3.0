@@ -72,9 +72,8 @@ class Responder(threading.Thread):
 
     def run(self):
         while True:
-                print("response,run",repr(self.sock))
                 msg_json = self.sock.recv(1024)
-                print(msg_json)
+                print("response.run",msg_json)
                 msg_d = yaml.safe_load(msg_json)
                 remoteIP = msg_d["ip"]
                 msg_d["status"] = "device_discovered"
@@ -102,12 +101,12 @@ class Caller_Send(threading.Thread):
         self.active = True
     def set_active(self,val):
         # NOT_THREAD_SAFE
-        print(set_active, val)
+        print("set_active", val)
         self.active = val
     def run(self):
         while True:
             if self.active == True:
-                print(">>",repr(self.mcast_msg),repr(self.discovery_multicast_group),repr(self.discovery_multicast_port))
+                print("Caller_Send.run",repr(self.mcast_msg),repr(self.discovery_multicast_group),repr(self.discovery_multicast_port))
                 self.multicast_socket.sendto(self.mcast_msg, (self.discovery_multicast_group, self.discovery_multicast_port))
             time.sleep(self.caller_period)
 
