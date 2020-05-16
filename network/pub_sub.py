@@ -106,9 +106,8 @@ class Pub_Sub(threading.Thread):
             self.sub_socket.connect("tcp://%s:%s" % (remote_ip, remote_port))
 
     def subscribe_to_topic(self, topic):
-        topic = topic.decode('ascii')
         # NOT_THREAD_SAFE
-        self.sub_socket.setsockopt(zmq.SUBSCRIBE, topic)
+        self.sub_socket.setsockopt(zmq.SUBSCRIBE, str(topic))
 
     def unsubscribe_from_topic(self, topic):
         topic = topic.decode('ascii')
