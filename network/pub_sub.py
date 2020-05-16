@@ -125,6 +125,6 @@ class Pub_Sub(threading.Thread):
             incoming = self.sub_socket.recv()
             print("incoming",incoming, type(incoming), repr(incoming))
             #incoming = bytes(incoming, 'utf-8')
-            topic, msg = incoming.split(' ', 1)
+            topic, msg = incoming.split(b' ', 1)
             self.receiver_queue.add_to_queue(topic, msg)
 
