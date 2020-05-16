@@ -79,7 +79,7 @@ class Thirtybirds_Connection():
                         self.pubsub_pub_port)
                     time.sleep(2 )
                     self.pub_sub.subscribe_to_topic("asdf")
-                    time.sleep(10)
+                    time.sleep(20)
                     self.pub_sub.send("asdf", self.hostname)
                     time.sleep(1)
                     self.pub_sub.send("asdf", self.hostname)
@@ -91,7 +91,7 @@ class Thirtybirds_Connection():
             if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
                 time.sleep(2)
                 self.pub_sub.subscribe_to_topic("asdf")
-                time.sleep(10)
+                time.sleep(20)
                 self.pub_sub.send("asdf", self.hostname)
                 time.sleep(1)
                 self.pub_sub.send("asdf", self.hostname)
