@@ -12,7 +12,7 @@ Other hosts are configured as clients which send broadcast messages containing
 the client hostname and IP on a specific IP and port.  
 When the server receives a broadcast message from a client, it sends a 
 return message containg the server hostname and IP.
-Both client and server report the interaction to a callback method that is passed 
+Both client and server report the interaction to a discovery_update_receiver method that is passed 
 into this module's init function.
 
 This script may eventually support other methods such as connection brokers.
@@ -41,20 +41,20 @@ class Responder(threading.Thread):
             self, 
             hostname,
             local_ip, 
-            discovery_multicastGroup, 
-            discovery_multicastPort, 
-            discovery_responsePort, 
-            callback):
+            discovery_multicast_group, 
+            discovery_multicast_port, 
+            discovery_response_port, 
+            discovery_update_receiver):
         threading.Thread.__init__(self)
         self.hostname = hostname
         self.local_ip = local_ip
-        self.discovery_multicastPort = discovery_multicastPort
-        self.discovery_responsePort = discovery_responsePort
-        self.callback = callback
+        self.discovery_multicast_port = discovery_multicast_port
+        self.discovery_response_port = discovery_response_port
+        self.discovery_update_receiver = discovery_update_receiver
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.sock.bind((discovery_multicastGroup, discovery_multicastPort))
-        self.multicast_request = struct.pack("4sl", socket.inet_aton(discovery_multicastGroup), socket.INADDR_ANY)
+        self.sock.bind((discovery_multicast_group, discovery_multicast_port))
+        self.multicast_request = struct.pack("4sl", socket.inet_aton(discovery_multicast_group), socket.INADDR_ANY)
         self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, self.multicast_request)
         #self.IpTiming = {}
 
@@ -66,18 +66,20 @@ class Responder(threading.Thread):
         #    self.IpTiming[remoteIP] = time.time()
         context = zmq.Context()
         socket = context.socket(zmq.PAIR)
-        socket.connect("tcp://%s:%s" % (remoteIP,self.discovery_responsePort))
+        socket.connect("tcp://%s:%s" % (remoteIP,self.discovery_response_port))
         socket.send(msg_json)
         socket.close()
 
     def run(self):
         while True:
+                print("response,run",repr(self.sock))
                 msg_json = self.sock.recv(1024)
+                print(msg_json)
                 msg_d = yaml.safe_load(msg_json)
                 remoteIP = msg_d["ip"]
                 msg_d["status"] = "device_discovered"
-                if self.callback:
-                    resp_d = self.callback(msg_d)
+                if self.discovery_update_receiver:
+                    resp_d = self.discovery_update_receiver(msg_d)
                 resp_json = json.dumps( {"ip":self.local_ip,"hostname":socket.gethostname()})
                 self.response(remoteIP,resp_json)
 
@@ -86,10 +88,10 @@ class Responder(threading.Thread):
 ##################
 
 class Caller_Send(threading.Thread):
-    def __init__(self, local_hostname, local_ip, discovery_multicastGroup, discovery_multicastPort, caller_period):
+    def __init__(self, local_hostname, local_ip, discovery_multicast_group, discovery_multicast_port, caller_period):
         threading.Thread.__init__(self)
-        self.discovery_multicastGroup = discovery_multicastGroup
-        self.discovery_multicastPort = discovery_multicastPort
+        self.discovery_multicast_group = discovery_multicast_group
+        self.discovery_multicast_port = discovery_multicast_port
         self.caller_period = caller_period
         self.multicast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.multicast_socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 32)
@@ -103,14 +105,14 @@ class Caller_Send(threading.Thread):
     def run(self):
         while True:
             if self.active == True:
-                print(">>",repr(self.mcast_msg),repr(self.discovery_multicastGroup),repr(self.discovery_multicastPort))
-                self.multicast_socket.sendto(self.mcast_msg, (self.discovery_multicastGroup, self.discovery_multicastPort))
+                print(">>",repr(self.mcast_msg),repr(self.discovery_multicast_group),repr(self.discovery_multicast_port))
+                self.multicast_socket.sendto(self.mcast_msg, (self.discovery_multicast_group, self.discovery_multicast_port))
             time.sleep(self.caller_period)
 
 class Caller_Recv(threading.Thread):
-    def __init__(self, recv_port, callback, callerSend):
+    def __init__(self, recv_port, discovery_update_receiver, callerSend):
         threading.Thread.__init__(self)
-        self.callback = callback
+        self.discovery_update_receiver = discovery_update_receiver
         self.callerSend = callerSend
         self.listen_context = zmq.Context()
         self.listen_sock = self.listen_context.socket(zmq.PAIR)
@@ -123,8 +125,8 @@ class Caller_Recv(threading.Thread):
             msg_d = yaml.safe_load(msg_json)
             msg_d["status"] = "device_discovered"
             self.callerSend.set_active(False)
-            if self.callback:
-                self.callback(msg_d)
+            if self.discovery_update_receiver:
+                self.discovery_update_receiver(msg_d)
 
 ###################
 ##### WRAPPER #####
@@ -136,20 +138,21 @@ class Discovery():
         ip_address,
         hostname,
         controller_hostname,
-        discovery_multicastGroup,
-        discovery_multicastPort,
-        discovery_responsePort,
+        discovery_multicast_group,
+        discovery_multicast_port,
+        discovery_response_port,
         caller_period,
-        callback
+        discovery_update_receiver,
+        exception_receiver
     ):
         self.ip_address = ip_address
         self.hostname = hostname
         self.controller_hostname = controller_hostname
-        self.discovery_multicastGroup = discovery_multicastGroup
-        self.discovery_multicastPort = discovery_multicastPort
-        self.discovery_responsePort = discovery_responsePort
+        self.discovery_multicast_group = discovery_multicast_group
+        self.discovery_multicast_port = discovery_multicast_port
+        self.discovery_response_port = discovery_response_port
         self.caller_period = caller_period
-        self.callback = callback
+        self.discovery_update_receiver = discovery_update_receiver
         self.role = Network_Defaults.DISCOVERY_ROLE_RESPONDER if hostname == controller_hostname else Network_Defaults.DISCOVERY_ROLE_CALLER
         self.server_ip = ""
         self.status = "" 
@@ -158,30 +161,25 @@ class Discovery():
             self.responder = Responder(
                 self.hostname,
                 self.ip_address,
-                self.discovery_multicastGroup,
-                self.discovery_multicastPort, 
-                self.discovery_responsePort, 
+                self.discovery_multicast_group,
+                self.discovery_multicast_port, 
+                self.discovery_response_port, 
                 self.status
             )
             self.responder.start()
 
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
-            
             self.caller_send = Caller_Send(
                 self.hostname, 
                 self.ip_address, 
-                self.discovery_multicastGroup, 
-                self.discovery_multicastPort,
+                self.discovery_multicast_group, 
+                self.discovery_multicast_port,
                 self.caller_period
             )
             self.caller_recv = Caller_Recv(
-                self.discovery_responsePort, 
-                self.callback, 
+                self.discovery_response_port, 
+                self.discovery_update_receiver, 
                 self.caller_send
             )
             self.caller_recv.start()
             self.caller_send.start()
-
-
-
-

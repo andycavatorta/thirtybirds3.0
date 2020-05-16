@@ -21,13 +21,15 @@ from thirtybirds3.reporting.exceptions import capture_exceptions
 
 @capture_exceptions.Class
 class Host_Info(threading.Thread):
-    def __init__(self, callback=None, test_interval=10):
+    def __init__(self, online_status_change_receiver=None, exception_receiver=None, test_interval=10):
         threading.Thread.__init__(self)
-        self.callback = callback
+        self.online_status_change_receiver = online_status_change_receiver
+        self.exception_receiver = exception_receiver
+        capture_exceptions.init(self.exception_receiver)
         self.test_interval = test_interval
         self.queue = queue.Queue()
         self.online_status = False
-        if self.callback:
+        if self.online_status_change_receiver:
             self.start()
 
     def get_hostname(self):
@@ -81,4 +83,4 @@ class Host_Info(threading.Thread):
             if polling:
                 if self.online_status != self.get_online_status():
                     self.online_status = not self.online_status
-                    self.callback(self.online_status)
+                    self.online_status_change_receiver(self.online_status)

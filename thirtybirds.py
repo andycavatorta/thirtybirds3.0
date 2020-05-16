@@ -7,14 +7,19 @@ from .network import host_info
 from .network import thirtybirds_connection
 from .reporting.exceptions import capture_exceptions
 
-def handle_exceptions(msg):
-    print("handle_exceptions",handle_exceptions)
+@capture_exceptions.Function
+def exception_receiver(msg):
+    print("exception_receiver",msg)
 
 # start reporting
-capture_exceptions.init(handle_exceptions)
+capture_exceptions.init(exception_receiver)
 
 @capture_exceptions.Function
-def handle_online_status_change(online_status):
+def status_receiver(msg):
+    print("status_receiver",msg)
+
+@capture_exceptions.Function
+def network_status_change_receiver(online_status):
     print("online_status",online_status)
 
 @capture_exceptions.Class
@@ -25,7 +30,9 @@ def init(app_settings,app_path):
     print("  -forceupdate")
     print("    run all version updates specified in settings")
 
-    hostinfo = host_info.Host_Info(handle_online_status_change)
+    hostinfo = host_info.Host_Info(
+        online_status_change_receiver=network_status_change_receiver, 
+        exception_receiver = exception_receiver)
 
     #########################
     # a p p l y   f l a g s #
@@ -54,15 +61,16 @@ def init(app_settings,app_path):
     
     print(app_settings.Network.controller_hostname)
     
-    thirtybirds_connection.init(
+    tb_connection = thirtybirds_connection.Thirtybirds_Connection(
         hostinfo.get_local_ip(),
         hostname = hostname,
         controller_hostname = app_settings.Network.controller_hostname,
-        discovery_multicastGroup = app_settings.Network.discovery_multicastGroup,
-        discovery_multicastPort = app_settings.Network.discovery_multicastPort,
-        discovery_responsePort = app_settings.Network.discovery_responsePort,
-        pubsub_pubPort = app_settings.Network.pubsub_pubPort,
-        pubsub_pubPort2 = app_settings.Network.pubsub_pubPort2
+        discovery_multicast_group = app_settings.Network.discovery_multicast_group,
+        discovery_multicast_port = app_settings.Network.discovery_multicast_port,
+        discovery_response_port = app_settings.Network.discovery_response_port,
+        pubsub_pub_port = app_settings.Network.pubsub_pub_port,
+        pubsub_pub_port2 = app_settings.Network.pubsub_pub_port2,
+        exception_receiver = exception_receiver
     )
 
     

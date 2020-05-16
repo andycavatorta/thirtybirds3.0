@@ -9,31 +9,50 @@ This script creates and manages the conneciton between thirtybirds clients and t
 from . import discovery
 from . import Network_Defaults
 
+root_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(root_path[0:root_path.find("/thirtybirds")])
+from thirtybirds3.reporting.exceptions import capture_exceptions
 
 
-def discovery_handler(message):
-    print("discovery_handler",message)
 
 
-def init(
-    ip_address,
-    hostname,
-    controller_hostname,
-    discovery_multicastGroup,
-    discovery_multicastPort,
-    discovery_responsePort,
-    pubsub_pubPort,
-    pubsub_pubPort2):
+class Thirtybirds_Connection():
+    def __init__(
+        self,
+        ip_address,
+        hostname,
+        controller_hostname,
+        discovery_multicast_group,
+        discovery_multicast_port,
+        discovery_response_port,
+        pubsub_pub_port,
+        pubsub_pub_port2,
+        exception_receiver
+        ):
 
-    #role = Network_Defaults.DISCOVERY_ROLE_RESPONDER if hostname == controller_hostname else Network_Defaults.DISCOVERY_ROLE_CALLER
+        self.ip_address = ip_address
+        self.hostname = hostname
+        self.controller_hostname = controller_hostname
+        self.discovery_multicast_group = discovery_multicast_group
+        self.discovery_multicast_port = discovery_multicast_port
+        self.discovery_response_port = discovery_response_port
+        self.pubsub_pub_port = pubsub_pub_port
+        self.pubsub_pub_port2 = pubsub_pub_port2
+        self.exception_receiver = exception_receiver
 
-    tb_discovery = discovery.Discovery(
-        ip_address = ip_address,
-        hostname = hostname,
-        controller_hostname = controller_hostname,
-        discovery_multicastGroup = discovery_multicastGroup,
-        discovery_multicastPort = discovery_multicastPort,
-        discovery_responsePort = discovery_responsePort,
-        caller_period = 10,
-        callback = discovery_handler)
+        self.discovery = discovery.Discovery(
+            ip_address = ip_address,
+            hostname = hostname,
+            controller_hostname = controller_hostname,
+            discovery_multicast_group = discovery_multicast_group,
+            discovery_multicast_port = discovery_multicast_port,
+            discovery_response_port = discovery_response_port,
+            caller_period = 10,
+            discovery_update_receiver = self.discovery_handler,
+            exception_receiver = exception_receiver)
+
+    def discovery_handler(self,message):
+        print("discovery_handler",message)
+
+
 
