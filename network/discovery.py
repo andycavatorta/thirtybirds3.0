@@ -44,26 +44,29 @@ class Responder(threading.Thread):
             discovery_multicast_group, 
             discovery_multicast_port, 
             discovery_response_port, 
-            discovery_update_receiver):
+            discovery_update_receiver,
+            caller_period):
         threading.Thread.__init__(self)
         self.hostname = hostname
         self.local_ip = local_ip
         self.discovery_multicast_port = discovery_multicast_port
         self.discovery_response_port = discovery_response_port
         self.discovery_update_receiver = discovery_update_receiver
+        self.caller_period = caller_period
+
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.bind((discovery_multicast_group, discovery_multicast_port))
         self.multicast_request = struct.pack("4sl", socket.inet_aton(discovery_multicast_group), socket.INADDR_ANY)
         self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, self.multicast_request)
-        #self.IpTiming = {}
+        self.last_responese_by_ip = {}
 
     def response(self, remoteIP, msg_json): # response sends the local IP to the remote device
-        #if self.IpTiming.has_key(remoteIP):
-        #    if self.IpTiming[remoteIP] + (CALLER_PERIOD * 2) > time.time():
-        #        return
-        #else:
-        #    self.IpTiming[remoteIP] = time.time()
+        if self.last_responese_by_ip.has_key(remoteIP):
+            if self.last_responese_by_ip[remoteIP] + (self.caller_period * 2) > time.time():
+                return
+        else:
+            self.last_responese_by_ip[remoteIP] = time.time()
         context = zmq.Context()
         socket = context.socket(zmq.PAIR)
         socket.connect("tcp://%s:%s" % (remoteIP,self.discovery_response_port))
@@ -163,7 +166,8 @@ class Discovery():
                 self.discovery_multicast_group,
                 self.discovery_multicast_port, 
                 self.discovery_response_port,
-                self.discovery_update_receiver
+                self.discovery_update_receiver,
+                self.caller_period
             )
 
             self.responder.daemon = True
