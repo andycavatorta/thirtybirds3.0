@@ -69,36 +69,28 @@ class Thirtybirds_Connection():
     def discovery_update_receiver(self,message):
         print("discovery_update_receiver",message)
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
+            print("discovery_update_receiver 1",message)
             if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
+                print("discovery_update_receiver 2",message)
                 if message["hostname"] == self.controller_hostname:
+                    print("discovery_update_receiver 3",message)
                     self.controller_ip = message["ip"]
                     self.discovery.end_caller()
                     self.pub_sub.connect_to_publisher(
                         self.controller_hostname, 
                         self.controller_ip, 
                         self.pubsub_pub_port)
-                    """
-                    time.sleep(2 )
-                    self.pub_sub.subscribe_to_topic("asdf")
-                    time.sleep(20)
-                    self.pub_sub.send("asdf", self.hostname)
-                    time.sleep(1)
-                    self.pub_sub.send("asdf", self.hostname)
-                    time.sleep(1)
-                    self.pub_sub.send("asdf", self.hostname)
-                    """
+                    print("discovery_update_receiver ",message)
                 else:
                     print("Wrong controller found?", message["hostname"])
-        """
+        
         if self.role == Network_Defaults.DISCOVERY_ROLE_RESPONDER:
+            print("discovery_update_receiver 4",message)
             if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
-                time.sleep(2)
-                self.pub_sub.subscribe_to_topic("asdf")
-                time.sleep(20)
-                self.pub_sub.send("asdf", self.hostname)
-                time.sleep(1)
-                self.pub_sub.send("asdf", self.hostname)
-                time.sleep(1)
-                self.pub_sub.send("asdf", self.hostname)
+                print("discovery_update_receiver 5",message)
+
+
+
+
         """
 
