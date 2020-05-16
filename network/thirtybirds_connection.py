@@ -6,6 +6,9 @@ Intended use:
 This script creates and manages the conneciton between thirtybirds clients and their controller
 """
 
+import os
+import sys
+
 from . import discovery
 from . import Network_Defaults
 
