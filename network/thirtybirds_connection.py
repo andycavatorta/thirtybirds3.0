@@ -67,7 +67,7 @@ class Thirtybirds_Connection():
         print("subscription_message_receiver",topic, message)
 
     def discovery_update_receiver(self,message):
-        print("discovery_update_receiver",message)
+        print("discovery_update_receiver",message, self.role)
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
             print("discovery_update_receiver 1",message)
             if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
