@@ -80,7 +80,7 @@ class Thirtybirds_Connection():
                     time.sleep(1)
                     self.pub_sub.subscribe_to_topic("asdf")
                     time.sleep(1)
-                    self.pub_sub.self("asdf", self.hostname)
+                    self.pub_sub.send("asdf", self.hostname)
                 else:
                     print("Wrong controller found?", message["hostname"])
 
