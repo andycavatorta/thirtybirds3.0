@@ -62,7 +62,7 @@ class Responder(threading.Thread):
         self.last_responese_by_ip = {}
 
     def response(self, remoteIP, msg_json): # response sends the local IP to the remote device
-        if self.last_responese_by_ip.has_key(remoteIP):
+        if remoteIP in self.last_responese_by_ip.keys():
             if self.last_responese_by_ip[remoteIP] + (self.caller_period * 2) > time.time():
                 return
         else:
