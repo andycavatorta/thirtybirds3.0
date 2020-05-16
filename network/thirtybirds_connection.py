@@ -77,7 +77,7 @@ class Thirtybirds_Connection():
                         self.controller_hostname, 
                         self.controller_ip, 
                         self.pubsub_pub_port)
-                    time.sleep(1)
+                    time.sleep(2)
                     self.pub_sub.subscribe_to_topic("asdf")
                     time.sleep(1)
                     self.pub_sub.send("asdf", self.hostname)
@@ -88,13 +88,14 @@ class Thirtybirds_Connection():
                 else:
                     print("Wrong controller found?", message["hostname"])
         if self.role == Network_Defaults.DISCOVERY_ROLE_RESPONDER:
-            time.sleep(1)
-            self.pub_sub.subscribe_to_topic("asdf")
-            time.sleep(1)
-            self.pub_sub.send("asdf", self.hostname)
-            time.sleep(1)
-            self.pub_sub.send("asdf", self.hostname)
-            time.sleep(1)
-            self.pub_sub.send("asdf", self.hostname)
+            if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
+                time.sleep(2)
+                self.pub_sub.subscribe_to_topic("asdf")
+                time.sleep(1)
+                self.pub_sub.send("asdf", self.hostname)
+                time.sleep(1)
+                self.pub_sub.send("asdf", self.hostname)
+                time.sleep(1)
+                self.pub_sub.send("asdf", self.hostname)
 
 
