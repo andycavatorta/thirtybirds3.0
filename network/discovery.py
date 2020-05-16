@@ -102,6 +102,7 @@ class Caller_Send(threading.Thread):
         self.active = True
     def set_active(self,val):
         # NOT_THREAD_SAFE
+        print(set_active, val)
         self.active = val
     def run(self):
         while True:
