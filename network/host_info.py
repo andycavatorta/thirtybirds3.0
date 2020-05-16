@@ -30,7 +30,7 @@ class Host_Info(threading.Thread):
         self.queue = queue.Queue()
         self.online_status = False
         if self.online_status_change_receiver:
-            self.daemon = True
+            #self.daemon = True
             self.start()
 
     def get_hostname(self):
