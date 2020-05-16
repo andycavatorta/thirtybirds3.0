@@ -80,7 +80,8 @@ class Responder(threading.Thread):
                 msg_d["status"] = "device_discovered"
                 if self.discovery_update_receiver:
                     resp_d = self.discovery_update_receiver(msg_d)
-                resp_json = json.dumps( {"ip":self.local_ip,"hostname":socket.gethostname()})
+                resp_json = json.dumps({"ip":self.local_ip,"hostname":socket.gethostname()})
+                resp_json = str. encode(resp_json)
                 self.response(remoteIP,resp_json)
 
 ##################
