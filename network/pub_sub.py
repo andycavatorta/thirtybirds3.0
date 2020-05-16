@@ -84,18 +84,15 @@ class Pub_Sub(threading.Thread):
         self.exception_receiver = exception_receiver
         self.subscriptions = {}
 
-        # 
         self.context = zmq.Context()
         self.pub_socket = self.context.socket(zmq.PUB)
         self.pub_socket.bind("tcp://*:%s" % publish_port)
         self.sub_socket = self.context.socket(zmq.SUB)
 
-        # 
         self.send_queue = Send_Queue(self.pub_socket)
         self.send_queue.daemon = True
         self.send_queue.start()
 
-        # 
         self.receiver_queue = Receiver_Queue(self.message_receiver)
         self.receiver_queue.daemon = True
         self.receiver_queue.start()
@@ -103,7 +100,6 @@ class Pub_Sub(threading.Thread):
         self.daemon = True
         self.start()
 
-    ### receiving
     def connect_to_publisher(self, hostname, remote_ip, remote_port):
         if hostname not in self.subscriptions:
             self.subscriptions[hostname] = Subscription(hostname, remote_ip, remote_port)
@@ -118,7 +114,6 @@ class Pub_Sub(threading.Thread):
         # NOT_THREAD_SAFE
         self.sub_socket.setsockopt(zmq.UNSUBSCRIBE, topic)
 
-    ### sending
     def send(self, topic, msg):
         # NOT_THREAD_SAFE
         self.send_queue.add_to_queue(topic, msg)

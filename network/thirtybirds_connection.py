@@ -76,6 +76,10 @@ class Thirtybirds_Connection():
                         self.controller_hostname, 
                         self.controller_ip, 
                         self.pubsub_pub_port)
+                    time.sleep(1)
+                    self.pub_sub.subscribe_to_topic("asdf")
+                    time.sleep(1)
+                    self.pub_sub.self("asdf", self.hostname)
                 else:
                     print("Wrong controller found?", message["hostname"])
 
