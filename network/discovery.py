@@ -166,6 +166,8 @@ class Discovery():
                 self.discovery_response_port,
                 self.discovery_update_receiver
             )
+
+            self.responder.daemon = True
             self.responder.start()
 
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
@@ -181,6 +183,8 @@ class Discovery():
                 self.discovery_update_receiver, 
                 self.caller_send
             )
+            self.caller_recv.daemon = True
+            self.caller_send.daemon = True
             self.caller_recv.start()
             self.caller_send.start()
 
