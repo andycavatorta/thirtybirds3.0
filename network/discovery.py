@@ -81,7 +81,7 @@ class Responder(threading.Thread):
                 if self.discovery_update_receiver:
                     resp_d = self.discovery_update_receiver(msg_d)
                 resp_json = json.dumps({"ip":self.local_ip,"hostname":socket.gethostname()})
-                resp_json = str. encode(resp_json)
+                resp_json = str.encode(resp_json)
                 self.response(remoteIP,resp_json)
 
 ##################
@@ -111,10 +111,10 @@ class Caller_Send(threading.Thread):
             time.sleep(self.caller_period)
 
 class Caller_Recv(threading.Thread):
-    def __init__(self, recv_port, discovery_update_receiver, callerSend):
+    def __init__(self, recv_port, discovery_update_receiver, caller_send):
         threading.Thread.__init__(self)
         self.discovery_update_receiver = discovery_update_receiver
-        self.callerSend = callerSend
+        self.caller_send = caller_send
         self.listen_context = zmq.Context()
         self.listen_sock = self.listen_context.socket(zmq.PAIR)
         self.listen_sock.bind("tcp://*:%d" % recv_port)
@@ -125,7 +125,7 @@ class Caller_Recv(threading.Thread):
             msg_json = self.listen_sock.recv()
             msg_d = yaml.safe_load(msg_json)
             msg_d["status"] = "device_discovered"
-            self.callerSend.set_active(False)
+            #self.caller_send.set_active(False)
             if self.discovery_update_receiver:
                 self.discovery_update_receiver(msg_d)
 
@@ -156,7 +156,6 @@ class Discovery():
         self.discovery_update_receiver = discovery_update_receiver
         self.role = Network_Defaults.DISCOVERY_ROLE_RESPONDER if hostname == controller_hostname else Network_Defaults.DISCOVERY_ROLE_CALLER
         self.server_ip = ""
-        self.status = "" 
 
         if self.role == Network_Defaults.DISCOVERY_ROLE_RESPONDER:
             self.responder = Responder(
@@ -184,3 +183,11 @@ class Discovery():
             )
             self.caller_recv.start()
             self.caller_send.start()
+
+    def begin_caller(self):
+        if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
+            self.caller_send.set_active(True)
+
+    def end_caller(self):
+        if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
+            self.caller_send.set_active(False)

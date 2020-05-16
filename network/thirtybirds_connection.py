@@ -42,6 +42,7 @@ class Thirtybirds_Connection():
         self.pubsub_pub_port = pubsub_pub_port
         self.pubsub_pub_port2 = pubsub_pub_port2
         self.exception_receiver = exception_receiver
+        self.role = Network_Defaults.DISCOVERY_ROLE_RESPONDER if hostname == controller_hostname else Network_Defaults.DISCOVERY_ROLE_CALLER
 
         self.discovery = discovery.Discovery(
             ip_address = ip_address,
@@ -56,6 +57,9 @@ class Thirtybirds_Connection():
 
     def discovery_handler(self,message):
         print("discovery_handler",message)
+        if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
+            if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
+                self.discovery.end_caller()
 
 
 
