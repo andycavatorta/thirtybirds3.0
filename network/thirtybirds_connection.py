@@ -80,7 +80,6 @@ class Thirtybirds_Connection():
                         self.controller_hostname, 
                         self.controller_ip, 
                         self.pubsub_pub_port)
-                    print("discovery_update_receiver ",message)
                 else:
                     print("Wrong controller found?", message["hostname"])
         
