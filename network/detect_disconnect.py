@@ -22,7 +22,7 @@ class Publisher(): # this could probably be done with a generator rather than a 
 
     def check_for_timeout(self):
         _alive_ = False if time.time() - self.timeout < self.last_heartbeat else True
-        print("check_for_timeout", _alive_, self.alive)
+        print("check_for_timeout", _alive_, self.alive, time.time() - self.timeout, self.last_heartbeat)
         if self.alive != _alive_:
             self.alive = _alive_
             self.status_receiver(_alive_)
