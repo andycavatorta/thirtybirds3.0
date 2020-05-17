@@ -96,10 +96,10 @@ class Thirtybirds_Connection():
         
         if self.role == Network_Defaults.DISCOVERY_ROLE_RESPONDER:
             if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
-                
+
                 self.pub_sub.connect_to_publisher(
-                    self.message["hostname"], 
-                    self.message["ip"], 
+                    message["hostname"], 
+                    message["ip"], 
                     self.pubsub_pub_port)
 
 
