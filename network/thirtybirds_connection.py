@@ -81,6 +81,7 @@ class Thirtybirds_Connection():
         print("subscription_message_receiver",topic, message)
 
     def discovery_update_receiver(self,message):
+        # todo: cover the case of disconnections and unsubscriptions
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
             if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
                 if message["hostname"] == self.controller_hostname:
@@ -90,6 +91,7 @@ class Thirtybirds_Connection():
                         self.controller_hostname, 
                         self.controller_ip, 
                         self.pubsub_pub_port)
+                    self.detect_disconnect.subscribe(message["hostname"])
                 else:
                     print("Wrong controller found?", message["hostname"])
         
@@ -100,3 +102,4 @@ class Thirtybirds_Connection():
                     message["hostname"], 
                     message["ip"], 
                     self.pubsub_pub_port)
+                self.detect_disconnect.subscribe(message["hostname"])
