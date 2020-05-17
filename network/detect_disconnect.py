@@ -98,8 +98,9 @@ class Detect_Disconnect(threading.Thread):
 
     def run(self):
         while True: 
+            print("Detect_Disconnect.run 0",publisher_hostname)
             for publisher_hostname,val in self.publishers.items():
-                print("Detect_Disconnect.run",publisher_hostname)
+                print("Detect_Disconnect.run 1",publisher_hostname)
                 val.check_for_timeout() 
             time.sleep(self.heartbeat_interval)
 
