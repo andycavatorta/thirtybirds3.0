@@ -17,7 +17,7 @@ class Network():
     discovery_multicast_port = 10020
     discovery_response_port = 10021
     pubsub_publish_port = 10022
-    heartbeat_interval = 1
+    heartbeat_interval = 5
     heartbeat_timeout_factor = 1.5
     caller_interval = 1
 
