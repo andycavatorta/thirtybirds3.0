@@ -76,6 +76,9 @@ class Thirtybirds_Connection():
 
     def disconnect_status_receiver(self, disconnected_hostname, disconnection_status):
         print("disconnect_status_receiver", disconnected_hostname, disconnection_status)
+        if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
+            if disconnection_status == True:
+                self.discovery.start_caller()
 
     def subscription_message_receiver(self, topic, message):
         print("subscription_message_receiver",topic, message)

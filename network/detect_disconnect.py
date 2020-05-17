@@ -9,6 +9,7 @@ It can also generate such periodic messages for other hosts to receive.
 The detection of disconnections can be useful for automatic reconnection.
 """
 
+
 import threading
 import time
 
@@ -115,6 +116,4 @@ class Detect_Disconnect(threading.Thread):
                     self.publishers[publisher_key].check_for_timeout()
                 except KeyError:
                     pass
-                #for publisher_hostname,val in self.publishers.items():
             time.sleep(self.heartbeat_interval)
-

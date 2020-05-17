@@ -191,7 +191,7 @@ class Discovery():
             self.caller_recv.start()
             self.caller_send.start()
 
-    def begin_caller(self):
+    def start_caller(self):
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
             self.caller_send.set_active(True)
 
