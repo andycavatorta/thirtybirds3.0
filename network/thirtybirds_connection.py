@@ -80,9 +80,12 @@ class Thirtybirds_Connection():
                 self.discovery.start_caller()
 
     def subscription_message_receiver(self, topic, message):
-        print("subscription_message_receiver",topic, message)
-        if topic == b"__heartbeat__":
-            self.detect_disconnect.record_heartbeat(message)
+        # topics with dunder names are for internal TB use 
+        if topic[:2]==b"__" and topic[-2:]==b"__":
+            if topic == b"__heartbeat__":
+                self.detect_disconnect.record_heartbeat(message)
+        else:
+            print("subscription_message_receiver",topic, message)
 
     def discovery_update_receiver(self,message):
         # todo: cover the case of disconnections and unsubscriptions
