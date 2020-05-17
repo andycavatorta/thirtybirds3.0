@@ -17,6 +17,7 @@ class Publisher(): # this could probably be done with a generator rather than a 
         self.timeout = timeout
         self.publisher_hostname = publisher_hostname
         self.status_receiver = status_receiver
+        self.last_heartbeat = 0
         self.alive = True 
 
     def check_for_timeout(self):
