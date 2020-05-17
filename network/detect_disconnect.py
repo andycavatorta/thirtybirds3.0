@@ -109,7 +109,7 @@ class Detect_Disconnect(threading.Thread):
 
     def run(self):
         while True: 
-            publisher_keys = self.publishers.keys()
+            publisher_keys = list(self.publishers.keys())
             for publisher_key in publisher_keys:
                 try:
                     self.publishers[publisher_key].check_for_timeout()
