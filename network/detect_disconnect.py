@@ -77,6 +77,7 @@ class Detect_Disconnect(threading.Thread):
             self.heartbeat_interval
         )
         self.start()
+        self.pub_sub.subscribe_to_topic(self.topic)
 
     def subscribe(self, publisher_hostname):
         # NOT_THREAD_SAFE
