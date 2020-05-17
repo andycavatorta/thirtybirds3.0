@@ -19,7 +19,7 @@ class Network():
     pubsub_publish_port = 10022
     heartbeat_interval = 5
     heartbeat_timeout_factor = 1.5
-    caller_interval = 1
+    caller_interval = 5
 
 class Reporting():
     app_name = "tb_test_application"
