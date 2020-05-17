@@ -74,8 +74,8 @@ class Thirtybirds_Connection():
             status_receiver = self.disconnect_status_receiver,
             exception_receiver = self.exception_receiver)
 
-    def disconnect_status_receiver(self, message):
-        print("disconnect_status_receiver", message)
+    def disconnect_status_receiver(self, disconnected_hostname, disconnection_status):
+        print("disconnect_status_receiver", disconnected_hostname, disconnection_status)
 
     def subscription_message_receiver(self, topic, message):
         print("subscription_message_receiver",topic, message)
