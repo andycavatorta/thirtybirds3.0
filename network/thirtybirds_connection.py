@@ -31,8 +31,7 @@ class Thirtybirds_Connection():
         pubsub_pub_port,
         exception_receiver,
         heartbeat_interval,
-        heartbeat_timeout_factor
-        ):
+        heartbeat_timeout_factor):
 
         self.ip_address = ip_address
         self.hostname = hostname
