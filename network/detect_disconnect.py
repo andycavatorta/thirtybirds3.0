@@ -85,7 +85,7 @@ class Detect_Disconnect(threading.Thread):
             self.heartbeat_timeout, 
             self.status_receiver
         )
-        print("Detect_Disconnect.subscribe", self.publishers)
+        #print("Detect_Disconnect.subscribe", self.publishers)
 
     def unsubscribe(self, publisher_hostname):
         # NOT_THREAD_SAFE
@@ -93,18 +93,18 @@ class Detect_Disconnect(threading.Thread):
 
     def record_heartbeat(self, publisher_hostname):
         # NOT_THREAD_SAFE
-        print("record_heartbeat 0", publisher_hostname)
+        #print("record_heartbeat 0", publisher_hostname)
         if publisher_hostname not in self.publishers:
-            print("record_heartbeat 1", publisher_hostname)
+            #print("record_heartbeat 1", publisher_hostname)
             self.subscribe(publisher_hostname)
-        print("record_heartbeat 2", publisher_hostname)
+        #print("record_heartbeat 2", publisher_hostname)
         self.publishers[publisher_hostname].record_heartbeat()
 
     def run(self):
         while True: 
-            print("Detect_Disconnect.run 0",self.publishers)
+            #print("Detect_Disconnect.run 0",self.publishers)
             for publisher_hostname,val in self.publishers.items():
-                print("Detect_Disconnect.run 1",publisher_hostname)
+                #print("Detect_Disconnect.run 1",publisher_hostname)
                 val.check_for_timeout() 
             time.sleep(self.heartbeat_interval)
 
