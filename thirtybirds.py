@@ -6,6 +6,7 @@ tb_path = os.path.dirname(os.path.realpath(__file__))
 from .network import host_info
 from .network import thirtybirds_connection
 from .reporting.exceptions import capture_exceptions
+from . import settings as tb_settings
 
 @capture_exceptions.Function
 def exception_receiver(msg):
@@ -53,24 +54,31 @@ def init(app_settings,app_path):
     
     # run updates on app and tb if specified
 
+    #################################
+    # c o l a t e   s e t t i n g s #
+    #################################
+    
+
+
     #############################
     # s t a r t   n e t w o r k #
     #############################
     
-    print(hostname, forceupdate)
+    #print(hostname, forceupdate)
     
-    print(app_settings.Network.controller_hostname)
-    
+    #print(app_settings.Network.controller_hostname)
+
     tb_connection = thirtybirds_connection.Thirtybirds_Connection(
         hostinfo.get_local_ip(),
         hostname = hostname,
         controller_hostname = app_settings.Network.controller_hostname,
-        discovery_multicast_group = app_settings.Network.discovery_multicast_group,
-        discovery_multicast_port = app_settings.Network.discovery_multicast_port,
-        discovery_response_port = app_settings.Network.discovery_response_port,
-        pubsub_pub_port = app_settings.Network.pubsub_pub_port,
-        pubsub_pub_port2 = app_settings.Network.pubsub_pub_port2,
-        exception_receiver = exception_receiver
+        discovery_multicast_group = tb_settings.Network.discovery_multicast_group,
+        discovery_multicast_port = tb_settings.Network.discovery_multicast_port,
+        discovery_response_port = tb_settings.Network.discovery_response_port,
+        pubsub_pub_port = tb_settings.Network.pubsub_publish_port,
+        exception_receiver = exception_receiver,
+        heartbeat_interval = tb_settings.Network.heartbeat_interval,
+        heartbeat_timeout_factor = tb_settings.Network.heartbeat_timeout_factor
     )
 
     

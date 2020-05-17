@@ -17,6 +17,7 @@ root_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(root_path[0:root_path.find("/thirtybirds")])
 from thirtybirds3.reporting.exceptions import capture_exceptions
 from . import pub_sub
+from . import detect_disconnect
 
 class Thirtybirds_Connection():
     def __init__(
@@ -28,8 +29,9 @@ class Thirtybirds_Connection():
         discovery_multicast_port,
         discovery_response_port,
         pubsub_pub_port,
-        pubsub_pub_port2,
-        exception_receiver
+        exception_receiver,
+        heartbeat_interval,
+        heartbeat_timeout_factor
         ):
 
         self.ip_address = ip_address
@@ -40,8 +42,9 @@ class Thirtybirds_Connection():
         self.discovery_multicast_port = discovery_multicast_port
         self.discovery_response_port = discovery_response_port
         self.pubsub_pub_port = pubsub_pub_port
-        self.pubsub_pub_port2 = pubsub_pub_port2
         self.exception_receiver = exception_receiver
+        self.heartbeat_interval = heartbeat_interval
+        self.heartbeat_timeout_factor = heartbeat_timeout_factor
         self.role = Network_Defaults.DISCOVERY_ROLE_RESPONDER if hostname == controller_hostname else Network_Defaults.DISCOVERY_ROLE_CALLER
 
         self.discovery = discovery.Discovery(
@@ -63,17 +66,25 @@ class Thirtybirds_Connection():
             message_receiver = self.subscription_message_receiver,
             exception_receiver = self.exception_receiver)
 
+        self.detect_disconnect = detect_disconnect.Detect_Disconnect(
+            hostname = self.hostname,
+            pub_sub = self.pub_sub,
+            heartbeat_timeout_factor = self.heartbeat_timeout_factor,
+            heartbeat_interval = self.heartbeat_interval,
+            status_receiver = self.disconnect_status_receiver,
+            exception_receiver = self.exception_receiver)
+
+    def disconnect_status_receiver(self, message):
+        print("disconnect_status_receiver", message)
+
     def subscription_message_receiver(self, topic, message):
         print("subscription_message_receiver",topic, message)
 
+
     def discovery_update_receiver(self,message):
-        print("discovery_update_receiver",message, self.role)
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
-            print("discovery_update_receiver 1",message)
             if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
-                print("discovery_update_receiver 2",message)
                 if message["hostname"] == self.controller_hostname:
-                    print("discovery_update_receiver 3",message)
                     self.controller_ip = message["ip"]
                     self.discovery.end_caller()
                     self.pub_sub.connect_to_publisher(
@@ -84,10 +95,8 @@ class Thirtybirds_Connection():
                     print("Wrong controller found?", message["hostname"])
         
         if self.role == Network_Defaults.DISCOVERY_ROLE_RESPONDER:
-            print("discovery_update_receiver 4",message)
             if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
-                print("discovery_update_receiver 5",message)
-
+                pass
 
 
 
