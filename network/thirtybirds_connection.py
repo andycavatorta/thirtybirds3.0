@@ -16,6 +16,7 @@ from . import Network_Defaults
 root_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(root_path[0:root_path.find("/thirtybirds")])
 from thirtybirds3.reporting.exceptions import capture_exceptions
+from thirtybirds3.reporting.context import get_context
 from . import pub_sub
 from . import detect_disconnect
 
@@ -47,6 +48,8 @@ class Thirtybirds_Connection():
         self.heartbeat_timeout_factor = heartbeat_timeout_factor
         self.caller_interval = caller_interval
         self.role = Network_Defaults.DISCOVERY_ROLE_RESPONDER if hostname == controller_hostname else Network_Defaults.DISCOVERY_ROLE_CALLER
+
+        print(get_context())
 
         self.discovery = discovery.Discovery(
             ip_address = ip_address,
