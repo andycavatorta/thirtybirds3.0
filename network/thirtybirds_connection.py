@@ -80,7 +80,6 @@ class Thirtybirds_Connection():
     def subscription_message_receiver(self, topic, message):
         print("subscription_message_receiver",topic, message)
 
-
     def discovery_update_receiver(self,message):
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
             if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
@@ -101,6 +100,3 @@ class Thirtybirds_Connection():
                     message["hostname"], 
                     message["ip"], 
                     self.pubsub_pub_port)
-
-
-

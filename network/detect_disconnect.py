@@ -21,12 +21,10 @@ class Publisher(): # this could probably be done with a generator rather than a 
 
     def check_for_timeout(self):
         _alive_ = False if time.time() - self.timeout < self.last_heartbeat else True
+        print("check_for_timeout", _alive_, alive)
         if self.alive != _alive_:
             self.alive = _alive_
             self.status_receiver(_alive_)
-
-    def check_if_alive(self):
-        return True if time.time() - self.timeout < self.last_heartbeat else False
 
     def record_heartbeat(self):
         self.last_heartbeat = time.time()
@@ -86,6 +84,7 @@ class Detect_Disconnect(threading.Thread):
             self.heartbeat_timeout, 
             self.status_receiver
         )
+        print("Detect_Disconnect.subscribe", self.publishers)
 
     def unsubscribe(self, publisher_hostname):
         # NOT_THREAD_SAFE
@@ -100,6 +99,7 @@ class Detect_Disconnect(threading.Thread):
     def run(self):
         while True: 
             for publisher_hostname,val in self.publishers.items():
+                print("Detect_Disconnect.run",publisher_hostname)
                 val.check_for_timeout() 
             time.sleep(self.heartbeat_interval)
 
