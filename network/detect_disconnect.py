@@ -33,7 +33,8 @@ class Publisher(): # this could probably be done with a generator rather than a 
         if self.disconnected != _disconnected_:
             self.disconnected = _disconnected_
             self.status_receiver(self.publisher_hostname, _disconnected_)
-            self.unsubscribe(self.publisher_hostname)
+            if _disconnected_ == True:
+                self.unsubscribe(self.publisher_hostname)
 
     def record_heartbeat(self):
         self.last_heartbeat = time.time()
@@ -108,8 +109,10 @@ class Detect_Disconnect(threading.Thread):
 
     def run(self):
         while True: 
-            for publisher_hostname,val in self.publishers.items():
-                val.check_for_timeout() 
+            publisher_refs = self.publishers.values()
+            for publisher_ref in publisher_refs:
+                #for publisher_hostname,val in self.publishers.items():
+                publisher_ref.check_for_timeout() 
             time.sleep(self.heartbeat_interval)
 
 
