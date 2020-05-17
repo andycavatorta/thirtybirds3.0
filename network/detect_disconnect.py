@@ -93,8 +93,11 @@ class Detect_Disconnect(threading.Thread):
 
     def record_heartbeat(self, publisher_hostname):
         # NOT_THREAD_SAFE
+        print("record_heartbeat 0", publisher_hostname)
         if publisher_hostname not in self.publishers:
+            print("record_heartbeat 1", publisher_hostname)
             self.subscribe(publisher_hostname)
+        print("record_heartbeat 2", publisher_hostname)
         self.publishers[publisher_hostname].record_heartbeat()
 
     def run(self):
