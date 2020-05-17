@@ -17,13 +17,15 @@ class Publisher(): # this could probably be done with a generator rather than a 
             self, 
             publisher_hostname, 
             timeout, 
-            status_receiver
+            status_receiver,
+            unsubscribe
         ):
         self.timeout = timeout
         self.publisher_hostname = publisher_hostname
         self.status_receiver = status_receiver
         self.last_heartbeat = 0
         self.disconnected = True 
+        self.unsubscribe = unsubscribe
 
     def check_for_timeout(self):
         _disconnected_ = False if time.time() - self.timeout < self.last_heartbeat else True
@@ -31,6 +33,7 @@ class Publisher(): # this could probably be done with a generator rather than a 
         if self.disconnected != _disconnected_:
             self.disconnected = _disconnected_
             self.status_receiver(self.publisher_hostname, _disconnected_)
+            self.unsubscribe(self.publisher_hostname)
 
     def record_heartbeat(self):
         self.last_heartbeat = time.time()
@@ -87,10 +90,10 @@ class Detect_Disconnect(threading.Thread):
         # NOT_THREAD_SAFE
         self.publishers[publisher_hostname] = Publisher(
             publisher_hostname, 
-            self.heartbeat_timeout, 
-            self.status_receiver
+            self.heartbeat_timeout,
+            self.status_receiver,
+            self.unsubscribe
         )
-        #print("Detect_Disconnect.subscribe", self.publishers)
 
     def unsubscribe(self, publisher_hostname):
         # NOT_THREAD_SAFE
@@ -99,18 +102,13 @@ class Detect_Disconnect(threading.Thread):
     def record_heartbeat(self, publisher_hostname):
         # NOT_THREAD_SAFE
         publisher_hostname = publisher_hostname.decode("utf-8") 
-        #print("record_heartbeat 0", publisher_hostname)
         if publisher_hostname not in self.publishers:
-            #print("record_heartbeat 1", publisher_hostname)
             self.subscribe(publisher_hostname)
-        #print("record_heartbeat 2", publisher_hostname)
         self.publishers[publisher_hostname].record_heartbeat()
 
     def run(self):
         while True: 
-            #print("Detect_Disconnect.run 0",self.publishers)
             for publisher_hostname,val in self.publishers.items():
-                #print("Detect_Disconnect.run 1",publisher_hostname)
                 val.check_for_timeout() 
             time.sleep(self.heartbeat_interval)
 
