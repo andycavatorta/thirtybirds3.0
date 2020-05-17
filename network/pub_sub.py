@@ -42,7 +42,7 @@ class Send_Queue(threading.Thread):
         while True:
             try:
                 topic, msg = self.queue.get(True)
-                print("Send_Queue",topic, msg)
+                #print("Send_Queue",topic, msg)
                 self.socket.send_string("%s %s" % (topic, msg))
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()

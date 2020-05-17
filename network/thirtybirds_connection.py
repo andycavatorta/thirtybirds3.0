@@ -79,7 +79,7 @@ class Thirtybirds_Connection():
 
     def subscription_message_receiver(self, topic, message):
         print("subscription_message_receiver",topic, message)
-        if str(topic) == "__heartbeat__":
+        if topic == b"__heartbeat__":
             self.detect_disconnect.record_heartbeat(message)
 
     def discovery_update_receiver(self,message):
