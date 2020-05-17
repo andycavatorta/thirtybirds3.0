@@ -98,7 +98,7 @@ class Detect_Disconnect(threading.Thread):
 
     def record_heartbeat(self, publisher_hostname):
         # NOT_THREAD_SAFE
-        publisher_hostname.decode("utf-8") 
+        publisher_hostname = publisher_hostname.decode("utf-8") 
         #print("record_heartbeat 0", publisher_hostname)
         if publisher_hostname not in self.publishers:
             #print("record_heartbeat 1", publisher_hostname)
