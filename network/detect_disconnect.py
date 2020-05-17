@@ -30,7 +30,6 @@ class Publisher(): # this could probably be done with a generator rather than a 
 
     def check_for_timeout(self):
         _disconnected_ = False if time.time() - self.timeout < self.last_heartbeat else True
-        print("check_for_timeout", self.publisher_hostname, _disconnected_, self.disconnected, time.time() - self.timeout, self.last_heartbeat)
         if self.disconnected != _disconnected_:
             self.disconnected = _disconnected_
             self.status_receiver(self.publisher_hostname, _disconnected_)
