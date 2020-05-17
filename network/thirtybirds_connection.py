@@ -31,7 +31,8 @@ class Thirtybirds_Connection():
         pubsub_pub_port,
         exception_receiver,
         heartbeat_interval,
-        heartbeat_timeout_factor):
+        heartbeat_timeout_factor,
+        caller_interval):
 
         self.ip_address = ip_address
         self.hostname = hostname
@@ -44,6 +45,7 @@ class Thirtybirds_Connection():
         self.exception_receiver = exception_receiver
         self.heartbeat_interval = heartbeat_interval
         self.heartbeat_timeout_factor = heartbeat_timeout_factor
+        self.caller_interval = caller_interval
         self.role = Network_Defaults.DISCOVERY_ROLE_RESPONDER if hostname == controller_hostname else Network_Defaults.DISCOVERY_ROLE_CALLER
 
         self.discovery = discovery.Discovery(
@@ -53,7 +55,7 @@ class Thirtybirds_Connection():
             discovery_multicast_group = discovery_multicast_group,
             discovery_multicast_port = discovery_multicast_port,
             discovery_response_port = discovery_response_port,
-            caller_period = 5,
+            caller_period = self.caller_interval,
             discovery_update_receiver = self.discovery_update_receiver,
             exception_receiver = exception_receiver)
 

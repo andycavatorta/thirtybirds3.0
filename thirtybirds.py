@@ -78,7 +78,8 @@ def init(app_settings,app_path):
         pubsub_pub_port = tb_settings.Network.pubsub_publish_port,
         exception_receiver = exception_receiver,
         heartbeat_interval = tb_settings.Network.heartbeat_interval,
-        heartbeat_timeout_factor = tb_settings.Network.heartbeat_timeout_factor
+        heartbeat_timeout_factor = tb_settings.Network.heartbeat_timeout_factor,
+        caller_interval = tb_settings.Network.
     )
 
     
