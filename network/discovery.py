@@ -143,7 +143,8 @@ class Discovery():
         discovery_response_port,
         caller_period,
         discovery_update_receiver,
-        exception_receiver
+        exception_receiver,
+        status_receiver
     ):
         self.ip_address = ip_address
         self.hostname = hostname
@@ -153,6 +154,8 @@ class Discovery():
         self.discovery_response_port = discovery_response_port
         self.caller_period = caller_period
         self.discovery_update_receiver = discovery_update_receiver
+        self.status_receiver = status_receiver
+        self.exception_receiver = exception_receiver
         self.role = Network_Defaults.DISCOVERY_ROLE_RESPONDER if hostname == controller_hostname else Network_Defaults.DISCOVERY_ROLE_CALLER
         self.server_ip = ""
 

@@ -74,7 +74,8 @@ class Pub_Sub(threading.Thread):
             publish_port,
             role,
             message_receiver,
-            exception_receiver
+            exception_receiver,
+            status_receiver
         ):
         threading.Thread.__init__(self)
         self.hostname = hostname
@@ -83,6 +84,7 @@ class Pub_Sub(threading.Thread):
         self.role = role
         self.message_receiver = message_receiver
         self.exception_receiver = exception_receiver
+        self.status_receiver = status_receiver
         self.subscriptions = {}
 
         self.context = zmq.Context()

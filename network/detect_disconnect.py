@@ -18,12 +18,12 @@ class Publisher(): # this could probably be done with a generator rather than a 
             self, 
             publisher_hostname, 
             timeout, 
-            status_receiver,
+            disconnect_event_receiver,
             unsubscribe
         ):
         self.timeout = timeout
         self.publisher_hostname = publisher_hostname
-        self.status_receiver = status_receiver
+        self.disconnect_event_receiver = disconnect_event_receiver
         self.last_heartbeat = 0
         self.disconnected = True 
         self.unsubscribe = unsubscribe
@@ -32,7 +32,7 @@ class Publisher(): # this could probably be done with a generator rather than a 
         _disconnected_ = False if time.time() - self.timeout < self.last_heartbeat else True
         if self.disconnected != _disconnected_:
             self.disconnected = _disconnected_
-            self.status_receiver(self.publisher_hostname, _disconnected_)
+            self.disconnect_event_receiver(self.publisher_hostname, _disconnected_)
             if _disconnected_ == True:
                 self.unsubscribe(self.publisher_hostname)
 
@@ -66,14 +66,16 @@ class Detect_Disconnect(threading.Thread):
         pub_sub,
         heartbeat_timeout_factor,
         heartbeat_interval,
-        status_receiver,
-        exception_receiver
+        disconnect_event_receiver,
+        exception_receiver,
+        status_receiver
     ):
         threading.Thread.__init__(self)
         self.hostname = hostname
         self.pub_sub = pub_sub
-        self.status_receiver = status_receiver
+        self.disconnect_event_receiver = disconnect_event_receiver
         self.exception_receiver = exception_receiver
+        self.status_receiver = status_receiver
         self.heartbeat_interval = heartbeat_interval
         self.heartbeat_timeout = heartbeat_interval * heartbeat_timeout_factor
         self.topic = "__heartbeat__"
@@ -92,7 +94,7 @@ class Detect_Disconnect(threading.Thread):
         self.publishers[publisher_hostname] = Publisher(
             publisher_hostname, 
             self.heartbeat_timeout,
-            self.status_receiver,
+            self.disconnect_event_receiver,
             self.unsubscribe
         )
 
