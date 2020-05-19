@@ -47,7 +47,6 @@ class Class:
         #print("path",decorator_self.path)
 
     def __call__(decorator_self, *args, **kwargs):
-        
         target_instance_ref = decorator_self.target_class(*args, **kwargs)
         target_instance_dir = dir(target_instance_ref)
         for attribute in target_instance_dir:

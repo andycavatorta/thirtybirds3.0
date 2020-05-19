@@ -18,6 +18,7 @@ from thirtybirds3.reporting.exceptions import capture_exceptions
 from . import pub_sub
 from . import detect_disconnect
 
+@capture_exceptions.Class
 class Thirtybirds_Connection():
     def __init__(
         self,
@@ -35,6 +36,7 @@ class Thirtybirds_Connection():
         heartbeat_timeout_factor,
         caller_interval):
 
+        capture_exceptions.init(exception_receiver)
         self.ip_address = ip_address
         self.hostname = hostname
         self.controller_hostname = controller_hostname

@@ -19,8 +19,8 @@ import zmq
 root_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(root_path[0:root_path.find("/thirtybirds")])
 from thirtybirds3.reporting.exceptions import capture_exceptions
-from . import Network_Defaults
 
+@capture_exceptions.Class
 class Subscription():
     def __init__(self, hostname, remote_ip, remote_port):
         self.hostname = hostname
@@ -28,6 +28,7 @@ class Subscription():
         self.remote_port = remote_port
         self.connected = False
 
+@capture_exceptions.Class
 class Send_Queue(threading.Thread):
     def __init__(self, socket):
         threading.Thread.__init__(self)
@@ -50,6 +51,7 @@ class Send_Queue(threading.Thread):
                 print(e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback)))
             """
 
+@capture_exceptions.Class
 class Receiver_Queue(threading.Thread):
     def __init__(self, callback):
         threading.Thread.__init__(self)
@@ -72,6 +74,7 @@ class Receiver_Queue(threading.Thread):
                 print(e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback)))
             """
             
+@capture_exceptions.Class
 class Pub_Sub(threading.Thread):
     def __init__(
             self, 
@@ -83,6 +86,7 @@ class Pub_Sub(threading.Thread):
             exception_receiver,
             status_receiver
         ):
+        capture_exceptions.init(exception_receiver)
         threading.Thread.__init__(self)
         self.hostname = hostname
         self.local_ip = local_ip

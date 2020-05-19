@@ -5,8 +5,6 @@
 
 make receivers thread safe
 
-add exception handling everywhere
-
 make detect_disconnect thread safe
 
 in thirtybirds_connection, unify connection status reported by discovery and detect_disconnect
@@ -74,6 +72,7 @@ def network_status_change_receiver(online_status):
 def network_message_receiver(topic, message):
     print("network_message_receiver",topic, message)
 
+@capture_exceptions.Function
 def collate(base_settings_module, optional_settings_module):
     base_settings_classnames = [i for i in dir(base_settings_module) if not (i[:2]=="__" and i[-2:]=="__")] 
     optional_settings_classnames = [i for i in dir(optional_settings_module) if not (i[:2]=="__" and i[-2:]=="__")]
@@ -88,7 +87,7 @@ def collate(base_settings_module, optional_settings_module):
             for optional_settings_class_variable_name in optional_settings_class_variable_names:
                 setattr(base_settings_class_ref, optional_settings_class_variable_name, getattr(optional_settings_class_ref, optional_settings_class_variable_name))
 
-@capture_exceptions.Class
+@capture_exceptions.Function
 def init(app_settings,app_path):
 
     hostinfo = host_info.Host_Info(
@@ -108,7 +107,6 @@ def init(app_settings,app_path):
     #########################
     # a p p l y   f l a g s #
     #########################
-
     try:
         sys.argv[sys.argv.index("-help")]
         print("thirtybirds command line options:")

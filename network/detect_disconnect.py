@@ -9,9 +9,16 @@ The detection of disconnections can be useful for automatic reconnection.
 """
 
 
+import os
+import sys
 import threading
 import time
 
+root_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(root_path[0:root_path.find("/thirtybirds")])
+from thirtybirds3.reporting.exceptions import capture_exceptions
+
+@capture_exceptions.Class
 class Publisher(): # this could probably be done with a generator rather than a class.
     def __init__(
             self, 
@@ -38,6 +45,7 @@ class Publisher(): # this could probably be done with a generator rather than a 
     def record_heartbeat(self):
         self.last_heartbeat = time.time()
 
+@capture_exceptions.Class
 class Send_Periodic_Heartbeats(threading.Thread):
     def __init__(
         self, 
@@ -58,6 +66,7 @@ class Send_Periodic_Heartbeats(threading.Thread):
             self.pub_sub.send(self.topic, self.local_hostname)
             time.sleep(self.heartbeat_interval)
 
+@capture_exceptions.Class
 class Detect_Disconnect(threading.Thread):
     def __init__(
         self, 
@@ -69,6 +78,7 @@ class Detect_Disconnect(threading.Thread):
         exception_receiver,
         status_receiver
     ):
+        capture_exceptions.init(exception_receiver)
         threading.Thread.__init__(self)
         self.hostname = hostname
         self.pub_sub = pub_sub
