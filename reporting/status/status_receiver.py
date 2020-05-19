@@ -38,8 +38,9 @@ class Status_Receiver(threading.Thread):
         if message_type in self.capture_types:
             caller_frame = inspect.stack()[1]
             fullpath = caller_frame.filename
-            filename = fullpath[fullpath.rfind("/"):]
-            path = fullpath[:fullpath.rfind("/")]
+            last_slash_position = fullpath.rfind("/")+1
+            filename = fullpath[last_slash_position:]
+            path = fullpath[:last_slash_position]
             try:
                 class_name = caller_frame[0].f_locals["self"].__class__.__name__
             except KeyError:
@@ -62,6 +63,16 @@ class Status_Receiver(threading.Thread):
             try:
                 status_details = self.queue.get(True)
                 if self.print_to_stdout:
+                    print(
+                        status_details["hostname"], 
+                        status_details["path"], 
+                        status_details["script_name"], 
+                        status_details["class_name"], 
+                        status_details["method_name"],
+                        status_details["message"],
+                        status_details["args"]
+                    )
+                    """
                     print("##### Status_Receiver #####")
                     print("message", ":", status_details["message"])
                     print("time_epoch", ":", status_details["time_epoch"])
@@ -72,6 +83,7 @@ class Status_Receiver(threading.Thread):
                     print("method_name", ":", status_details["method_name"])
                     print("message_type", ":", status_details["message_type"])
                     print("args", ":", status_details["args"])
+                    """
                 if self.callback:
                     self.callback(status_details)
             except Exception as e:
