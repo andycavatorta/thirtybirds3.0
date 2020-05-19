@@ -22,13 +22,20 @@ class Network():
     caller_interval = 5
 
 class Reporting():
-    app_name = "tb_test_application"
-    logfile_location = "logs/thirtybirds.log"
-    level = "ERROR" #[DEBUG | INFO | WARNING | ERROR | CRITICAL]
+    app_name = "thirtybirds"
+    #logfile_location = "logs/thirtybirds.log"
+    #level = "ERROR" #[DEBUG | INFO | WARNING | ERROR | CRITICAL]
     print_to_stdout = True
-    log_to_file = True
-    publish_to_dash = True
     publish_as_topic = "thirtybirds_exception"
+
+    publish_to_dash = True
+    capture_exceptions = True
+    capture_initializations = True
+    capture_network_connections = True
+    capture_network_messages = True
+    capture_system_status = True
+    capture_version_status = True
+    capture_adapter_status = True
 
 class Update_Thirtybirds():
     repo_owner = "andycavatorta"

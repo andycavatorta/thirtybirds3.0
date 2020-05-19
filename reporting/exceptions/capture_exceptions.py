@@ -40,10 +40,16 @@ class Class:
     callback = lambda msg: print(msg) # default, unset state
     def __init__(decorator_self,target_class):
         decorator_self.target_class = target_class
+        fullpath = str(inspect.stack()[1].filename)
+        decorator_self.filename = fullpath[fullpath.rfind("/"):]
+        decorator_self.path = fullpath[:fullpath.rfind("/")]
+        
+        #print("filename",decorator_self.filename)
+        #print("path",decorator_self.path)
 
     def __call__(decorator_self, *args, **kwargs):
+        
         target_instance_ref = decorator_self.target_class(*args, **kwargs)
-        #print(inspect.getmembers(decorator_self.target_class, predicate=inspect.isfunction))
         target_instance_dir = dir(target_instance_ref)
         for attribute in target_instance_dir:
             if isinstance(getattr(decorator_self.target_class, attribute, ""), FunctionType):
@@ -62,12 +68,13 @@ class Class:
                 return function_ref(*args, **kwargs)
             except:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
+
                 exception_details = {
                     "time_epoch":time.time(),
                     "time_local":time.localtime(),
                     "hostname":socket.gethostname(),
-                    "path":os.getcwd(),
-                    "script_name":__file__,
+                    "path":decorator_self.path,
+                    "script_name":decorator_self.filename,
                     "class_name":decorator_self.__class__.__name__,
                     "method_name":function_ref.__name__,
                     "args":args,
@@ -92,12 +99,15 @@ class Function:
             return decorator_self.func(*args, **kwargs)
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
+            fullpath = str(inspect.stack()[1].filename)
+            filename = fullpath[fullpath.rfind("/"):]
+            path = fullpath[:fullpath.rfind("/")]
             exception_details = {
                 "time_epoch":time.time(),
                 "time_local":time.localtime(),
                 "hostname":socket.gethostname(),
-                "path":os.getcwd(),
-                "script_name":__file__,
+                "path":path,
+                "script_name":filename,
                 "class_name":"",
                 "method_name":decorator_self.func.__name__,
                 "args":args,
