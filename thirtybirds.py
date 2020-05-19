@@ -94,7 +94,6 @@ def init(app_settings,app_path):
     hostinfo = host_info.Host_Info(
         online_status_change_receiver=network_status_change_receiver, 
         exception_receiver = exception_receiver)
-
     
     # run updates on app and tb if specified
 
@@ -165,8 +164,6 @@ def init(app_settings,app_path):
         else:
             status_recvr.deactivate_capture_type(status_type_name)
     
-    #status_recvr.types.EXCEPTIONS
-
     #############################
     # s t a r t   n e t w o r k #
     #############################

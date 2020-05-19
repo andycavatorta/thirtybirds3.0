@@ -39,13 +39,16 @@ class Send_Queue(threading.Thread):
 
     def run(self):
         while True:
+            topic, msg = self.queue.get(True)
+            self.socket.send_string("%s %s" % (topic, msg))
+            """
             try:
                 topic, msg = self.queue.get(True)
-                #print("Send_Queue",topic, msg)
                 self.socket.send_string("%s %s" % (topic, msg))
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print(e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback)))
+            """
 
 class Receiver_Queue(threading.Thread):
     def __init__(self, callback):
@@ -58,13 +61,17 @@ class Receiver_Queue(threading.Thread):
 
     def run(self):
         while True:
+            topic, msg = self.queue.get(True)
+            self.callback(topic, msg)
+            """
             try:
                 topic, msg = self.queue.get(True)
                 self.callback(topic, msg)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print(e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback)))
-
+            """
+            
 class Pub_Sub(threading.Thread):
     def __init__(
             self, 
