@@ -1,9 +1,11 @@
+#!/usr/bin/python
+
 """
-to do:
-make comprehaneive reporting system
-    report data to server
-    create a system to dynamically change data collection at runtime
-    make each receiver a single class passed into each module that can be modified globally using class variables?
+== fix before proceeding ==
+
+replace all magic strings with contants
+    status types
+    in BASH args, change to [capture|ignore] status_type
 
 make receivers thread safe
 
@@ -11,18 +13,40 @@ add exception handling everywhere
 
 make detect_disconnect thread safe
 
+in thirtybirds_connection, unify connection status reported by discovery and detect_disconnect
+
+why does reconnection sometimes fail?
+
 simplify and unify data types used in network system  [ json | str | byte | etc]
-    is protobuf better tha json?
 
-x select log level using conf and args
+daemonize all threada
+    why does that cause the script to end?  
 
-x collate app and tb settings
+== future features ==
 
-x make exception collector grab correct data
-x      what is incorrect?
+add authentication for raspberry pis
+    authenticate on discover using certs?
+
+send status and exceptions messages to controller
+
+
+== future setup process ==
+
+installers for Raspbian, Ubuntu, Windows, OSX
+
+copyable disk images
+    setup script:
+        assign new hostname
+        generate new ssh key
+
+change password for pi
+add thirtybirds user and run as that
 
 """
 
+
+
+import copy
 import os
 import sys
 
@@ -32,7 +56,8 @@ from .network import host_info
 from .network import thirtybirds_connection
 from .reporting.exceptions import capture_exceptions
 from .reporting.status.status_receiver import Status_Receiver 
-from . import settings as tb_settings
+from . import settings as tb_settings # this copy retains tb settings
+from . import settings as settings # this copy gets collated with app settings
 
 @capture_exceptions.Function
 def exception_receiver(msg):
@@ -41,10 +66,10 @@ def exception_receiver(msg):
 # start reporting
 capture_exceptions.init(exception_receiver)
 
-
 @capture_exceptions.Function
 def network_status_change_receiver(online_status):
-    print("online_status",online_status)
+    pass
+    #print("online_status",online_status)
 
 def collate(base_settings_module, optional_settings_module):
     base_settings_classnames = [i for i in dir(base_settings_module) if not (i[:2]=="__" and i[-2:]=="__")] 
@@ -62,33 +87,41 @@ def collate(base_settings_module, optional_settings_module):
 
 @capture_exceptions.Class
 def init(app_settings,app_path):
-    print("thirtybirds command like options:")
-    print("  -hostname $hostname")
-    print("    run as specified $hostname")
-    print("  -update_on_start [true|false]")
-    print("    run all version updates specified in settings")
-    print("  -capture_exceptions [true|false]")
-    print("    capture exceptions")
-    print("  -capture_initializations [true|false]")
-    print("    capture initializations")
-    print("  -capture_network_connections [true|false]")
-    print("    capture network connections")
-    print("  -capture_network_messages [true|false]")
-    print("    capture network messages")
-    print("  -capture_system_status [true|false]")
-    print("    capture system status")
-    print("  -capture_version_status [true|false]")
-    print("    capture version status")
-    print("  -capture_adapter_status [true|false]")
-    print("    capture adapter status")
 
     hostinfo = host_info.Host_Info(
         online_status_change_receiver=network_status_change_receiver, 
         exception_receiver = exception_receiver)
 
+    
+    # run updates on app and tb if specified
+
+    #################################
+    # c o l a t e   s e t t i n g s #
+    #################################
+    
+    collate(settings, app_settings)
+    
+    status_type_names = [i for i in dir(settings.Reporting.Status_Types) if not (i[:2]=="__" and i[-2:]=="__")] 
+    
     #########################
     # a p p l y   f l a g s #
     #########################
+
+    try:
+        sys.argv[sys.argv.index("-help")]
+        print("thirtybirds command line options:")
+        print("  -hostname $hostname")
+        print("    run as specified $hostname")
+        print("  -update_on_start [true|false]")
+        print("    run all version updates specified in settings")
+        for status_type_name in status_type_names:
+            print("  -{0} [capture|ignore]".format(status_type_name))
+            print("    capture or ignore status messages for {0}".format(status_type_name))
+
+        sys.exit(0)
+    except ValueError:
+        pass
+
     try:
         hostname = sys.argv[sys.argv.index("-hostname")+1]
     except ValueError as e:
@@ -99,58 +132,37 @@ def init(app_settings,app_path):
 
     try:
         update_on_start = sys.argv[sys.argv.index("-update_on_start")+1]
-        app_settings.Version_Control.update_on_start = True if update_on_start == "true" else False
+        settings.Version_Control.update_on_start = True if update_on_start == "true" else False
     except ValueError as e:
         pass
     except IndexError as e:
         print("usage: python ____.py -update_on_start [true|false]")
         sys.exit(0)
 
-    reporting_parameters = [
-        "capture_exceptions", 
-        "capture_initializations", 
-        "capture_network_connections", 
-        "capture_network_messages", 
-        "capture_system_status", 
-        "capture_version_status", 
-        "capture_adapter_status"
-    ]
-
-    for reporting_parameter in reporting_parameters:
+    for status_type_name in status_type_names:
         try:
-             param_bool = sys.argv[sys.argv.index("-{0}".format(reporting_parameter))+1]
-             setattr(app_settings.Reporting,reporting_parameter,True if param_bool == "true" else False)
+            capture_or_ignore = sys.argv[sys.argv.index("-{0}".format(status_type_name))+1]
+            setattr(settings.Reporting.Status_Types, status_type_name, True if update_on_start == "true" else False)
         except ValueError as e:
             pass
         except IndexError as e:
-            print("usage: python ____.py -{0} [true|false]".format(reporting_parameter))
+            print("usage: python ____.py -{0} [capture|ignore]".format(status_type_name))
             sys.exit(0)
-
-    # run updates on app and tb if specified
-
-    #################################
-    # c o l a t e   s e t t i n g s #
-    #################################
-    
-    collate(tb_settings, app_settings)
 
     ##############################################
     # s t a r t   s t a t u s    r e c e i v e r #
     ##############################################
 
     status_recvr = Status_Receiver(True)
-    if tb_settings.Reporting.capture_initializations:
-        status_recvr.activate_capture_type("initialization")
-    if tb_settings.Reporting.capture_network_connections:
-        status_recvr.activate_capture_type("network_connection")
-    if tb_settings.Reporting.capture_network_messages:
-        status_recvr.activate_capture_type("network_message")
-    if tb_settings.Reporting.capture_system_status:
-        status_recvr.activate_capture_type("system_status")
-    if tb_settings.Reporting.capture_version_status:
-        status_recvr.activate_capture_type("version_status")
-    if tb_settings.Reporting.capture_adapter_status:
-        status_recvr.activate_capture_type("adapter_status")
+
+    for status_type_name in status_type_names:
+        capture_or_ignore = getattr(settings.Reporting.Status_Types, status_type_name)
+        if capture_or_ignore:
+            status_recvr.activate_capture_type(status_type_name)
+        else:
+            status_recvr.deactivate_capture_type(status_type_name)
+    
+    #status_recvr.types.EXCEPTIONS
 
     #############################
     # s t a r t   n e t w o r k #
@@ -159,16 +171,16 @@ def init(app_settings,app_path):
     tb_connection = thirtybirds_connection.Thirtybirds_Connection(
         hostinfo.get_local_ip(),
         hostname = hostname,
-        controller_hostname = tb_settings.Network.controller_hostname,
-        discovery_multicast_group = tb_settings.Network.discovery_multicast_group,
-        discovery_multicast_port = tb_settings.Network.discovery_multicast_port,
-        discovery_response_port = tb_settings.Network.discovery_response_port,
-        pubsub_pub_port = tb_settings.Network.pubsub_publish_port,
+        controller_hostname = settings.Network.controller_hostname,
+        discovery_multicast_group = settings.Network.discovery_multicast_group,
+        discovery_multicast_port = settings.Network.discovery_multicast_port,
+        discovery_response_port = settings.Network.discovery_response_port,
+        pubsub_pub_port = settings.Network.pubsub_publish_port,
         exception_receiver = exception_receiver,
-        status_receiver = status_recvr.collect,
-        heartbeat_interval = tb_settings.Network.heartbeat_interval,
-        heartbeat_timeout_factor = tb_settings.Network.heartbeat_timeout_factor,
-        caller_interval = tb_settings.Network.caller_interval
+        status_receiver = status_recvr,
+        heartbeat_interval = settings.Network.heartbeat_interval,
+        heartbeat_timeout_factor = settings.Network.heartbeat_timeout_factor,
+        caller_interval = settings.Network.caller_interval
     )
     
     # start host-specific code

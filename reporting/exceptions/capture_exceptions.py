@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: ascii -*-
 
 """
 This module contains decorator classes that augment target functions and/or all methods within target classes.

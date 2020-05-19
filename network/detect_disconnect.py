@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: ascii -*-
 
 """
 Intended use:
@@ -80,6 +79,8 @@ class Detect_Disconnect(threading.Thread):
         self.heartbeat_timeout = heartbeat_interval * heartbeat_timeout_factor
         self.topic = "__heartbeat__"
         self.publishers = {}
+
+        self.status_receiver.collect("starting",self.status_receiver.types.INITIALIZATIONS)
         self.send_periodic_heartbeats = Send_Periodic_Heartbeats(
             self.topic,
             self.pub_sub,
@@ -88,6 +89,7 @@ class Detect_Disconnect(threading.Thread):
         )
         self.start()
         self.pub_sub.subscribe_to_topic(self.topic)
+        self.status_receiver.collect("started",self.status_receiver.types.INITIALIZATIONS)
 
     def subscribe(self, publisher_hostname):
         # NOT_THREAD_SAFE

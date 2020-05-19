@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: ascii -*-
 
 import inspect
 import queue
@@ -9,7 +8,9 @@ import time
 import threading
 
 class Status_Receiver(threading.Thread):
-    capture_types = []
+    class types:
+        pass
+    capture_type_values = []
     def __init__(
         self, 
         print_to_stdout,
@@ -23,19 +24,21 @@ class Status_Receiver(threading.Thread):
         self.start()
     
     def activate_capture_type(self, message_type):
+        setattr(self.types, message_type, message_type)
         # NOT THREAD SAFE
-        if message_type not in self.capture_types:
-            self.capture_types.append(message_type)
+        if message_type not in self.capture_type_values:
+            self.capture_type_values.append(message_type)
 
     def deactivate_capture_type(self, message_type):
+        setattr(self.types, message_type, message_type)
         # NOT THREAD SAFE
         try:
-            self.capture_types.remove(message_type)
+            self.capture_type_values.remove(message_type)
         except ValueError:
             pass
 
     def collect(self, message, message_type,  args={}, class_ref=""):
-        if message_type in self.capture_types:
+        if message_type in self.capture_type_values:
             caller_frame = inspect.stack()[1]
             fullpath = caller_frame.filename
             last_slash_position = fullpath.rfind("/")+1

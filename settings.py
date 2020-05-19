@@ -29,13 +29,15 @@ class Reporting():
     publish_as_topic = "thirtybirds_exception"
 
     publish_to_dash = True
-    capture_exceptions = True
-    capture_initializations = True
-    capture_network_connections = True
-    capture_network_messages = True
-    capture_system_status = True
-    capture_version_status = True
-    capture_adapter_status = True
+
+    class Status_Types:
+        EXCEPTIONS = True
+        INITIALIZATIONS = True
+        NETWORK_CONNECTIONS = True
+        NETWORK_MESSAGES = True
+        SYSTEM_STATUS = True
+        VERSION_STATUS = True
+        ADAPTER_STATUS = True
 
 class Update_Thirtybirds():
     repo_owner = "andycavatorta"

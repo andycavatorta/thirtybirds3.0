@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: ascii -*-
 
 """
 Intended use:
@@ -159,6 +158,8 @@ class Discovery():
         self.role = Network_Defaults.DISCOVERY_ROLE_RESPONDER if hostname == controller_hostname else Network_Defaults.DISCOVERY_ROLE_CALLER
         self.server_ip = ""
 
+        self.status_receiver.collect("starting",self.status_receiver.types.INITIALIZATIONS)
+
         if self.role == Network_Defaults.DISCOVERY_ROLE_RESPONDER:
             self.responder = Responder(
                 self.hostname,
@@ -189,6 +190,7 @@ class Discovery():
             self.caller_send.daemon = True
             self.caller_recv.start()
             self.caller_send.start()
+        self.status_receiver.collect("started",self.status_receiver.types.INITIALIZATIONS)
 
     def start_caller(self):
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:

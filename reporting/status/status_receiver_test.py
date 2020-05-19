@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: ascii -*-
 
 from status_receiver import Status_Receiver
 

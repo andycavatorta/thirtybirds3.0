@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: ascii -*-
 
 """
 Intended use:
@@ -87,6 +86,7 @@ class Pub_Sub(threading.Thread):
         self.status_receiver = status_receiver
         self.subscriptions = {}
 
+        self.status_receiver.collect("starting",self.status_receiver.types.INITIALIZATIONS)
         self.context = zmq.Context()
         self.pub_socket = self.context.socket(zmq.PUB)
         self.pub_socket.bind("tcp://*:%s" % publish_port)
@@ -102,6 +102,7 @@ class Pub_Sub(threading.Thread):
 
         self.daemon = True
         self.start()
+        self.status_receiver.collect("started",self.status_receiver.types.INITIALIZATIONS)
 
     def connect_to_publisher(self, hostname, remote_ip, remote_port):
         if hostname not in self.subscriptions:
@@ -114,7 +115,7 @@ class Pub_Sub(threading.Thread):
         self.sub_socket.setsockopt(zmq.SUBSCRIBE, bytes(topic, 'utf-8'))
 
     def unsubscribe_from_topic(self, topic):
-        topic = topic.decode('ascii')
+        topic = topic.decode('utf-8')
         # NOT_THREAD_SAFE
         self.sub_socket.setsockopt(zmq.UNSUBSCRIBE, topic)
 

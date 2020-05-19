@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: ascii -*-
 
 """
 Intended use:
@@ -50,7 +49,7 @@ class Thirtybirds_Connection():
         self.caller_interval = caller_interval
         self.role = Network_Defaults.DISCOVERY_ROLE_RESPONDER if hostname == controller_hostname else Network_Defaults.DISCOVERY_ROLE_CALLER
 
-        self.status_receiver("starting","initialization")
+        self.status_receiver.collect("starting",self.status_receiver.types.INITIALIZATIONS)
 
         self.discovery = discovery.Discovery(
             ip_address = ip_address,
@@ -82,11 +81,11 @@ class Thirtybirds_Connection():
             exception_receiver = self.exception_receiver,
             status_receiver = self.status_receiver)
 
-        self.status_receiver("started","initialization")
+        self.status_receiver.collect("started",self.status_receiver.types.INITIALIZATIONS)
 
     def disconnect_event_receiver(self, disconnected_hostname, disconnection_status):
         if self.role == Network_Defaults.DISCOVERY_ROLE_RESPONDER:
-            self.status_receiver("disconnection","network_connection", {"disconnected_hostname":disconnected_hostname,"disconnection_status":disconnection_status})
+            self.status_receiver.collect("disconnection",self.status_receiver.types.NETWORK_CONNECTIONS, {"disconnected_hostname":disconnected_hostname,"disconnection_status":disconnection_status})
         #print("disconnect_event_receiver", disconnected_hostname, disconnection_status)
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
             if disconnection_status == True:
@@ -101,9 +100,9 @@ class Thirtybirds_Connection():
 
     def discovery_update_receiver(self,message):
         # todo: cover the case of disconnections and unsubscriptions
-        self.status_receiver(
+        self.status_receiver.collect(
             "connection status update",
-            "network_connection", 
+            self.status_receiver.types.NETWORK_CONNECTIONS, 
             {
                 "hostname":message["hostname"],
                 "status":message["status"],
