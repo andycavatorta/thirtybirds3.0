@@ -3,10 +3,6 @@
 """
 == fix before proceeding ==
 
-replace all magic strings with contants
-    status types
-    in BASH args, change to [capture|ignore] status_type
-
 make receivers thread safe
 
 add exception handling everywhere
@@ -22,6 +18,8 @@ simplify and unify data types used in network system  [ json | str | byte | etc]
 daemonize all threada
     why does that cause the script to end?  
 
+apply exception capture decorators everywhere
+
 == future features ==
 
 add authentication for raspberry pis
@@ -29,6 +27,7 @@ add authentication for raspberry pis
 
 send status and exceptions messages to controller
 
+trim paths in status_receiver?
 
 == future setup process ==
 
@@ -70,6 +69,10 @@ capture_exceptions.init(exception_receiver)
 def network_status_change_receiver(online_status):
     pass
     #print("online_status",online_status)
+
+@capture_exceptions.Function
+def network_message_receiver(topic, message):
+    print("network_message_receiver",topic, message)
 
 def collate(base_settings_module, optional_settings_module):
     base_settings_classnames = [i for i in dir(base_settings_module) if not (i[:2]=="__" and i[-2:]=="__")] 
@@ -176,6 +179,7 @@ def init(app_settings,app_path):
         discovery_multicast_port = settings.Network.discovery_multicast_port,
         discovery_response_port = settings.Network.discovery_response_port,
         pubsub_pub_port = settings.Network.pubsub_publish_port,
+        network_message_receiver = network_message_receiver,
         exception_receiver = exception_receiver,
         status_receiver = status_recvr,
         heartbeat_interval = settings.Network.heartbeat_interval,

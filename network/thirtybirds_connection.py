@@ -28,6 +28,7 @@ class Thirtybirds_Connection():
         discovery_multicast_port,
         discovery_response_port,
         pubsub_pub_port,
+        network_message_receiver,
         exception_receiver,
         status_receiver,
         heartbeat_interval,
@@ -42,6 +43,7 @@ class Thirtybirds_Connection():
         self.discovery_multicast_port = discovery_multicast_port
         self.discovery_response_port = discovery_response_port
         self.pubsub_pub_port = pubsub_pub_port
+        self.network_message_receiver = network_message_receiver
         self.exception_receiver = exception_receiver
         self.status_receiver = status_receiver
         self.heartbeat_interval = heartbeat_interval
@@ -96,7 +98,8 @@ class Thirtybirds_Connection():
         if topic == b"__heartbeat__":
             self.detect_disconnect.record_heartbeat(message)
         else:
-            print("subscription_message_receiver",topic, message)
+            self.network_message_receiver(topic, message)
+            #print("subscription_message_receiver",topic, message)
 
     def discovery_update_receiver(self,message):
         # todo: cover the case of disconnections and unsubscriptions
@@ -120,7 +123,12 @@ class Thirtybirds_Connection():
                         self.pubsub_pub_port)
                     self.detect_disconnect.subscribe(message["hostname"])
                 else:
-                    print("Wrong controller found?", message["hostname"])
+                    self.status_receiver.types.NETWORK_CONNECTIONS, 
+                    {
+                        "controller_hostname":message["hostname"],
+                        "controller_status":message["status"],
+                        "controller_ip":message["ip"]
+                    }
         
         if self.role == Network_Defaults.DISCOVERY_ROLE_RESPONDER:
             if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
