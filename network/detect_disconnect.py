@@ -122,7 +122,7 @@ class Detect_Disconnect(threading.Thread):
     def record_heartbeat(self, publisher_hostname):
         # NOT_THREAD_SAFE
         self.lock .acquire()
-        publisher_hostnames = list(self.publisher_hostname.keys())
+        publisher_hostnames = list(self.publishers.keys())
         self.lock .release()
         #if publisher_hostname not in self.publishers:
         if publisher_hostname not in publisher_hostnames:
