@@ -58,7 +58,7 @@ class Thirtybirds_Connection():
         self.status_receiver.collect("starting",self.status_receiver.types.INITIALIZATIONS)
 
         self.connections = {}
-        if self.role = Network_Defaults.DISCOVERY_ROLE_RESPONDER:
+        if self.role == Network_Defaults.DISCOVERY_ROLE_RESPONDER:
             [self.connections.setdefault(x, False) for x in self.client_names] 
         else:
             self.connections[controller_hostname] = False
@@ -101,7 +101,7 @@ class Thirtybirds_Connection():
 
     def check_connections(self):
         all_connected = True
-        for value in self.connections.values()
+        for value in self.connections.values():
             if value == False:
                 all_connected = False
         return (all_connected,self.connections)
