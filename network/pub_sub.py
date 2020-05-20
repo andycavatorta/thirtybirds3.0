@@ -35,13 +35,14 @@ class Send_Queue(threading.Thread):
         self.socket = socket
         self.queue = queue.Queue()
 
-    def add_to_queue(self, topic, msg):
-        self.queue.put((topic, msg))
+    def add_to_queue(self, topic, message):
+        self.queue.put((topic, message))
 
     def run(self):
         while True:
-            topic, msg = self.queue.get(True)
-            self.socket.send_string("%s %s" % (topic, msg))
+            topic, message = self.queue.get(True)
+            message_json = json.dumps(message)
+            self.socket.send_string("%s %s" % (topic, message_json))
 
 @capture_exceptions.Class
 class Receiver_Queue(threading.Thread):
@@ -50,13 +51,13 @@ class Receiver_Queue(threading.Thread):
         self.callback = callback
         self.queue = queue.Queue()
 
-    def add_to_queue(self, topic, msg):
-        self.queue.put((topic, msg))
+    def add_to_queue(self, topic, message):
+        self.queue.put((topic, message))
 
     def run(self):
         while True:
-            topic, msg = self.queue.get(True)
-            self.callback(topic, msg)
+            topic, message = self.queue.get(True)
+            self.callback(topic, message)
 
 @capture_exceptions.Class
 class Pub_Sub(threading.Thread):
@@ -113,13 +114,17 @@ class Pub_Sub(threading.Thread):
         topic = topic.decode('utf-8')
         self.sub_socket.setsockopt(zmq.UNSUBSCRIBE, topic)
 
-    def send(self, topic, msg):
+    def send(self, topic, message):
         # NOT_THREAD_SAFE
-        self.send_queue.add_to_queue(topic, msg)
+        self.send_queue.add_to_queue(topic, message)
 
     def run(self):
         while True:
             incoming = self.sub_socket.recv()
-            topic, msg = incoming.split(b' ', 1)
-            self.receiver_queue.add_to_queue(topic, msg)
+            topic, message = incoming.split(b' ', 1)
+            print(">>>",message)
+            #message_json = b'["foo", {"bar":["baz", null, 1.0, 2]}]'
+            print(">>>>",json.loads(message))
+
+            self.receiver_queue.add_to_queue(topic, message)
 
