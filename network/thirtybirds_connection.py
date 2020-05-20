@@ -24,6 +24,7 @@ class Thirtybirds_Connection():
         self,
         ip_address,
         hostname,
+        client_names,
         controller_hostname,
         discovery_multicast_group,
         discovery_multicast_port,
@@ -39,6 +40,7 @@ class Thirtybirds_Connection():
         capture_exceptions.init(exception_receiver)
         self.ip_address = ip_address
         self.hostname = hostname
+        self.client_names = client_names
         self.controller_hostname = controller_hostname
         self.controller_ip = ""
         self.discovery_multicast_group = discovery_multicast_group
@@ -54,6 +56,12 @@ class Thirtybirds_Connection():
         self.role = Network_Defaults.DISCOVERY_ROLE_RESPONDER if hostname == controller_hostname else Network_Defaults.DISCOVERY_ROLE_CALLER
 
         self.status_receiver.collect("starting",self.status_receiver.types.INITIALIZATIONS)
+
+        self.connections = {}
+        if self.role = Network_Defaults.DISCOVERY_ROLE_RESPONDER:
+            [self.connections.setdefault(x, False) for x in self.client_names] 
+        else:
+            self.connections[controller_hostname] = False
 
         self.discovery = discovery.Discovery(
             ip_address = ip_address,
@@ -91,9 +99,17 @@ class Thirtybirds_Connection():
 
         self.status_receiver.collect("started",self.status_receiver.types.INITIALIZATIONS)
 
+    def check_connections(self):
+        all_connected = True
+        for value in self.connections.values()
+            if value == False:
+                all_connected = False
+        return (all_connected,self.connections)
+
     def disconnect_event_receiver(self, disconnected_hostname, disconnection_status):
-        print(">>>>disconnect_event_receiver", disconnected_hostname, disconnection_status)
+        #print(">>>>disconnect_event_receiver", disconnected_hostname, disconnection_status)
         self.status_receiver.collect("disconnection",self.status_receiver.types.NETWORK_CONNECTIONS, {"disconnected_hostname":disconnected_hostname,"disconnection_status":disconnection_status})
+        self.connections[disconnected_hostname] = not disconnection_status
         #print("disconnect_event_receiver", disconnected_hostname, disconnection_status)
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
             if disconnection_status == True:
@@ -118,6 +134,7 @@ class Thirtybirds_Connection():
                 "ip":message["ip"]
             }
         )
+        self.connections[message["hostname"]] = True
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
             if message["status"] == Network_Defaults.DISCOVERY_STATUS_FOUND:
                 if message["hostname"] == self.controller_hostname:

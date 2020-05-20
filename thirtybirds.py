@@ -102,13 +102,12 @@ class Thirtybirds():
                 self.controller_hostname = host
             else:
                 self.client_names.append(host)
-        
-        print(self.controller_hostname,self.client_names)
 
         self.connection = thirtybirds_connection.Thirtybirds_Connection(
             self.hostinfo.get_local_ip(),
             hostname = self.hostname,
             controller_hostname = self.controller_hostname,
+            client_names = self.client_names,
             discovery_multicast_group = settings.Network.discovery_multicast_group,
             discovery_multicast_port = settings.Network.discovery_multicast_port,
             discovery_response_port = settings.Network.discovery_response_port,
