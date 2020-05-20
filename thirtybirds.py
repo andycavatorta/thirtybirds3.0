@@ -3,22 +3,31 @@
 """
 == fix before proceeding ==
 
+simplify and unify data types used in network system  [ json | str | byte | etc]
+
+why does reconnection sometimes fail?
+
+in thirtybirds_connection, unify connection status reported by discovery and detect_disconnect
+
 make receivers thread safe
 
 make detect_disconnect thread safe
 
-in thirtybirds_connection, unify connection status reported by discovery and detect_disconnect
-
-why does reconnection sometimes fail?
-
-simplify and unify data types used in network system  [ json | str | byte | etc]
-
 daemonize all threada
     why does that cause the script to end?  
 
-apply exception capture decorators everywhere
+this script and scripts called here should return a reference to the calling app.  
+    for use with interactive shell
+
+add logging option with native logging module
+    because log rotation and size limits
 
 == future features ==
+
+management interface s
+    web interface?
+    interactive shell?
+    log file that can be tailed
 
 add authentication for raspberry pis
     authenticate on discover using certs?
@@ -40,9 +49,6 @@ change password for pi
 add thirtybirds user and run as that
 
 """
-
-
-
 import copy
 import os
 import sys
@@ -182,8 +188,11 @@ def init(app_settings,app_path):
         caller_interval = settings.Network.caller_interval
     )
     
-    # start host-specific code
+    ###################################################
+    # s t a r t   h o s t - s p e c i f i c   c o d e #
+    ###################################################
 
+    
 
 
 
