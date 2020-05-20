@@ -121,10 +121,6 @@ class Pub_Sub(threading.Thread):
     def run(self):
         while True:
             incoming = self.sub_socket.recv()
-            topic, message = incoming.split(b' ', 1)
-            print(">>>",message)
-            #message_json = b'["foo", {"bar":["baz", null, 1.0, 2]}]'
-            print(">>>>",json.loads(message))
-
-            self.receiver_queue.add_to_queue(topic, message)
+            topic, message_json = incoming.split(b' ', 1)
+            self.receiver_queue.add_to_queue(topic, json.loads(message_json))
 
