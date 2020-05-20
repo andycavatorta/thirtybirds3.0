@@ -3,8 +3,6 @@
 """
 == fix before proceeding ==
 
-simplify and unify data types used in network system  [ json | str | byte | etc]
-
 why does reconnection sometimes fail?
 
 in thirtybirds_connection, unify connection status reported by discovery and detect_disconnect
