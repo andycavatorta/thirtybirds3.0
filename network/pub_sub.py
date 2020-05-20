@@ -42,14 +42,6 @@ class Send_Queue(threading.Thread):
         while True:
             topic, msg = self.queue.get(True)
             self.socket.send_string("%s %s" % (topic, msg))
-            """
-            try:
-                topic, msg = self.queue.get(True)
-                self.socket.send_string("%s %s" % (topic, msg))
-            except Exception as e:
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                print(e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback)))
-            """
 
 @capture_exceptions.Class
 class Receiver_Queue(threading.Thread):
@@ -65,15 +57,7 @@ class Receiver_Queue(threading.Thread):
         while True:
             topic, msg = self.queue.get(True)
             self.callback(topic, msg)
-            """
-            try:
-                topic, msg = self.queue.get(True)
-                self.callback(topic, msg)
-            except Exception as e:
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                print(e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback)))
-            """
-            
+
 @capture_exceptions.Class
 class Pub_Sub(threading.Thread):
     def __init__(
@@ -122,12 +106,11 @@ class Pub_Sub(threading.Thread):
 
     def subscribe_to_topic(self, topic):
         # NOT_THREAD_SAFE
-        #self.sub_socket.setsockopt(zmq.SUBSCRIBE, b"")
         self.sub_socket.setsockopt(zmq.SUBSCRIBE, bytes(topic, 'utf-8'))
 
     def unsubscribe_from_topic(self, topic):
-        topic = topic.decode('utf-8')
         # NOT_THREAD_SAFE
+        topic = topic.decode('utf-8')
         self.sub_socket.setsockopt(zmq.UNSUBSCRIBE, topic)
 
     def send(self, topic, msg):
@@ -137,7 +120,6 @@ class Pub_Sub(threading.Thread):
     def run(self):
         while True:
             incoming = self.sub_socket.recv()
-            #incoming = bytes(incoming, 'utf-8')
             topic, msg = incoming.split(b' ', 1)
             self.receiver_queue.add_to_queue(topic, msg)
 

@@ -76,6 +76,10 @@ class Thirtybirds_Connection():
             exception_receiver = self.exception_receiver,
             status_receiver = self.status_receiver)
 
+        self.send = self.pub_sub.send
+        self.subscribe_to_topic = self.pub_sub.subscribe_to_topic
+        self.unsubscribe_from_topic = self.pub_sub.unsubscribe_from_topic
+
         self.detect_disconnect = detect_disconnect.Detect_Disconnect(
             hostname = self.hostname,
             pub_sub = self.pub_sub,
