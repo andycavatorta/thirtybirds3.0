@@ -3,8 +3,6 @@
 """
 == fix before proceeding ==
 
-why does reconnection sometimes fail?
-
 in thirtybirds_connection, unify connection status reported by discovery and detect_disconnect
 
 make receivers thread safe
@@ -17,7 +15,7 @@ daemonize all threada
 add logging option with native logging module
     because log rotation and size limits
 
-consider using relative imports within tb instead of sys paths
+try using relative imports within tb instead of sys paths
 
 == future features ==
 
@@ -98,10 +96,19 @@ class Thirtybirds():
             else:
                 self.status_recvr.deactivate_capture_type(status_type_name)
 
+        self.client_names = []
+        for host,role in settings.Roles.hosts.items():
+            if role == "controller":
+                self.controller_hostname = host
+            else:
+                self.client_names.append(host)
+        
+        print(self.controller_hostname,self.client_names)
+
         self.connection = thirtybirds_connection.Thirtybirds_Connection(
             self.hostinfo.get_local_ip(),
             hostname = self.hostname,
-            controller_hostname = settings.Network.controller_hostname,
+            controller_hostname = self.controller_hostname,
             discovery_multicast_group = settings.Network.discovery_multicast_group,
             discovery_multicast_port = settings.Network.discovery_multicast_port,
             discovery_response_port = settings.Network.discovery_response_port,
