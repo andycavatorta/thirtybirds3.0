@@ -107,10 +107,8 @@ class Thirtybirds_Connection():
         return (all_connected,self.connections)
 
     def disconnect_event_receiver(self, disconnected_hostname, disconnection_status):
-        #print(">>>>disconnect_event_receiver", disconnected_hostname, disconnection_status)
         self.status_receiver.collect("disconnection",self.status_receiver.types.NETWORK_CONNECTIONS, {"disconnected_hostname":disconnected_hostname,"disconnection_status":disconnection_status})
         self.connections[disconnected_hostname] = not disconnection_status
-        #print("disconnect_event_receiver", disconnected_hostname, disconnection_status)
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
             if disconnection_status == True:
                 self.discovery.start_caller()

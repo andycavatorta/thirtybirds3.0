@@ -3,8 +3,6 @@
 """
 == fix before proceeding ==
 
-in thirtybirds_connection, unify connection status reported by discovery and detect_disconnect
-
 make receivers thread safe
 
 make detect_disconnect thread safe

@@ -102,12 +102,20 @@ class Caller_Send(threading.Thread):
         self.msg_json = json.dumps(self.msg_d)
         self.mcast_msg = bytes(self.msg_json, 'utf-8')
         self.active = True
+        self.lock = threading.Lock()
+
+
     def set_active(self,val):
         # NOT_THREAD_SAFE
+        self.lock .acquire()
         self.active = val
+        self.lock .release()
     def run(self):
         while True:
-            if self.active == True:
+            self.lock .acquire()
+            active = bool(self.active)
+            self.lock .release()
+            if active == True:
                 self.multicast_socket.sendto(self.mcast_msg, (self.discovery_multicast_group, self.discovery_multicast_port))
             time.sleep(self.caller_period)
 
