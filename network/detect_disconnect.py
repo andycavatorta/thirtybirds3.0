@@ -90,6 +90,7 @@ class Detect_Disconnect(threading.Thread):
         self.topic = "__heartbeat__"
         self.publishers = {}
 
+        self.lock = threading.Lock()
         self.status_receiver.collect("starting",self.status_receiver.types.INITIALIZATIONS)
         self.send_periodic_heartbeats = Send_Periodic_Heartbeats(
             self.topic,
@@ -103,21 +104,28 @@ class Detect_Disconnect(threading.Thread):
 
     def subscribe(self, publisher_hostname):
         # NOT_THREAD_SAFE
+        self.lock .acquire()
         self.publishers[publisher_hostname] = Publisher(
             publisher_hostname, 
             self.heartbeat_timeout,
             self.disconnect_event_receiver,
             self.unsubscribe
         )
+        self.lock .release()
 
     def unsubscribe(self, publisher_hostname):
         # NOT_THREAD_SAFE
+        self.lock .acquire()
         del self.publishers[publisher_hostname]
+        self.lock .release()
 
     def record_heartbeat(self, publisher_hostname):
         # NOT_THREAD_SAFE
-        #publisher_hostname = publisher_hostname.decode("utf-8") 
-        if publisher_hostname not in self.publishers:
+        self.lock .acquire()
+        publisher_hostnames = list(self.publisher_hostname.keys())
+        self.lock .release()
+        #if publisher_hostname not in self.publishers:
+        if publisher_hostname not in publisher_hostnames:
             self.subscribe(publisher_hostname)
         self.publishers[publisher_hostname].record_heartbeat()
 

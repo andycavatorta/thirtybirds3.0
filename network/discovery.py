@@ -103,10 +103,7 @@ class Caller_Send(threading.Thread):
         self.mcast_msg = bytes(self.msg_json, 'utf-8')
         self.active = True
         self.lock = threading.Lock()
-
-
     def set_active(self,val):
-        # NOT_THREAD_SAFE
         self.lock .acquire()
         self.active = val
         self.lock .release()
