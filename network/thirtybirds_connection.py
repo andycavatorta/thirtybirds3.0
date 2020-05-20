@@ -92,6 +92,7 @@ class Thirtybirds_Connection():
         self.status_receiver.collect("started",self.status_receiver.types.INITIALIZATIONS)
 
     def disconnect_event_receiver(self, disconnected_hostname, disconnection_status):
+        print(">>>>disconnect_event_receiver", disconnected_hostname, disconnection_status)
         if self.role == Network_Defaults.DISCOVERY_ROLE_RESPONDER:
             self.status_receiver.collect("disconnection",self.status_receiver.types.NETWORK_CONNECTIONS, {"disconnected_hostname":disconnected_hostname,"disconnection_status":disconnection_status})
         #print("disconnect_event_receiver", disconnected_hostname, disconnection_status)
