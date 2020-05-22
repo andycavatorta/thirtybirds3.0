@@ -128,6 +128,9 @@ class Thirtybirds():
             heartbeat_timeout_factor = settings.Network.heartbeat_timeout_factor,
             caller_interval = settings.Network.caller_interval
         )
+        self.connection.subscribe_to_topic("__status__")
+        self.connection.subscribe_to_topic("__error__")
+
 
     def set_up_logging(self, app_path):
         status_logging_path = "{0}/logs/status.log".format(app_path)
