@@ -18,7 +18,7 @@ root_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(root_path[0:root_path.find("/thirtybirds")])
 from thirtybirds3.reporting.exceptions import capture_exceptions
 
-@capture_exceptions.Class
+#@capture_exceptions.Class
 class Host_Info(threading.Thread):
     def __init__(self, online_status_change_receiver=None, exception_receiver=None, test_interval=10):
         threading.Thread.__init__(self)

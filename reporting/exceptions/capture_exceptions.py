@@ -13,6 +13,8 @@ All collected exception data is passed to a callback that is external to this mo
 The callback can be set for all decorators by passing a reference to the callback method to this module's init() funciton.
 Note that in multithreaded environments, the callback method must be thread safe.  
 
+THE CLASS DECORATOR WILL NOT CATCH EXCEPTIONS THAT OCCUR DURING THE INITIALIZING OF THE INSTANCE.
+
 Check examples.py for usage.
 """
 
@@ -42,31 +44,31 @@ class Class:
         fullpath = str(inspect.stack()[1].filename)
         decorator_self.filename = fullpath[fullpath.rfind("/"):]
         decorator_self.path = fullpath[:fullpath.rfind("/")]
-        
-        #print("filename",decorator_self.filename)
-        #print("path",decorator_self.path)
 
     def __call__(decorator_self, *args, **kwargs):
         target_instance_ref = decorator_self.target_class(*args, **kwargs)
         target_instance_dir = dir(target_instance_ref)
+        #target_instance_dir = [i for i in dir(target_instance_dir) if not (i[:1]=="__" and i[-2:]=="__")] 
         for attribute in target_instance_dir:
-            if isinstance(getattr(decorator_self.target_class, attribute, ""), FunctionType):
-                #print("--->",attribute, getattr(target_instance_ref,attribute).__func__)
-                func_name = attribute
-                function_ref = getattr(target_instance_ref,attribute)
-                #apply_wrapper is a separate method to break the reference to wrapper() on each cycle of this loop
-                wrapper = decorator_self.apply_wrapper(function_ref, target_instance_ref, args, kwargs)
-                setattr(target_instance_ref, func_name, wrapper)
+            if attribute not in ["isAlive","isDaemon","is_alive","join","run","setDaemon","setName","start","__repr__","_bootstrap","_bootstrap_inner","_delete","_reset_internal_locks","_set_ident","_set_native_id","_set_tstate_lock","_stop","_wait_for_tstate_lock","getName"]:
+                if isinstance(getattr(decorator_self.target_class, attribute, ""), FunctionType):
+                    func_name = attribute
+                    function_ref = getattr(target_instance_ref,attribute)
+                    #apply_wrapper is a separate method to break the reference to wrapper() on each cycle of this loop
+                    wrapper = decorator_self.apply_wrapper(function_ref, target_instance_ref, args, kwargs)
+                    setattr(target_instance_ref, func_name, wrapper)
         return target_instance_ref
+
     def apply_wrapper(decorator_self, function_ref, target_instance_ref, *args, **kwargs):
         @functools.wraps(function_ref)
         def wrapper(*args, **kwargs):
             self = target_instance_ref
             try:
+                
                 return function_ref(*args, **kwargs)
             except:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
-
+                #print(decorator_self.__class__.__name__, function_ref.__name__)
                 exception_details = {
                     "time_epoch":time.time(),
                     "time_local":time.localtime(),

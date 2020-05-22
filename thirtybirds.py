@@ -3,21 +3,24 @@
 """
 == fix before proceeding ==
 
-make receivers thread safe
-
-make detect_disconnect thread safe
-
-daemonize all threada
-    why does that cause the script to end?  
+create command-line interface system
+    can be extended by app
+    systems:
+        network
+        version control
+        os_and_hardware
 
 add logging option with native logging module
     because log rotation and size limits
 
-try using relative imports within tb instead of sys paths
+have clients send exceptions and status messages to controller
+
+daemonize all threada
+    why does that cause the script to end?  
 
 == future features ==
 
-management interface s
+management interfaces
     web interface?
     interactive shell?
     log file that can be tailed
@@ -43,10 +46,15 @@ add thirtybirds user and run as that
 
 """
 import copy
+import logging
+from logging.handlers import RotatingFileHandler
 import os
 import sys
+import time
 
 tb_path = os.path.dirname(os.path.realpath(__file__))
+
+path_containing_tb_and_app = os.path.split(tb_path)[0]
 
 from .network import host_info
 from .network import thirtybirds_connection
@@ -71,6 +79,9 @@ class Thirtybirds():
         self.exception_callback = exception_callback
         self.network_status_change_callback = network_status_change_callback
 
+    #def init(self):
+        self.set_up_logging(self.app_path)
+
         capture_exceptions.init(self.exception_receiver)
 
         self.hostinfo = host_info.Host_Info(
@@ -79,13 +90,13 @@ class Thirtybirds():
 
         self.hostname = self.hostinfo.get_hostname()
 
-        self.collate_settings(settings, app_settings)
+        self.collate_settings(settings, self.app_settings)
         
         self.status_type_names = [i for i in dir(settings.Reporting.Status_Types) if not (i[:2]=="__" and i[-2:]=="__")] 
     
         self.apply_flags()
 
-        self.status_recvr = Status_Receiver(True)
+        self.status_recvr = Status_Receiver(True, path_containing_tb_and_app, self.status_receiver)
 
         for status_type_name in self.status_type_names:
             capture_or_ignore = getattr(settings.Reporting.Status_Types, status_type_name)
@@ -116,8 +127,21 @@ class Thirtybirds():
             heartbeat_interval = settings.Network.heartbeat_interval,
             heartbeat_timeout_factor = settings.Network.heartbeat_timeout_factor,
             caller_interval = settings.Network.caller_interval
-        )        
+        )
 
+    def set_up_logging(self, app_path):
+        status_logging_path = "{0}/logs/status.log".format(app_path)
+        self.status_logger = logging.getLogger("status")
+        self.status_logger.setLevel(logging.DEBUG)
+        status_handler = RotatingFileHandler(status_logging_path, maxBytes=100000,backupCount=20)
+        self.status_logger.addHandler(status_handler)
+        
+        error_logging_path = "{0}/logs/error.log".format(app_path)
+        self.error_logger = logging.getLogger("error")
+        self.error_logger.setLevel(logging.DEBUG)
+        error_handler = RotatingFileHandler(error_logging_path, maxBytes=100000,backupCount=20)
+        self.error_logger.addHandler(error_handler)
+        
     def apply_flags(self):
         try:
             sys.argv[sys.argv.index("-help")]
@@ -160,11 +184,33 @@ class Thirtybirds():
                 print("usage: python ____.py -{0} [capture|ignore]".format(status_type_name))
                 sys.exit(0)
 
+    def status_receiver(self, status_details):
+        status_details_str = "{},{},{},{}{},{}.{},{},{}".format(time.strftime("%Y-%m-%d %H:%M:%S", status_details["time_local"]), status_details["time_epoch"],status_details["hostname"],status_details["path"],status_details["script_name"], status_details["class_name"],status_details["method_name"],status_details["message"],status_details["args"])
+        self.status_logger.error(status_details_str)
+        if self.hostname != self.controller_hostname:
+            self.connection.send("__status__", status_details_str)
+
     def exception_receiver(self, exception):
         # to do : add logging, if in config
         # if client, publish exceptions to controller
         # optional callback, though I don't know when it could be useful
-        print("exception_receiver",exception)
+        #print("exception_receiver",exception)
+        exception_details_str = "{0},{1},{2},{3}{4},{5}.{6},{7},{8},{9},{10},{11}".format(
+            time.strftime("%Y-%m-%d %H:%M:%S", exception["time_local"]), 
+            exception["time_epoch"],
+            exception["hostname"],
+            exception["path"],
+            exception["script_name"], 
+            exception["class_name"],
+            exception["method_name"],
+            exception["args"],
+            exception["kwargs"],
+            exception["exception_type"],
+            exception["exception_message"],
+            exception["stacktrace"]
+            )
+        self.error_logger.error(exception_details_str)
+
         try:
             self.exception_callback(exception)
         except TypeError:
@@ -175,13 +221,12 @@ class Thirtybirds():
         # report change back to app.  it might be important to halt hardware
         print("network_status_change_receiver",online_status)
         try:
-            self.exception_callback(exception)
+            self.network_status_change_callback(exception)
         except TypeError:
             pass
 
     def network_message_receiver(self, topic, message):
         print("network_message_receiver",topic, message)
-
         try:
             self.network_message__callback(topic, message)
         except TypeError:
@@ -200,4 +245,3 @@ class Thirtybirds():
                 optional_settings_class_variable_names = [attr for attr in dir(optional_settings_class_ref) if not callable(getattr(optional_settings_class_ref, attr)) and not attr.startswith("__")]
                 for optional_settings_class_variable_name in optional_settings_class_variable_names:
                     setattr(base_settings_class_ref, optional_settings_class_variable_name, getattr(optional_settings_class_ref, optional_settings_class_variable_name))
-

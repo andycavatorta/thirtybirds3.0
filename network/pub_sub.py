@@ -111,11 +111,9 @@ class Pub_Sub(threading.Thread):
 
     def unsubscribe_from_topic(self, topic):
         # NOT_THREAD_SAFE
-        topic = topic.decode('utf-8')
-        self.sub_socket.setsockopt(zmq.UNSUBSCRIBE, topic)
+        self.sub_socket.setsockopt(zmq.UNSUBSCRIBE, topic.decode('utf-8'))
 
     def send(self, topic, message):
-        # NOT_THREAD_SAFE
         self.send_queue.add_to_queue(topic, message)
 
     def run(self):

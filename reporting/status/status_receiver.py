@@ -14,12 +14,14 @@ class Status_Receiver(threading.Thread):
     def __init__(
         self, 
         print_to_stdout,
+        path_predicate="",
         callback=False
     ):
         threading.Thread.__init__(self)
         self.hostname = socket.gethostname()
         self.queue = queue.Queue()
         self.print_to_stdout = print_to_stdout,
+        self.path_predicate = path_predicate
         self.callback=callback
         self.start()
     
@@ -43,7 +45,7 @@ class Status_Receiver(threading.Thread):
             fullpath = caller_frame.filename
             last_slash_position = fullpath.rfind("/")+1
             filename = fullpath[last_slash_position:]
-            path = fullpath[:last_slash_position]
+            path = fullpath[:last_slash_position].replace(self.path_predicate,'')
             try:
                 class_name = caller_frame[0].f_locals["self"].__class__.__name__
             except KeyError:
@@ -51,6 +53,7 @@ class Status_Receiver(threading.Thread):
             status_details = {
                 "message":message,
                 "time_epoch":time.time(),
+                "time_local":time.localtime(),
                 "hostname":self.hostname,
                 "path":path,
                 "script_name":filename,
@@ -63,9 +66,10 @@ class Status_Receiver(threading.Thread):
 
     def run(self):
         while True:
-            try:
+            #try:
                 status_details = self.queue.get(True)
                 if self.print_to_stdout:
+                    """
                     print(
                         status_details["hostname"], 
                         status_details["path"], 
@@ -76,18 +80,8 @@ class Status_Receiver(threading.Thread):
                         status_details["args"]
                     )
                     """
-                    print("##### Status_Receiver #####")
-                    print("message", ":", status_details["message"])
-                    print("time_epoch", ":", status_details["time_epoch"])
-                    print("hostname", ":", status_details["hostname"])
-                    print("path", ":", status_details["path"])
-                    print("script_name", ":", status_details["script_name"])
-                    print("class_name", ":", status_details["class_name"])
-                    print("method_name", ":", status_details["method_name"])
-                    print("message_type", ":", status_details["message_type"])
-                    print("args", ":", status_details["args"])
-                    """
                 if self.callback:
                     self.callback(status_details)
-            except Exception as e:
-                pass
+            #except Exception as e:
+            #    print(e)
+            #    pass
