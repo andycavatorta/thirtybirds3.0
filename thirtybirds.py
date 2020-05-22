@@ -188,7 +188,10 @@ class Thirtybirds():
         status_details_str = "{},{},{},{}{},{}.{},{},{}".format(time.strftime("%Y-%m-%d %H:%M:%S", status_details["time_local"]), status_details["time_epoch"],status_details["hostname"],status_details["path"],status_details["script_name"], status_details["class_name"],status_details["method_name"],status_details["message"],status_details["args"])
         self.status_logger.error(status_details_str)
         if self.hostname != self.controller_hostname:
-            self.connection.send("__status__", status_details_str)
+            try:
+                self.connection.send("__status__", status_details_str)
+            except AttributeError:
+                pass
 
     def exception_receiver(self, exception):
         # to do : add logging, if in config
