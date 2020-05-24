@@ -3,15 +3,14 @@
 """
 == fix before proceeding ==
 
+add version control
+
 create command-line interface system
     can be extended by app
     systems:
         network
         version control
         os_and_hardware
-
-add logging option with native logging module
-    because log rotation and size limits
 
 have clients send exceptions and status messages to controller
 
@@ -58,8 +57,10 @@ path_containing_tb_and_app = os.path.split(tb_path)[0]
 
 from .network import host_info
 from .network import thirtybirds_connection
+#from .version_control import update
 from .reporting.exceptions import capture_exceptions
 from .reporting.status.status_receiver import Status_Receiver 
+from .reporting.hardware_management import Management
 from . import settings as tb_settings # this copy retains tb settings
 from . import settings as settings # this copy gets collated with app settings
 
@@ -131,15 +132,28 @@ class Thirtybirds():
         self.connection.subscribe_to_topic("__status__")
         self.connection.subscribe_to_topic("__error__")
 
+        self.management = Management(tb_path, self.app_path)
+
+        print(self.management.get_system_status())
+
+        #self.app_version_control = update.Update(self.app_settings.Version_Control)
+        #self.tb_version_control = update.Update(tb_settings.Version_Control)
 
     def set_up_logging(self, app_path):
-        status_logging_path = "{0}/logs/status.log".format(app_path)
+        log_directory = "{0}/logs/".format(app_path)
+        try:
+            os.listdir(log_directory)
+        except FileNotFoundError:
+            os.mkdir(log_directory)
+            open("{0}/__init__.py".format(log_directory), 'a').close()
+
+        status_logging_path = "{0}/status.log".format(log_directory)
         self.status_logger = logging.getLogger("status")
         self.status_logger.setLevel(logging.DEBUG)
         status_handler = RotatingFileHandler(status_logging_path, maxBytes=100000,backupCount=20)
         self.status_logger.addHandler(status_handler)
         
-        error_logging_path = "{0}/logs/error.log".format(app_path)
+        error_logging_path = "{0}/error.log".format(log_directory)
         self.error_logger = logging.getLogger("error")
         self.error_logger.setLevel(logging.DEBUG)
         error_handler = RotatingFileHandler(error_logging_path, maxBytes=100000,backupCount=20)
@@ -232,6 +246,9 @@ class Thirtybirds():
             pass
 
     def network_message_receiver(self, topic, message):
+        if topic == "__status__":
+            pass
+            #log this    
         print("network_message_receiver",topic, message)
         try:
             self.network_message__callback(topic, message)
