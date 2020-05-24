@@ -136,6 +136,8 @@ class Thirtybirds():
 
         print(self.management.get_system_status())
 
+        self.management.restart()
+
         #self.app_version_control = update.Update(self.app_settings.Version_Control)
         #self.tb_version_control = update.Update(tb_settings.Version_Control)
 
