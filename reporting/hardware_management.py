@@ -85,11 +85,8 @@ class Management(object):
         return [x / os.cpu_count() * 100 for x in os.getloadavg()][-1]
 
     def get_system_uptime(self):
-        process = subprocess.run('uptime', shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
-        lines_from_bash_str = process.stdout
-        split_output = lines_from_bash_str.split(",")
-        print(split_output)
-        return False
+        process = subprocess.run('uptime -s', shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
+        return process.stdout.strip()
 
     def get_system_disk(self):
         disk_usage = shutil.disk_usage("/")
