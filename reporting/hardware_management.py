@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sensors
 import shutil
 import subprocess
 import sys
+
+try:
+    import sensors #only for ubuntu
+except ImportError:
+    pass
 
 root_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(root_path[0:root_path.find("/thirtybirds")])
