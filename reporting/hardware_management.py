@@ -72,14 +72,12 @@ class Management(object):
                 pass
         return -1
 
-
     def get_core_voltage(self):
         try:
             return float(commands.getstatusoutput("/opt/vc/bin/vcgencmd measure_volts core")[1])
             # ^ not formatted yet
         except Exception:
             return False
-
 
     def get_system_cpu(self):
         return [x / os.cpu_count() * 100 for x in os.getloadavg()][-1]
@@ -108,7 +106,6 @@ class Management(object):
                 return mb
         return -1
 
-
     def get_system_status(self):
         report = {
             "system_uptime":self.get_system_uptime(),
@@ -120,3 +117,14 @@ class Management(object):
             "wifi_strength":self.get_wifi_strength()
         }
         return report
+
+    def restart(self):
+        process = subprocess.run('/usr/bin/sudo /sbin/shutdown -r now', shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
+        lines_from_bash_str = process.stdout
+        return True
+
+    def shutdown(self):
+        process = subprocess.run('/usr/bin/sudo /sbin/shutdown now', shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
+        lines_from_bash_str = process.stdout
+        return True
+
