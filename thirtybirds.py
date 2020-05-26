@@ -250,7 +250,8 @@ class Thirtybirds():
         self.status_logger.error(status_details_str)
         if self.hostname != self.controller_hostname:
             try:
-                self.connection.send("__status__", status_details_str)
+                print(type(status_details), status_details)
+                self.connection.send("__status__", status_details)
             except AttributeError:
                 pass
 
@@ -291,10 +292,10 @@ class Thirtybirds():
 
     def network_message_receiver(self, topic, message):
         print("network_message_receiver",topic, message)
-        if topic == "__status__":
+        if topic == b"__status__":
             if self.hostname == self.controller_hostname:
-                print("-------------",topic, message)
-                self.status_receiver(message)
+                print("-------------",type(message), message)
+                #self.status_receiver(message)
             #log this    
         try:
             self.network_message_callback(topic, message)
