@@ -52,7 +52,6 @@ import sys
 import time
 
 tb_path = os.path.dirname(os.path.realpath(__file__))
-
 path_containing_tb_and_app = os.path.split(tb_path)[0]
 
 from .network import host_info
@@ -66,39 +65,51 @@ from . import settings as settings # this copy gets collated with app settings
 
 @capture_exceptions.Class
 class Thirtybirds():
+    """
+    This class initializes, connects and organizes the Thirtybirds systems used in a typical application.  
+    So a Thirtybirds app need only provide settings and the required parameters.
+    This class also provides top-level access to the various systems it contains.
+    """
     def __init__(
             self,
             app_settings,
             app_path,
-            network_message__callback=None,
+            network_message_callback=None,
             exception_callback=None,
             network_status_change_callback=None,
         ):
         self.app_settings = app_settings
         self.app_path = app_path
-        self.network_message__callback = network_message__callback
+        self.network_message_callback = network_message_callback
         self.exception_callback = exception_callback
         self.network_status_change_callback = network_status_change_callback
 
-    #def init(self):
+    def init(self):
+        #########################
+        ## E X C E P T I O N S ##
+        #########################
         self.set_up_logging(self.app_path)
-
         capture_exceptions.init(self.exception_receiver)
 
+        ##########################################
+        ## B A S I C   N E T W O R K   I N F O  ##
+        ##########################################
         self.hostinfo = host_info.Host_Info(
             online_status_change_receiver=self.network_status_change_receiver, 
             exception_receiver = self.exception_receiver)
-
         self.hostname = self.hostinfo.get_hostname()
 
+        #############################################
+        ## A P P L Y   L O C A L   S E T T I N G S ##
+        #############################################
         self.collate_settings(settings, self.app_settings)
-        
         self.status_type_names = [i for i in dir(settings.Reporting.Status_Types) if not (i[:2]=="__" and i[-2:]=="__")] 
-    
         self.apply_flags()
 
+        ###########################################################
+        ## S T A R T   S T A T U S   M E S S A G E   S Y S T E M ##
+        ###########################################################
         self.status_recvr = Status_Receiver(True, path_containing_tb_and_app, self.status_receiver)
-
         for status_type_name in self.status_type_names:
             capture_or_ignore = getattr(settings.Reporting.Status_Types, status_type_name)
             if capture_or_ignore:
@@ -106,6 +117,9 @@ class Thirtybirds():
             else:
                 self.status_recvr.deactivate_capture_type(status_type_name)
 
+        #####################################
+        ## S T A R T   N E T W O R K I N G ##
+        #####################################
         self.client_names = []
         for host,role in settings.Roles.hosts.items():
             if role == "controller":
@@ -132,7 +146,9 @@ class Thirtybirds():
         self.connection.subscribe_to_topic("__status__")
         self.connection.subscribe_to_topic("__error__")
 
-        # make two explicit instances of Software_Management
+        #############################################
+        ## S O F T W A R E   A N D   U P D A T E S ##
+        #############################################
         self.tb_software_management = Software_Management(
             tb_path,
             self.exception_receiver,
@@ -145,11 +161,26 @@ class Thirtybirds():
         )
         os_version = self.tb_software_management.get_os_version()
 
-        print(self.app_software_management.get_git_timestamp())
-        print(self.app_software_management.pull_from_github())
-        print(self.app_software_management.get_git_timestamp())
-
+        ###############################################
+        ## H A R D W A R E   M E A S U R E M E N T S ##
+        ###############################################
         self.hardware_management = Hardware_Management(os_version["name"])
+        # todo: add a thread that sends intermittent data
+
+        #####################################
+        ## T O P   L E V E L   A C C E S S ##
+        #####################################
+
+        self.get_hostname = self.hostinfo.get_hostname
+        self.get_local_ip = self.hostinfo.get_local_ip
+        self.get_global_ip = self.hostinfo.get_global_ip
+        self.get_online_status = self.hostinfo.get_online_status
+        self.publish = self.connection.send
+        self.subscribe_to_topic = self.connection.subscribe_to_topic
+        self.unsubscribe_from_topic = self.connection.unsubscribe_from_topic
+        # get received messages
+
+
 
 
     def set_up_logging(self, app_path):
@@ -252,7 +283,7 @@ class Thirtybirds():
     def network_status_change_receiver(self, online_status):
         # todo: log loss of network
         # report change back to app.  it might be important to halt hardware
-        print("network_status_change_receiver",online_status)
+        #print("network_status_change_receiver",online_status)
         try:
             self.network_status_change_callback(exception)
         except TypeError:
@@ -262,9 +293,9 @@ class Thirtybirds():
         if topic == "__status__":
             pass
             #log this    
-        print("network_message_receiver",topic, message)
+        #print("network_message_receiver",topic, message)
         try:
-            self.network_message__callback(topic, message)
+            self.network_message_callback(topic, message)
         except TypeError:
             pass
 
