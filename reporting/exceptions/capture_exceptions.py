@@ -64,6 +64,7 @@ class Class:
         def wrapper(*args, **kwargs):
             self = target_instance_ref
             try:
+                print(">>>",*args,**kwargs)
                 return function_ref(*args, **kwargs)
             except:
                 exc_type, exc_value, exc_traceback = sys.exc_info()

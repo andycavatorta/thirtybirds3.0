@@ -84,7 +84,7 @@ class Thirtybirds():
         self.exception_callback = exception_callback
         self.network_status_change_callback = network_status_change_callback
 
-    def init(self):
+    #def init(self):
         #########################
         ## E X C E P T I O N S ##
         #########################
@@ -181,7 +181,8 @@ class Thirtybirds():
         self.unsubscribe_from_topic = self.connection.unsubscribe_from_topic
         # get received messages
 
-
+    def get_role_name(self):
+        return settings.Roles.hosts[self.hostname]
 
 
     def set_up_logging(self, app_path):
