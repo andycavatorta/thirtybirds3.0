@@ -290,10 +290,10 @@ class Thirtybirds():
             pass
 
     def network_message_receiver(self, topic, message):
+        print("network_message_receiver",topic, message)
         if topic == "__status__":
-            pass
+            self.status_receiver(message)
             #log this    
-        #print("network_message_receiver",topic, message)
         try:
             self.network_message_callback(topic, message)
         except TypeError:
