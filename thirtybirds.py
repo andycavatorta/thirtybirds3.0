@@ -292,7 +292,9 @@ class Thirtybirds():
     def network_message_receiver(self, topic, message):
         print("network_message_receiver",topic, message)
         if topic == "__status__":
-            self.status_receiver(message)
+            if self.hostname == self.controller_hostname:
+                print("-------------",topic, message)
+                self.status_receiver(message)
             #log this    
         try:
             self.network_message_callback(topic, message)
