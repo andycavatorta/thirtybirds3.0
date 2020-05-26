@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import os
+import pickle
 import shutil
 import subprocess
 import sys
 
 try:
-    import sensors #only for ubuntu
+    import sensors #only needed for ubuntu
 except ImportError:
     pass
 
@@ -15,32 +16,13 @@ sys.path.append(root_path[0:root_path.find("/thirtybirds")])
 from thirtybirds3.reporting.exceptions import capture_exceptions
 
 #@capture_exceptions.Class
-class Management(object):
+class Hardware_Management():
     def __init__(
             self,
-            tb_path,
-            app_path
+            os_name
         ):
-        self.app_path = app_path
-        self.tb_path = tb_path
-        self.os_name, self.os_version = self.get_os_version()
+        self.os_name = os_name
         
-    def get_os_version(self):
-        name = ""
-        version = ""
-        lines_from_bash = []
-
-        process = subprocess.run('cat /etc/os-release', shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
-        lines_from_bash_str = process.stdout
-        lines_from_bash_l = lines_from_bash_str.split("\n")
-
-        for line_from_bash in lines_from_bash_l:
-            if line_from_bash.startswith("ID="):
-                name = line_from_bash[line_from_bash.index("=")+1:].strip("\"")
-            if line_from_bash.startswith("VERSION_ID="):
-                version = line_from_bash[line_from_bash.index("=")+1:].strip("\"")
-        return (name, version)
-
     def get_core_temp(self):
         if self.os_name == "ubuntu":
             sensors.init()

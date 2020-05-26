@@ -35,7 +35,7 @@ from . import Network_Defaults
 ##### RESPONDER #####
 #####################
 
-#@capture_exceptions.Class
+@capture_exceptions.Class
 class Responder(threading.Thread):
     def __init__(
             self, 
@@ -90,7 +90,7 @@ class Responder(threading.Thread):
 ##### CALLER #####
 ##################
 
-#@capture_exceptions.Class
+@capture_exceptions.Class
 class Caller_Send(threading.Thread):
     def __init__(self, local_hostname, local_ip, discovery_multicast_group, discovery_multicast_port, caller_period):
         threading.Thread.__init__(self)
@@ -117,7 +117,7 @@ class Caller_Send(threading.Thread):
                 self.multicast_socket.sendto(self.mcast_msg, (self.discovery_multicast_group, self.discovery_multicast_port))
             time.sleep(self.caller_period)
 
-#@capture_exceptions.Class
+@capture_exceptions.Class
 class Caller_Recv(threading.Thread):
     def __init__(self, recv_port, discovery_update_receiver, caller_send):
         threading.Thread.__init__(self)
@@ -140,7 +140,7 @@ class Caller_Recv(threading.Thread):
 ##### WRAPPER #####
 ###################
 
-#@capture_exceptions.Class
+@capture_exceptions.Class
 class Discovery():
     def __init__(
         self,

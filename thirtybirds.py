@@ -57,10 +57,10 @@ path_containing_tb_and_app = os.path.split(tb_path)[0]
 
 from .network import host_info
 from .network import thirtybirds_connection
-#from .version_control import update
+from .version_control.software_management import Software_Management
 from .reporting.exceptions import capture_exceptions
 from .reporting.status.status_receiver import Status_Receiver 
-from .reporting.hardware_management import Management
+from .reporting.hardware_management import Hardware_Management
 from . import settings as tb_settings # this copy retains tb settings
 from . import settings as settings # this copy gets collated with app settings
 
@@ -132,14 +132,24 @@ class Thirtybirds():
         self.connection.subscribe_to_topic("__status__")
         self.connection.subscribe_to_topic("__error__")
 
-        self.management = Management(tb_path, self.app_path)
+        # make two explicit instances of Software_Management
+        self.tb_software_management = Software_Management(
+            tb_path,
+            self.exception_receiver,
+            self.status_recvr
+        )
+        self.app_software_management = Software_Management(
+            self.app_path,
+            self.exception_receiver,
+            self.status_recvr
+        )
+        os_version = self.tb_software_management.get_os_version()
 
-        print(self.management.get_system_status())
+        print(self.tb_software_management.run_update_scripts())
+        print(self.app_software_management.run_update_scripts())
 
-        self.management.restart()
+        self.hardware_management = Hardware_Management(os_version["name"])
 
-        #self.app_version_control = update.Update(self.app_settings.Version_Control)
-        #self.tb_version_control = update.Update(tb_settings.Version_Control)
 
     def set_up_logging(self, app_path):
         log_directory = "{0}/logs/".format(app_path)
