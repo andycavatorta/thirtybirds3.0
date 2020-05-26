@@ -145,8 +145,9 @@ class Thirtybirds():
         )
         os_version = self.tb_software_management.get_os_version()
 
-        #print(self.tb_software_management.pull_from_github())
+        print(self.app_software_management.get_git_timestamp())
         print(self.app_software_management.pull_from_github())
+        print(self.app_software_management.get_git_timestamp())
 
         self.hardware_management = Hardware_Management(os_version["name"])
 
