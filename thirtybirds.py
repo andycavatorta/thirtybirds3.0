@@ -246,11 +246,22 @@ class Thirtybirds():
                 sys.exit(0)
 
     def status_receiver(self, status_details):
-        status_details_str = "{},{},{},{}{},{}.{},{},{}".format(time.strftime("%Y-%m-%d %H:%M:%S", status_details["time_local"]), status_details["time_epoch"],status_details["hostname"],status_details["path"],status_details["script_name"], status_details["class_name"],status_details["method_name"],status_details["message"],status_details["args"])
+        
+        status_details_str = "{},{},{},{}{},{}.{},{},{}".format(
+            time.strftime("%Y-%m-%d %H:%M:%S", status_details["time_local"]), 
+            status_details["time_epoch"],
+            status_details["hostname"],
+            status_details["path"],
+            status_details["script_name"], 
+            status_details["class_name"],
+            status_details["method_name"],
+            status_details["message"],
+            status_details["args"]
+        )
         self.status_logger.error(status_details_str)
         if self.hostname != self.controller_hostname:
             try:
-                print(type(status_details), status_details)
+                #print(type(status_details), status_details)
                 self.connection.send("__status__", status_details)
             except AttributeError:
                 pass
@@ -291,14 +302,18 @@ class Thirtybirds():
             pass
 
     def network_message_receiver(self, topic, message):
-        print("network_message_receiver",topic, message)
+        #print("network_message_receiver",topic, message)
         if topic == b"__status__":
             if self.hostname == self.controller_hostname:
-                print("-------------",type(message), message)
+                # todo: this should not have to be here.  don't send time struct through JSON or switch to Python serializer
+                message["time_local"] = time.struct_time(message["time_local"])
+                #print("-------------",type(message["time_local"]), message["time_local"])
                 self.status_receiver(message)
             #log this    
         try:
+            print("--1",topic, message)
             self.network_message_callback(topic, message)
+            print("--2",topic, message)
         except TypeError:
             pass
 
