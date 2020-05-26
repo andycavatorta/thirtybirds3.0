@@ -75,8 +75,8 @@ class Thirtybirds():
             app_settings,
             app_path,
             network_message_callback=None,
-            exception_callback=None,
             network_status_change_callback=None,
+            exception_callback=None
         ):
         self.app_settings = app_settings
         self.app_path = app_path
@@ -171,6 +171,7 @@ class Thirtybirds():
         ## T O P   L E V E L   A C C E S S ##
         #####################################
 
+        # todo: rethink how this is structured. we need to be able to fetch these properties and query the list of them
         self.get_hostname = self.hostinfo.get_hostname
         self.get_local_ip = self.hostinfo.get_local_ip
         self.get_global_ip = self.hostinfo.get_global_ip
@@ -310,12 +311,13 @@ class Thirtybirds():
                 #print("-------------",type(message["time_local"]), message["time_local"])
                 self.status_receiver(message)
             #log this    
-        try:
-            print("--1",topic, message)
-            self.network_message_callback(topic, message)
-            print("--2",topic, message)
-        except TypeError:
-            pass
+        else:
+            try:
+                #print("--1",topic, message)
+                self.network_message_callback(topic, message)
+                #print("--2",topic, message)
+            except TypeError:
+                pass
 
     def collate_settings(self, base_settings_module, optional_settings_module):
         base_settings_classnames = [i for i in dir(base_settings_module) if not (i[:2]=="__" and i[-2:]=="__")] 
