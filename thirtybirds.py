@@ -295,7 +295,7 @@ class Thirtybirds():
         if topic == b"__status__":
             if self.hostname == self.controller_hostname:
                 print("-------------",type(message), message)
-                #self.status_receiver(message)
+                self.status_receiver(message)
             #log this    
         try:
             self.network_message_callback(topic, message)
