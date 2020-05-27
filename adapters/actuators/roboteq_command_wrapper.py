@@ -170,6 +170,7 @@ class Controllers(threading.Thread):
         #self.status_receiver("mcu_ids_from_boards",mcu_ids_from_boards)
         
         # So it's not functionally different except that it always takes the max time.
+        print(">>>",type(self.boards_config),self.boards_config)
         mcu_ids_in_config = self.boards_config.keys()
         #self.status_receiver("mcu_ids_in_config",mcu_ids_in_config)
 
