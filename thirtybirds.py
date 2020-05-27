@@ -212,8 +212,8 @@ class Thirtybirds():
             shutdown = self.hardware_management.shutdown
 
             ## S T A T U S ##
-            activate_status_capture_type =  self.hardware_management.activate_capture_type
-            deactivate_status_capture_type =  self.hardware_management.deactivate_capture_type
+            activate_status_capture_type =  self.status_recvr.activate_capture_type
+            deactivate_status_capture_type =  self.status_recvr.deactivate_capture_type
 
         self.api = API()
 
