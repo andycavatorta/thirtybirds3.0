@@ -3,7 +3,13 @@
 """
 == fix before proceeding ==
 
-add version control
+expand and clarify networking data format
+
+destination [ ALL | hostname | role | arbitrary pattern ]
+action
+data
+
+use arrows and cascading menus
 
 create command-line interface system
     can be extended by app
@@ -171,18 +177,50 @@ class Thirtybirds():
         ## T O P   L E V E L   A C C E S S ##
         #####################################
 
-        # todo: rethink how this is structured. we need to be able to fetch these properties and query the list of them
-        self.get_hostname = self.hostinfo.get_hostname
-        self.get_local_ip = self.hostinfo.get_local_ip
-        self.get_global_ip = self.hostinfo.get_global_ip
-        self.get_online_status = self.hostinfo.get_online_status
-        self.publish = self.connection.send
-        self.subscribe_to_topic = self.connection.subscribe_to_topic
-        self.unsubscribe_from_topic = self.connection.unsubscribe_from_topic
-        # get received messages
+        class API():
+            ## N E T W O R K I N G ##
+            get_hostname = self.hostinfo.get_hostname            
+            get_local_ip = self.hostinfo.get_local_ip
+            get_global_ip = self.hostinfo.get_global_ip
+            get_online_status = self.hostinfo.get_online_status
+            publish = self.connection.send
+            subscribe_to_topic = self.connection.subscribe_to_topic
+            unsubscribe_from_topic = self.connection.unsubscribe_from_topic
 
-    def get_role_name(self):
-        return settings.Roles.hosts[self.hostname]
+            ## S O F T W A R E ##
+            get_os_version = self.tb_software_management.get_os_version
+            app_pull_from_github = self.app_software_management.pull_from_github
+            app_get_git_timestamp = self.app_software_management.get_git_timestamp
+            app_get_scripts_version = self.app_software_management.get_scripts_version
+            app_run_update_scripts = self.app_software_management.run_update_scripts
+
+            tb_pull_from_github = self.tb_software_management.pull_from_github
+            tb_get_git_timestamp = self.tb_software_management.get_git_timestamp
+            tb_get_scripts_version = self.tb_software_management.get_scripts_version
+            tb_run_update_scripts = self.tb_software_management.run_update_scripts
+
+            ## H A R D W A R E ##
+            get_core_temp = self.hardware_management.get_core_temp
+            get_wifi_strength = self.hardware_management.get_wifi_strength
+            get_core_voltage = self.hardware_management.get_core_voltage
+            get_system_cpu = self.hardware_management.get_system_cpu
+            get_system_uptime = self.hardware_management.get_system_uptime
+            get_system_disk = self.hardware_management.get_system_disk
+            get_memory_free = self.hardware_management.get_memory_free
+            get_system_status = self.hardware_management.get_system_status
+            restart = self.hardware_management.restart
+            shutdown = self.hardware_management.shutdown
+
+            ## S T A T U S ##
+            activate_status_capture_type =  self.hardware_management.activate_capture_type
+            deactivate_status_capture_type =  self.hardware_management.deactivate_capture_type
+
+        self.api = API()
+
+
+
+
+
 
 
     def set_up_logging(self, app_path):
