@@ -128,14 +128,13 @@ class Motor(threading.Thread):
         while True:
             serial_command, value, callback = self.queue.get(True)
 
-
-
+"""
 #@capture_exceptions.Function
 def init(data_receiver, status_receiver, exception_receiver, config):
     capture_exceptions.init(exception_receiver)
     controllers = Controllers(data_receiver, status_receiver, config)
     return controllers
-
+"""
 
 
 #@capture_exceptions.Class
@@ -144,10 +143,12 @@ class Controllers(threading.Thread):
             self, 
             data_receiver, 
             status_receiver, 
+            exception_receiver,
             boards_config, 
             motors_config, 
             mcu_serial_device_path_patterns=['/dev/serial/by-id/usb-FTDI*','/dev/serial/by-id/usb-Roboteq*']):
         threading.Thread.__init__(self)
+        capture_exceptions.init(exception_receiver)
         self.data_receiver = data_receiver
         self.status_receiver = status_receiver
         self.boards_config = boards_config

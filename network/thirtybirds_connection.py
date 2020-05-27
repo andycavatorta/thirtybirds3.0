@@ -119,7 +119,6 @@ class Thirtybirds_Connection():
             self.detect_disconnect.record_heartbeat(message)
         else:
             self.network_message_receiver(topic, message)
-            #print("subscription_message_receiver",topic, message)
 
     def discovery_update_receiver(self,message):
         # todo: cover the case of disconnections and unsubscriptions
