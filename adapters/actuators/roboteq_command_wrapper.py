@@ -128,15 +128,6 @@ class Motor(threading.Thread):
         while True:
             serial_command, value, callback = self.queue.get(True)
 
-"""
-#@capture_exceptions.Function
-def init(data_receiver, status_receiver, exception_receiver, config):
-    capture_exceptions.init(exception_receiver)
-    controllers = Controllers(data_receiver, status_receiver, config)
-    return controllers
-"""
-
-
 #@capture_exceptions.Class
 class Controllers(threading.Thread):
     def __init__(
@@ -164,20 +155,22 @@ class Controllers(threading.Thread):
         for mcu_serial_device_path in self.mcu_serial_device_paths:
             self.match_mcu_id(mcu_serial_device_path)
         #self.status_receiver("self.boards",self.boards)
+        print("self.boards",self.boards)
         # This is brittle.  But an async method would rely on the serial timeout for each board. 
         time.sleep(5) 
         # are physical boards found for all boards defined in config?
         mcu_ids_from_boards = [board.read_internal_mcu_id() for board in self.boards.values()]
         #self.status_receiver("mcu_ids_from_boards",mcu_ids_from_boards)
-        
+        print("mcu_ids_from_boards",mcu_ids_from_boards)
         # So it's not functionally different except that it always takes the max time.
-        print(">>>",type(self.boards_config),self.boards_config)
+        
         mcu_ids_in_config = self.boards_config.keys()
         #self.status_receiver("mcu_ids_in_config",mcu_ids_in_config)
 
         if not (set(mcu_ids_in_config).issubset(set(mcu_ids_from_boards))):
             pass
             #self.status_receiver("missing board", set(mcu_ids_in_config).difference(set(mcu_ids_from_boards)))
+            print("missing board", set(mcu_ids_in_config).difference(set(mcu_ids_from_boards)))
         else:
             # map mcu_ids to mcu_serial_device_paths
             #device_path_by_mcu_id = {board.mcu_id:board.serial_device_path for board in self.boards}
@@ -193,6 +186,7 @@ class Controllers(threading.Thread):
                     self.motors_config[motor_name]["channel"],
                     self.status_receiver
                 )
+            print("self.boards",self.boards)
             self.start()
 
     def get_device_id_list(self):
