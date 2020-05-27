@@ -182,7 +182,7 @@ class Controllers(threading.Thread):
             for motor_name in self.motors_config:
                 print("-----------------")
                 print("motor_name",motor_name)
-                print("self.motors_config[motor_name]["mcu_id"]",self.motors_config[motor_name]["mcu_id"])
+                print("self.motors_config[motor_name]['mcu_id']",self.motors_config[motor_name]["mcu_id"])
                 print("self.motors_config",self.motors_config)
                 self.motors[motor_name] = Motor(
                     motor_name,
