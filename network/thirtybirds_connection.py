@@ -63,6 +63,15 @@ class Thirtybirds_Connection():
         else:
             self.connections[controller_hostname] = False
 
+        self.pub_sub = pub_sub.Pub_Sub(
+            hostname = self.hostname,
+            local_ip = self.ip_address,
+            publish_port = self.pubsub_pub_port,
+            role = self.role,
+            message_receiver = self.subscription_message_receiver,
+            exception_receiver = self.exception_receiver,
+            status_receiver = self.status_receiver)
+
         self.discovery = discovery.Discovery(
             ip_address = ip_address,
             hostname = hostname,
@@ -73,15 +82,6 @@ class Thirtybirds_Connection():
             caller_period = self.caller_interval,
             discovery_update_receiver = self.discovery_update_receiver,
             exception_receiver = exception_receiver,
-            status_receiver = self.status_receiver)
-
-        self.pub_sub = pub_sub.Pub_Sub(
-            hostname = self.hostname,
-            local_ip = self.ip_address,
-            publish_port = self.pubsub_pub_port,
-            role = self.role,
-            message_receiver = self.subscription_message_receiver,
-            exception_receiver = self.exception_receiver,
             status_receiver = self.status_receiver)
 
         self.send = self.pub_sub.send
