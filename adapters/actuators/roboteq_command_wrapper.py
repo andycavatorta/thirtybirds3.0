@@ -58,7 +58,7 @@ class Board(threading.Thread):
             #print(resp_char)
             resp_str += resp_char.decode('utf-8')
         resp_str = resp_str[:-1] # trim /r from end
-        print("resp_str",resp_str)
+        print(self.serial_device_path, "resp_str",resp_str)
         resp_l = resp_str.split('=')
         if len(resp_l) == 1:
             return resp_str
@@ -118,8 +118,17 @@ class Motor(threading.Thread):
         serial_command = "!G {} {}".format(self.channel, value)
         self.board.add_to_queue(serial_command)
 
+    def read_encoder_counter_absolute(self):
+        """
+        Returns the encoder value as an absolute number. The counter is 32-bit with a range of
+        +/- 2147483648 counts.
 
-
+        Type: Signed 32-bit
+        Min: -2147M
+        Max: 2147M
+        """
+        serial_command = "?C {}".format(self.channel)
+        self.board.add_to_queue(serial_command)
 
     ##############################################
     #    SAFETY                                  #
@@ -144,6 +153,28 @@ class Motor(threading.Thread):
         serial_command = "?FF {}".format(self.channel)
         self.board.add_to_queue(serial_command)
 
+    ##############################################
+    #    MOTOR CONFIG                            #
+    ##############################################
+    def set_operating_mode(self, mode):
+        """
+        This parameter lets you select the operating mode for that channel. See manual for de-
+        scription of each mode
+
+        nn =
+            0: Open-loop
+            1: Closed-loop speed
+            2: Closed-loop position relative
+            3: Closed-loop count position
+            4: Closed-loop position tracking
+            5: Torque
+            6: Closed-loop speed position
+        """
+        serial_command = "^MMOD {} {}".format(self.channel, mode)
+        self.board.add_to_queue(serial_command)
+
+
+
 
     ##############################################
     #    CLASS INTERNALS                         #
@@ -157,7 +188,7 @@ class Motor(threading.Thread):
             try:
                 serial_command, value, callback = self.queue.get(block=True, timeout=0.5)
             except queue.Empty:
-                self.read_fault_flags()
+                self.read_encoder_counter_absolute()
 
 
 #@capture_exceptions.Class
