@@ -72,6 +72,15 @@ class Thirtybirds_Connection():
             exception_receiver = self.exception_receiver,
             status_receiver = self.status_receiver)
 
+        self.detect_disconnect = detect_disconnect.Detect_Disconnect(
+            hostname = self.hostname,
+            pub_sub = self.pub_sub,
+            heartbeat_timeout_factor = self.heartbeat_timeout_factor,
+            heartbeat_interval = self.heartbeat_interval,
+            disconnect_event_receiver = self.disconnect_event_receiver,
+            exception_receiver = self.exception_receiver,
+            status_receiver = self.status_receiver)
+
         self.discovery = discovery.Discovery(
             ip_address = ip_address,
             hostname = hostname,
@@ -87,15 +96,6 @@ class Thirtybirds_Connection():
         self.send = self.pub_sub.send
         self.subscribe_to_topic = self.pub_sub.subscribe_to_topic
         self.unsubscribe_from_topic = self.pub_sub.unsubscribe_from_topic
-
-        self.detect_disconnect = detect_disconnect.Detect_Disconnect(
-            hostname = self.hostname,
-            pub_sub = self.pub_sub,
-            heartbeat_timeout_factor = self.heartbeat_timeout_factor,
-            heartbeat_interval = self.heartbeat_interval,
-            disconnect_event_receiver = self.disconnect_event_receiver,
-            exception_receiver = self.exception_receiver,
-            status_receiver = self.status_receiver)
 
         self.status_receiver.collect("started",self.status_receiver.types.INITIALIZATIONS)
 
