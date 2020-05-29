@@ -191,7 +191,7 @@ class Motor(threading.Thread):
     def run(self):
         while True:
             #try:
-                serial_command, value, callback = self.queue.get(block=True, timeout=0.5)
+                serial_command, value, callback = self.queue.get(block=True) #, timeout=0.5)
             #except queue.Empty:
             #    self.read_encoder_counter_absolute()
 
