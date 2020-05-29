@@ -117,6 +117,33 @@ class Motor(threading.Thread):
         serial_command = "!G {} {}".format(self.channel, value)
         self.board.add_to_queue(serial_command)
 
+
+
+
+    ##############################################
+    #    SAFETY                                  #
+    ##############################################
+    def read_fault_flags(self):
+        """
+        Reports the status of the controller fault conditions that can occur during operation. The
+        response to that query is a single number which must be converted into binary in order to
+        evaluate each of the individual status bits that compose it.
+
+        f1 = Overheat
+        f2 = Overvoltage
+        f3 = Undervoltage
+        f4 = Short circuit
+        f5 = Emergency stop
+        f6 = Brushless sensor fault
+        f7 = MOSFET failure
+        f8 = Default configuration loaded at startup
+
+        FM = f1 + f2*2 + f3*4 + ... + fn*2n-1
+        """
+        serial_command = "?FF {}".format(self.channel)
+        self.board.add_to_queue(serial_command)
+
+
     ##############################################
     #    CLASS INTERNALS                         #
     ##############################################
@@ -126,7 +153,11 @@ class Motor(threading.Thread):
 
     def run(self):
         while True:
-            serial_command, value, callback = self.queue.get(True)
+            try:
+                serial_command, value, callback = self.queue.get(block=True, timeout=0.5)
+            except queue.Empty:
+                self.read_fault_flags()
+
 
 #@capture_exceptions.Class
 class Controllers(threading.Thread):
@@ -186,6 +217,7 @@ class Controllers(threading.Thread):
                     self.motors_config[motor_name]["channel"],
                     self.status_receiver
                 )
+            
             self.start()
 
     def get_device_id_list(self):
