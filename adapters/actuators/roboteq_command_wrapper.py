@@ -130,6 +130,11 @@ class Motor(threading.Thread):
         serial_command = "?C {}".format(self.channel)
         self.board.add_to_queue(serial_command)
 
+    def set_encoder_counter(self, value):
+        serial_command = "!C {} {}".format(self.channel, value)
+        self.board.add_to_queue(serial_command)
+
+
     ##############################################
     #    SAFETY                                  #
     ##############################################
