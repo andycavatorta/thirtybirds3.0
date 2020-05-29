@@ -180,17 +180,12 @@ class Controllers(threading.Thread):
 
             # create motor instances
             for motor_name in self.motors_config:
-                print("-----------------")
-                print("motor_name",motor_name)
-                print("self.motors_config[motor_name]['mcu_id']",self.motors_config[motor_name]["mcu_id"])
-                print("self.motors_config",self.motors_config)
                 self.motors[motor_name] = Motor(
                     motor_name,
                     self.boards[device_path_by_mcu_id[self.motors_config[motor_name]["mcu_id"]]],
                     self.motors_config[motor_name]["channel"],
                     self.status_receiver
                 )
-            print("self.boards",self.boards)
             self.start()
 
     def get_device_id_list(self):
