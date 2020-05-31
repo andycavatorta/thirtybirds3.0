@@ -49,7 +49,7 @@ class Board(threading.Thread):
 
     def read_mixed_mode(self, response=None):
         if response:
-            print("read_mixed_mode", response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_mixed_mode", response)
         else:
             serial_command = "~MXMD"
             self.add_to_queue(serial_command, self.read_mixed_mode)
@@ -1354,13 +1354,12 @@ class Controllers(threading.Thread):
         # if match found, create Motor instances, bind to Board instances
         # store reference to this mcu in Controllers
         
-    def add_to_queue(self, mcu_serial_device_path, serial_command, resp_str, callback):
-        self.queue.put((mcu_serial_device_path, serial_command, resp_str, callback))
+    def add_to_queue(self, mcu_serial_device_path, channel, method, resp_str):
+        #self.serial_device_path, None, "read_mixed_mode", response
+        #self.serial_device_path, None, "read_mixed_mode", response
+        self.queue.put((self, mcu_serial_device_path, channel, method, resp_str))
 
     def run(self):
         while True:
-            mcu_serial_device_path, serial_command, resp_str, callback = self.queue.get(True)
-            try:
-                callback(mcu_serial_device_path, serial_command, resp_str)
-            except TypeError: #if callback == None
-                pass
+            mcu_serial_device_path, channel, method, resp_str = self.queue.get(True)
+            print(mcu_serial_device_path, channel, method, resp_str)
