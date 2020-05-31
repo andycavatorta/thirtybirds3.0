@@ -279,7 +279,7 @@ class Board(threading.Thread):
     def read_mcu_id(self, response=None):
         if response:
             self.add_mcu_id(response)
-            self.controller_ref.collect_boards(self.serial_device_path, response)
+            self.controller_ref.match_boards_to_config(self.serial_device_path, response)
             #self.add_to_controller_queue(self.serial_device_path, None, "read_mcu_id", response)
         else:
             serial_command = "?UID"
@@ -1316,15 +1316,7 @@ class Controllers(threading.Thread):
         # create board objects and read their mcu_ids
         for mcu_serial_device_path in self.mcu_serial_device_paths:
             self.boards[mcu_serial_device_path] = Board(mcu_serial_device_path, self, self.add_to_queue)
-            #self.boards[mcu_serial_device_path].read_mcu_id()
-            #self.match_mcu_id(mcu_serial_device_path)
 
-
-        """
-        #self.status_receiver("self.boards",self.boards)
-        print("self.boards",self.boards)
-        # This is brittle.  But an async method would rely on the serial timeout for each board. 
-        
         # are physical boards found for all boards defined in config?
         mcu_ids_from_boards = [board.read_internal_mcu_id() for board in self.boards.values()]
         #self.status_receiver("mcu_ids_from_boards",mcu_ids_from_boards)
@@ -1353,21 +1345,30 @@ class Controllers(threading.Thread):
                     self.motors_config[motor_name]["channel"],
                     self.status_receiver
                 )
-            self.start()
-        """
 
-    def collect_boards(self, mcu_serial_device_path, resp_str):
+    def match_boards_to_config(self, mcu_serial_device_path, resp_str):
         # this method verifies that all mcu_ids listed in config can be matched with discovered boards.
         found = True
         mcu_ids_in_config = list(self.boards_config.keys())
-
         for board in self.boards.values():
             mcu_ids_in_config.remove(board.read_internal_mcu_id())
-            print(mcu_ids_in_config)
-        #print(">>>", mcu_serial_device_path, resp_str)
-        #print(self.boards.keys())
-        #print(self.boards_config.keys())
-        
+        if len(mcu_ids_in_config) == 0:
+            self.create_motors()
+
+    def create_motors(self):
+            device_path_by_mcu_id = {}
+            for serial_id in self.boards:
+                print("serial_id",serial_id)
+                device_path_by_mcu_id[self.boards[serial_id].read_internal_mcu_id()] = serial_id
+
+            for motor_name in self.motors_config:
+                print("motor_name",motor_name)
+                self.motors[motor_name] = Motor(
+                    motor_name,
+                    self.boards[device_path_by_mcu_id[self.motors_config[motor_name]["mcu_id"]]],
+                    self.motors_config[motor_name]["channel"],
+                    self.status_receiver
+                )
 
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
