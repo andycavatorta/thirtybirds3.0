@@ -1357,11 +1357,14 @@ class Controllers(threading.Thread):
         """
 
     def collect_boards(self, mcu_serial_device_path, resp_str):
-        print(">>>", mcu_serial_device_path, resp_str)
-        print(self.boards.keys())
-        print(self.boards_config.keys())
+        mcu_ids_in_config = list(self.boards_config.keys())
+        for board_name in self.boards:
+            print(board_name)
+        #print(">>>", mcu_serial_device_path, resp_str)
+        #print(self.boards.keys())
+        #print(self.boards_config.keys())
         
-        
+
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
         for mcu_serial_device_path_pattern in self.mcu_serial_device_path_patterns:
