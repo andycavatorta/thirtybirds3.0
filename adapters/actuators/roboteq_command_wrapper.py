@@ -1384,7 +1384,7 @@ class Controllers(threading.Thread):
     def add_to_queue(self, mcu_serial_device_path, channel, method, resp_str):
         #self.serial_device_path, None, "read_mixed_mode", response
         #self.serial_device_path, None, "read_mixed_mode", response
-        self.queue.put((self, mcu_serial_device_path, channel, method, resp_str))
+        self.queue.put(( mcu_serial_device_path, channel, method, resp_str))
 
     def run(self):
         while True:
