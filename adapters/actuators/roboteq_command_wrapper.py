@@ -1268,7 +1268,7 @@ class Motor(threading.Thread):
     def run(self):
         while True:
             #try:
-                serial_command, value, callback = self.queue.get(block=True) #, timeout=0.5)
+            serial_command, value, callback = self.queue.get(block=True) #, timeout=0.5)
             #except queue.Empty:
             #    self.read_encoder_counter_absolute()
 
@@ -1317,7 +1317,6 @@ class Controllers(threading.Thread):
         for mcu_serial_device_path in self.mcu_serial_device_paths:
             self.boards[mcu_serial_device_path] = Board(mcu_serial_device_path, self, self.add_to_queue)
 
-
     def match_boards_to_config(self, mcu_serial_device_path, resp_str):
         # this method verifies that all mcu_ids listed in config can be matched with discovered boards.
         found = True
@@ -1330,11 +1329,9 @@ class Controllers(threading.Thread):
     def create_motors(self):
             device_path_by_mcu_id = {}
             for serial_id in self.boards:
-                print("serial_id",serial_id)
                 device_path_by_mcu_id[self.boards[serial_id].read_internal_mcu_id()] = serial_id
 
             for motor_name in self.motors_config:
-                print("motor_name",motor_name)
                 self.motors[motor_name] = Motor(
                     motor_name,
                     self.boards[device_path_by_mcu_id[self.motors_config[motor_name]["mcu_id"]]],
