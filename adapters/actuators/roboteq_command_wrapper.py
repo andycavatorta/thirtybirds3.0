@@ -1310,7 +1310,7 @@ class Controllers(threading.Thread):
         self.motors = {}
         self.mcu_serial_device_paths = self.get_device_id_list()
         #self.status_receiver("self.mcu_serial_device_paths",self.mcu_serial_device_paths)
-
+        self.start()
         # create board objects and read their mcu_ids
         for mcu_serial_device_path in self.mcu_serial_device_paths:
             self.boards[mcu_serial_device_path] = Board(mcu_serial_device_path, self, self.add_to_queue)
