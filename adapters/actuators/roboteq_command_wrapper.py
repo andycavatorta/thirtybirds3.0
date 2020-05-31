@@ -1317,34 +1317,6 @@ class Controllers(threading.Thread):
         for mcu_serial_device_path in self.mcu_serial_device_paths:
             self.boards[mcu_serial_device_path] = Board(mcu_serial_device_path, self, self.add_to_queue)
 
-        # are physical boards found for all boards defined in config?
-        mcu_ids_from_boards = [board.read_internal_mcu_id() for board in self.boards.values()]
-        #self.status_receiver("mcu_ids_from_boards",mcu_ids_from_boards)
-        print("mcu_ids_from_boards",mcu_ids_from_boards)
-        # So it's not functionally different except that it always takes the max time.
-        
-        mcu_ids_in_config = self.boards_config.keys()
-        #self.status_receiver("mcu_ids_in_config",mcu_ids_in_config)
-
-        if not (set(mcu_ids_in_config).issubset(set(mcu_ids_from_boards))):
-            pass
-            #self.status_receiver("missing board", set(mcu_ids_in_config).difference(set(mcu_ids_from_boards)))
-            print("missing board", set(mcu_ids_in_config).difference(set(mcu_ids_from_boards)))
-        else:
-            # map mcu_ids to mcu_serial_device_paths
-            #device_path_by_mcu_id = {board.mcu_id:board.serial_device_path for board in self.boards}
-            device_path_by_mcu_id = {}
-            for serial_id in self.boards:
-                device_path_by_mcu_id[self.boards[serial_id].read_internal_mcu_id()] = serial_id
-
-            # create motor instances
-            for motor_name in self.motors_config:
-                self.motors[motor_name] = Motor(
-                    motor_name,
-                    self.boards[device_path_by_mcu_id[self.motors_config[motor_name]["mcu_id"]]],
-                    self.motors_config[motor_name]["channel"],
-                    self.status_receiver
-                )
 
     def match_boards_to_config(self, mcu_serial_device_path, resp_str):
         # this method verifies that all mcu_ids listed in config can be matched with discovered boards.
