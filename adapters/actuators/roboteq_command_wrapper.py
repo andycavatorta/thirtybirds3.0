@@ -14,9 +14,10 @@ from thirtybirds3.reporting.exceptions import capture_exceptions
 
 #@capture_exceptions.Class
 class Board(threading.Thread):
-    def __init__(self,path, add_to_controller_queue):
+    def __init__(self,path, controller_ref, add_to_controller_queue):
         threading.Thread.__init__(self)
         self.serial_device_path = path
+        self.controller_ref = controller_ref
         self.add_to_controller_queue = add_to_controller_queue
         self.mcu_id = ""
         self.queue = queue.Queue()
@@ -67,7 +68,7 @@ class Board(threading.Thread):
 
     def read_pwm_frequency(self, response=None):
         if response:
-            print("read_pwm_frequency", response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_pwm_frequency", response)
         else:
             serial_command = "~PWMF"
             self.add_to_queue(serial_command, self.read_pwm_frequency)
@@ -86,7 +87,7 @@ class Board(threading.Thread):
         ditions.
         """
         if response:
-            print("read_volts", response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_volts", response)
         else:
             serial_command = "?V"
             self.add_to_queue(serial_command, self.read_volts)
@@ -105,7 +106,7 @@ class Board(threading.Thread):
 
     def read_serial_data_watchdog(self, response=None):
         if response:
-            print("read_serial_data_watchdog", response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_serial_data_watchdog", response)
         else:
             serial_command = "~RWD"
             self.add_to_queue(serial_command, self.read_serial_data_watchdog)
@@ -122,7 +123,7 @@ class Board(threading.Thread):
 
     def read_overvoltage_hysteresis(self, response=None):
         if response:
-            print("read_overvoltage_hysteresis", response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_overvoltage_hysteresis", response)
         else:
             serial_command = "~OVH"
             self.add_to_queue(serial_command, self.read_overvoltage_hysteresis)
@@ -145,7 +146,7 @@ class Board(threading.Thread):
 
     def read_overvoltage_cutoff_threhold(self, response=None):
         if response:
-            print("read_overvoltage_cutoff_threhold", response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_overvoltage_cutoff_threhold", response)
         else:
             serial_command = "~OVL"
             self.add_to_queue(serial_command, self.read_overvoltage_cutoff_threhold)
@@ -166,7 +167,7 @@ class Board(threading.Thread):
 
     def read_short_circuit_detection_threshold(self, response=None):
         if response:
-            print("read_short_circuit_detection_threshold", response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_short_circuit_detection_threshold", response)
         else:
             serial_command = "~THLD"
             self.add_to_queue(serial_command, self.read_short_circuit_detection_threshold)
@@ -182,7 +183,7 @@ class Board(threading.Thread):
 
     def read_undervoltage_limit(self, response=None):
         if response:
-            print("read_undervoltage_limit", response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_undervoltage_limit", response)
         else:
             serial_command = "~UVL"
             self.add_to_queue(serial_command, self.read_undervoltage_limit)
@@ -198,7 +199,7 @@ class Board(threading.Thread):
 
     def read_brake_activation_delay(self, response=None):
         if response:
-            print("read_brake_activation_delay", response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_brake_activation_delay", response)
         else:
             serial_command = "~BKD"
             self.add_to_queue(serial_command, self.read_brake_activation_delay)
@@ -225,7 +226,7 @@ class Board(threading.Thread):
 
     def read_command_priorities(self, response=None):
         if response:
-            print("read_command_priorities", response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_command_priorities", response)
         else:
             serial_command = "~CPRI"
             self.add_to_queue(serial_command)
@@ -241,7 +242,7 @@ class Board(threading.Thread):
 
     def read_serial_echo(self, response=None):
         if response:
-            print("read_serial_echo", response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_serial_echo", response)
         else:
             serial_command = "~ECHOF"
             self.add_to_queue(serial_command, self.read_serial_echo)
@@ -265,7 +266,7 @@ class Board(threading.Thread):
 
     def read_rs232_bit_rate(self, response=None):
         if response:
-            print("read_rs232_bit_rate", response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_rs232_bit_rate", response)
         else:
             serial_command = "~RSBR"
             self.add_to_queue(serial_command, self.read_rs232_bit_rate)
@@ -273,9 +274,13 @@ class Board(threading.Thread):
     ##############################################
     #    MEMORY                                  #
     ##############################################
-    def read_mcu_id(self, callback=None):
-        serial_command = "?UID"
-        self.add_to_queue(serial_command, callback)
+    def read_mcu_id(self, response=None):
+        if response:
+            self.controller_ref._match_mcu_id(self.serial_device_path, response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_mcu_id", response)
+        else:
+            serial_command = "?UID"
+            self.add_to_queue(serial_command, self.read_mcu_id)
 
     def set_user_boolean_variable(self, position, value):
         serial_command = "!B {} {}".format(position, value)
@@ -283,7 +288,10 @@ class Board(threading.Thread):
 
     def read_user_boolean_value(self, position):
         serial_command = "?B {}".format(position)
-        self.add_to_queue(serial_command)
+        self.add_to_queue(serial_command, self._read_user_boolean_value_)
+
+    def _read_user_boolean_value_(self, response):
+        self.add_to_controller_queue(self.serial_device_path, None, "read_user_boolean_value", response)
 
     def set_user_variable(self, position, value):
         serial_command = "!VAR {} {}".format(position, value)
@@ -291,7 +299,10 @@ class Board(threading.Thread):
 
     def read_user_variable(self, position):
         serial_command = "?VAR {}".format(position)
-        self.add_to_queue(serial_command)
+        self.add_to_queue(serial_command, self._read_user_variable_)
+
+    def _read_user_variable_(self, response):
+        self.add_to_controller_queue(self.serial_device_path, None, "read_user_variable", response)
 
     def set_user_data_in_ram(self, address, data):
         """
@@ -337,7 +348,7 @@ class Board(threading.Thread):
 
     def read_script_auto_start(self, response=None):
         if response:
-            print("read_script_auto_start", response)
+            self.add_to_controller_queue(self.serial_device_path, None, "read_script_auto_start", response)
         else:
             serial_command = "~BRUN"
             self.add_to_queue(serial_command, self.read_script_auto_start)
@@ -1338,7 +1349,7 @@ class Controllers(threading.Thread):
         return matching_mcu_serial_device_paths
 
     def match_mcu_id(self, mcu_serial_device_path):
-        self.boards[mcu_serial_device_path] = Board(mcu_serial_device_path, self.add_to_queue)
+        self.boards[mcu_serial_device_path] = Board(mcu_serial_device_path, self, self.add_to_queue)
         self.boards[mcu_serial_device_path].read_mcu_id(self._match_mcu_id)
         #self.match_mcu_id_temp_serial_device_path = mcu_serial_device_path
 
