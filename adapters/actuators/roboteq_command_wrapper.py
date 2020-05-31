@@ -28,6 +28,7 @@ class Board(threading.Thread):
             stopbits=serial.STOPBITS_ONE,
             parity=serial.PARITY_NONE,
         )
+        time.sleep(0.5) # give serial a moment
         self.start()
 
     ##############################################
@@ -1281,6 +1282,12 @@ class Motor(threading.Thread):
 
 
 
+
+
+
+
+
+
 #@capture_exceptions.Class
 class Controllers(threading.Thread):
     def __init__(
@@ -1306,11 +1313,16 @@ class Controllers(threading.Thread):
 
         # create board objects and read their mcu_ids
         for mcu_serial_device_path in self.mcu_serial_device_paths:
-            self.match_mcu_id(mcu_serial_device_path)
+            self.boards[mcu_serial_device_path] = Board(mcu_serial_device_path, self, self.add_to_queue)
+            self.boards[mcu_serial_device_path].read_mcu_id(self.collect_boards)
+            #self.match_mcu_id(mcu_serial_device_path)
+
+
+        """
         #self.status_receiver("self.boards",self.boards)
         print("self.boards",self.boards)
         # This is brittle.  But an async method would rely on the serial timeout for each board. 
-        time.sleep(5) 
+        
         # are physical boards found for all boards defined in config?
         mcu_ids_from_boards = [board.read_internal_mcu_id() for board in self.boards.values()]
         #self.status_receiver("mcu_ids_from_boards",mcu_ids_from_boards)
@@ -1339,8 +1351,12 @@ class Controllers(threading.Thread):
                     self.motors_config[motor_name]["channel"],
                     self.status_receiver
                 )
-            
             self.start()
+        """
+
+    def collect_boards(self, mcu_serial_device_path, resp_str):
+        print(">>>", mcu_serial_device_path, resp_str)
+
 
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
