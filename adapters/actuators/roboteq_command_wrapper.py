@@ -281,7 +281,7 @@ class Board(threading.Thread):
         if response:
             self.add_mcu_id(response)
             self.controller_ref.collect_boards(self.serial_device_path, response)
-            self.add_to_controller_queue(self.serial_device_path, None, "read_mcu_id", response)
+            #self.add_to_controller_queue(self.serial_device_path, None, "read_mcu_id", response)
         else:
             serial_command = "?UID"
             self.add_to_queue(serial_command, self.read_mcu_id)
