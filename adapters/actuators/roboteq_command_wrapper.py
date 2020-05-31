@@ -276,8 +276,9 @@ class Board(threading.Thread):
     #    MEMORY                                  #
     ##############################################
     def read_mcu_id(self, response=None):
+
         if response:
-            self.controller_ref._match_mcu_id(self.serial_device_path, response)
+            self.controller_ref.collect_boards(self.serial_device_path, response)
             self.add_to_controller_queue(self.serial_device_path, None, "read_mcu_id", response)
         else:
             serial_command = "?UID"
@@ -1314,7 +1315,7 @@ class Controllers(threading.Thread):
         # create board objects and read their mcu_ids
         for mcu_serial_device_path in self.mcu_serial_device_paths:
             self.boards[mcu_serial_device_path] = Board(mcu_serial_device_path, self, self.add_to_queue)
-            self.boards[mcu_serial_device_path].read_mcu_id(self.collect_boards)
+            self.boards[mcu_serial_device_path].read_mcu_id()
             #self.match_mcu_id(mcu_serial_device_path)
 
 
@@ -1382,6 +1383,7 @@ class Controllers(threading.Thread):
         # store reference to this mcu in Controllers
         
     def add_to_queue(self, mcu_serial_device_path, channel, method, resp_str):
+        print("-add_to_queue-",mcu_serial_device_path, channel, method, resp_str)
         #self.serial_device_path, None, "read_mixed_mode", response
         #self.serial_device_path, None, "read_mixed_mode", response
         self.queue.put(( mcu_serial_device_path, channel, method, resp_str))
