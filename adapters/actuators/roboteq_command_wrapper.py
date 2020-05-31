@@ -1358,7 +1358,7 @@ class Controllers(threading.Thread):
 
     def collect_boards(self, mcu_serial_device_path, resp_str):
         mcu_ids_in_config = list(self.boards_config.keys())
-        for board_name in self.boards:
+        for board_name in self.boards.items():
             print(board_name)
         #print(">>>", mcu_serial_device_path, resp_str)
         #print(self.boards.keys())
