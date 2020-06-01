@@ -1327,17 +1327,19 @@ class Controllers(threading.Thread):
             self.create_motors()
 
     def create_motors(self):
-            device_path_by_mcu_id = {}
-            for serial_id in self.boards:
-                device_path_by_mcu_id[self.boards[serial_id].read_internal_mcu_id()] = serial_id
+        device_path_by_mcu_id = {}
+        for serial_id in self.boards:
+            device_path_by_mcu_id[self.boards[serial_id].read_internal_mcu_id()] = serial_id
 
-            for motor_name in self.motors_config:
-                self.motors[motor_name] = Motor(
-                    motor_name,
-                    self.boards[device_path_by_mcu_id[self.motors_config[motor_name]["mcu_id"]]],
-                    self.motors_config[motor_name]["channel"],
-                    self.status_receiver
-                )
+        for motor_name in self.motors_config:
+            self.motors[motor_name] = Motor(
+                motor_name,
+                self.boards[device_path_by_mcu_id[self.motors_config[motor_name]["mcu_id"]]],
+                self.motors_config[motor_name]["channel"],
+                self.status_receiver
+            )
+        time.sleep(0.5)
+        self.data_receiver({"internal_event":"motors_initialized"})
 
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
