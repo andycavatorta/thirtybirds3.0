@@ -1348,10 +1348,10 @@ class Controllers(threading.Thread):
         return matching_mcu_serial_device_paths
 
     def add_to_queue(self, mcu_serial_device_path, channel, method, resp_str):
-        print("-add_to_queue-",mcu_serial_device_path, channel, method, resp_str)
+        #print("-add_to_queue-",mcu_serial_device_path, channel, method, resp_str)
         self.queue.put(( mcu_serial_device_path, channel, method, resp_str))
 
     def run(self):
         while True:
             mcu_serial_device_path, channel, method, resp_str = self.queue.get(True)
-            print(mcu_serial_device_path, channel, method, resp_str)
+            #print(mcu_serial_device_path, channel, method, resp_str)
