@@ -1338,6 +1338,8 @@ class Controllers(threading.Thread):
                 self.motors_config[motor_name]["channel"],
                 self.status_receiver
             )
+        time.sleep(0.5)
+        self.data_receiver({"internal_event":"motors_initialized"})
 
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
