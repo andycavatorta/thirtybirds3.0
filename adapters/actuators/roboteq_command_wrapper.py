@@ -1322,7 +1322,6 @@ class Controllers(threading.Thread):
         found = True
         mcu_ids_in_config = list(self.boards_config.keys())
         for board in self.boards.values():
-            print(":::", board.read_internal_mcu_id())
             mcu_ids_in_config.remove(board.read_internal_mcu_id())
         if len(mcu_ids_in_config) == 0:
             self.create_motors()
@@ -1339,8 +1338,6 @@ class Controllers(threading.Thread):
                 self.motors_config[motor_name]["channel"],
                 self.status_receiver
             )
-        time.sleep(0.5)
-        self.data_receiver({"internal_event":"motors_initialized"})
 
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
