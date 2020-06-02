@@ -14,7 +14,7 @@ from thirtybirds3.reporting.exceptions import capture_exceptions
 
 #@capture_exceptions.Class
 class Board(threading.Thread):
-    def __init__(self,path, controller_ref, add_to_controller_queue):
+    def __init__(self, path, controller_ref, add_to_controller_queue):
         threading.Thread.__init__(self)
         self.serial_device_path = path
         self.controller_ref = controller_ref
@@ -1308,6 +1308,7 @@ class Controllers(threading.Thread):
         self.motors_config = motors_config
         self.mcu_serial_device_path_patterns = mcu_serial_device_path_patterns
         self.queue = queue.Queue()
+        self.boards_to_device_path = {} 
         self.boards = {}
         self.motors = {}
         self.mcu_serial_device_paths = self.get_device_id_list()
@@ -1315,16 +1316,34 @@ class Controllers(threading.Thread):
         self.start()
         # create board objects and read their mcu_ids
         for mcu_serial_device_path in self.mcu_serial_device_paths:
-            self.boards[mcu_serial_device_path] = Board(mcu_serial_device_path, self, self.add_to_queue)
+            self.boards_to_device_path[mcu_serial_device_path] = Board(mcu_serial_device_path, self, self.add_to_queue)
 
     def match_boards_to_config(self, mcu_serial_device_path, resp_str):
         # this method verifies that all mcu_ids listed in config can be matched with discovered boards.
-        found = True
+        board_name = list(self.boards_config.keys())
+
+
+        mcu_ids_in_config = list(self.boards_config.keys())
+        for board in self.boards_to_device_path.values():
+            mcu_ids_in_config.remove(board.read_internal_mcu_id())
+
+        if len(mcu_ids_in_config) == 0:
+            for board_name in self.boards_config:
+                mcu_id_from_config = self.boards_config[board_name]["mcu_id"]
+                for board_object in self.boards_to_device_path.values():
+                    if board_object.read_internal_mcu_id() == mcu_id_from_config:
+                        self.boards[board_name] = board_object
+                        break
+
+            self.create_motors()
+
+        """
         mcu_ids_in_config = list(self.boards_config.keys())
         for board in self.boards.values():
             mcu_ids_in_config.remove(board.read_internal_mcu_id())
         if len(mcu_ids_in_config) == 0:
             self.create_motors()
+        """
 
     def create_motors(self):
         device_path_by_mcu_id = {}
