@@ -1320,9 +1320,8 @@ class Controllers(threading.Thread):
 
     def match_boards_to_config(self, mcu_serial_device_path, resp_str):
         # this method verifies that all mcu_ids listed in config can be matched with discovered boards.
-        board_name = list(self.boards_config.keys())
-
-
+        # todo: this can much more terse and pythonic
+        # todo: handle mismatches or incomplete processes
         mcu_ids_in_config = list(self.boards_config.keys())
         for board in self.boards_to_device_path.values():
             mcu_ids_in_config.remove(board.read_internal_mcu_id())
@@ -1334,16 +1333,7 @@ class Controllers(threading.Thread):
                     if board_object.read_internal_mcu_id() == mcu_id_from_config:
                         self.boards[board_name] = board_object
                         break
-
             self.create_motors()
-
-        """
-        mcu_ids_in_config = list(self.boards_config.keys())
-        for board in self.boards.values():
-            mcu_ids_in_config.remove(board.read_internal_mcu_id())
-        if len(mcu_ids_in_config) == 0:
-            self.create_motors()
-        """
 
     def create_motors(self):
         device_path_by_mcu_id = {}

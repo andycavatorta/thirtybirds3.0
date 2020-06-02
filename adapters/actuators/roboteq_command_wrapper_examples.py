@@ -2,7 +2,7 @@
 import queue
 import threading
 
-import roboteq_command_wrapper
+import roboteq_macro_functions as roboteq
 
 config = {
     "boards":{
@@ -45,10 +45,11 @@ class Status_Receiver(threading.Thread):
 status_receiver = Status_Receiver()
 status_receiver.start()
 
-class Data_Receiver(threading.Thread):
+class Roboteq_Data_Receiver(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.queue = queue.Queue()
+        self.start()
 
     def add_to_queue(self, message):
         self.queue.put(message)
@@ -57,7 +58,9 @@ class Data_Receiver(threading.Thread):
         while True:
             message = self.queue.get(True)
             print("data",message)
-
+            if "internal_event" in message:
+                do_tests()
+                
 data_receiver = Data_Receiver()
 data_receiver.start()
 
@@ -78,10 +81,33 @@ class Exception_Receiver(threading.Thread):
 exception_receiver = Exception_Receiver()
 exception_receiver.start()
 
-controllers = roboteq_command_wrapper.init(
+controllers = roboteq.init(
     data_receiver.add_to_queue, 
     status_receiver.add_to_queue, 
     exception_receiver.add_to_queue, 
     config
 )
 
+def do_tests():
+    for board_name in controllers.boards:
+        controllers.boards[board_name].set_serial_data_watchdog(0)
+    controllers.motors["pitch_slider"].go_to_speed_or_relative_position(200)
+    controllers.motors["bow_position_slider"].go_to_speed_or_relative_position(200)
+    controllers.motors["bow_height"].go_to_speed_or_relative_position(200)
+    controllers.motors["bow_rotation"].go_to_speed_or_relative_position(200)
+    time.sleep(5)
+    controllers.motors["pitch_slider"].go_to_speed_or_relative_position(00)
+    controllers.motors["bow_position_slider"].go_to_speed_or_relative_position(00)
+    controllers.motors["bow_height"].go_to_speed_or_relative_position(00)
+    controllers.motors["bow_rotation"].go_to_speed_or_relative_position(00)
+    time.sleep(5)
+    controllers.motors["pitch_slider"].go_to_speed_or_relative_position(-200)
+    controllers.motors["bow_position_slider"].go_to_speed_or_relative_position(-200)
+    controllers.motors["bow_height"].go_to_speed_or_relative_position(-200)
+    controllers.motors["bow_rotation"].go_to_speed_or_relative_position(-200)
+    time.sleep(5)
+    controllers.motors["pitch_slider"].go_to_speed_or_relative_position(00)
+    controllers.motors["bow_position_slider"].go_to_speed_or_relative_position(00)
+    controllers.motors["bow_height"].go_to_speed_or_relative_position(0)
+    controllers.motors["bow_rotation"].go_to_speed_or_relative_position(0)
+    time.sleep(5)
