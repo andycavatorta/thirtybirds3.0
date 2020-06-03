@@ -10,81 +10,107 @@ import time
 root_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(root_path[0:root_path.find("/thirtybirds")])
 from thirtybirds3.reporting.exceptions import capture_exceptions
-from thirtybirds3.adapters.actuators import roboteq_command_wrapper
+from thirtybirds3.adapters.actuators roboteq_command_wrapper import Controllers as roboteq_command_wrapper_controller
 
-#@capture_exceptions.Class
+
 class Controllers(threading.Thread):
-    def __init__(
-            self, 
-            data_receiver, 
-            status_receiver, 
-            exception_receiver,
-            boards_config, 
-            motors_config, 
-            mcu_serial_device_path_patterns=['/dev/serial/by-id/usb-FTDI*','/dev/serial/by-id/usb-Roboteq*']):
-        threading.Thread.__init__(self)
-        capture_exceptions.init(exception_receiver)
-        self.data_receiver = data_receiver
-        self.status_receiver = status_receiver
-        self.boards_config = boards_config
-        self.motors_config = motors_config
-        self.mcu_serial_device_path_patterns = mcu_serial_device_path_patterns
+    def __init__(self):
+        threading.Thread.__init__(
+            self,
+            app_data_receiver, 
+            app_status_receiver, 
+            app_exception_receiver, 
+            settings_for_boards,
+            settings_for_motors
+        )
+        self.app_status_receiver = app_status_receiver
         self.queue = queue.Queue()
-        self.boards_to_device_path = {} 
-        self.boards = {}
-        self.motors = {}
-        self.mcu_serial_device_paths = self.gxet_device_id_list()
+
+        self.controllers = roboteq_command_wrapper_controller(
+            app_data_receiver, 
+            app_status_receiver, 
+            app_exception_receiver, 
+            settings_for_boards,
+            settings_for_motors
+        )
+
         self.start()
-        # create board objects and read their mcu_ids
-        for mcu_serial_device_path in self.mcu_serial_device_paths:
-            self.boards_to_device_path[mcu_serial_device_path] = roboteq_command_wrapper.Board(mcu_serial_device_path, self, self.add_to_queue)
 
-    def match_boards_to_config(self, mcu_serial_device_path, resp_str):
-        # this method verifies that all mcu_ids listed in config can be matched with discovered boards.
-        # todo: this can much more terse and pythonic
-        # todo: handle mismatches or incomplete processes
-        mcu_ids_in_config = list(self.boards_config.keys())
-        for board in self.boards_to_device_path.values():
-            mcu_ids_in_config.remove(board.read_internal_mcu_id())
+    def 
 
-        if len(mcu_ids_in_config) == 0:
-            for board_name in self.boards_config:
-                mcu_id_from_config = self.boards_config[board_name]["mcu_id"]
-                for board_object in self.boards_to_device_path.values():
-                    if board_object.read_internal_mcu_id() == mcu_id_from_config:
-                        self.boards[board_name] = board_object
-                        break
-            self.create_motors()
 
-    def create_motors(self):
-        device_path_by_mcu_id = {}
-        for serial_id in self.boards:
-            device_path_by_mcu_id[self.boards[serial_id].read_internal_mcu_id()] = serial_id
 
-        for motor_name in self.motors_config:
-            self.motors[motor_name] = roboteq_command_wrapper.Motor(
-                motor_name,
-                self.boards[device_path_by_mcu_id[self.motors_config[motor_name]["mcu_id"]]],
-                self.motors_config[motor_name]["channel"],
-                self.status_receiver
-            )
-        time.sleep(0.5)
-        self.data_receiver({"internal_event":"motors_initialized"})
 
-    def get_device_id_list(self):
-        matching_mcu_serial_device_paths = []
-        for mcu_serial_device_path_pattern in self.mcu_serial_device_path_patterns:
-            matching_mcu_serial_device_paths.extend(glob.glob(mcu_serial_device_path_pattern))
-        return matching_mcu_serial_device_paths
 
-    def add_to_queue(self, mcu_serial_device_path, channel, method, resp_str):
-        #print("-add_to_queue-",mcu_serial_device_path, channel, method, resp_str)
-        self.queue.put(( mcu_serial_device_path, channel, method, resp_str))
+    def add_to_queue(self, message):
+        self.queue.put(message)
 
     def run(self):
         while True:
-            mcu_serial_device_path, channel, method, resp_str = self.queue.get(True)
-            #print(mcu_serial_device_path, channel, method, resp_str)
+            message = self.queue.get(True)
+
+
+
+
+
+
+
+
+
+
+
+class Roboteq_Data_Receiver(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.queue = queue.Queue()
+        self.start()
+
+    def add_to_queue(self, message):
+        self.queue.put(message)
+
+    def run(self):
+        while True:
+            message = self.queue.get(True)
+            print("data",message)
+            if "internal_event" in message:
+                do_tests()
+# 
+roboteq_data_receiver = Roboteq_Data_Receiver()
+
+controllers = roboteq_command_wrapper.Controllers(
+    roboteq_data_receiver.add_to_queue, 
+    # tb.status_receiver, 
+    tb.exception_receiver, 
+    settings.Roboteq.BOARDS,
+    settings.Roboteq.MOTORS
+)
+
+def do_tests():
+    for board_name in controllers.boards:
+        controllers.boards[board_name].set_serial_data_watchdog(0)
+    controllers.motors["pitch_slider"].go_to_speed_or_relative_position(200)
+    controllers.motors["bow_position_slider"].go_to_speed_or_relative_position(200)
+    controllers.motors["bow_height"].go_to_speed_or_relative_position(200)
+    controllers.motors["bow_rotation"].go_to_speed_or_relative_position(200)
+    time.sleep(5)
+    controllers.motors["pitch_slider"].go_to_speed_or_relative_position(00)
+    controllers.motors["bow_position_slider"].go_to_speed_or_relative_position(00)
+    controllers.motors["bow_height"].go_to_speed_or_relative_position(00)
+    controllers.motors["bow_rotation"].go_to_speed_or_relative_position(00)
+    time.sleep(5)
+    controllers.motors["pitch_slider"].go_to_speed_or_relative_position(-200)
+    controllers.motors["bow_position_slider"].go_to_speed_or_relative_position(-200)
+    controllers.motors["bow_height"].go_to_speed_or_relative_position(-200)
+    controllers.motors["bow_rotation"].go_to_speed_or_relative_position(-200)
+    time.sleep(5)
+    controllers.motors["pitch_slider"].go_to_speed_or_relative_position(00)
+    controllers.motors["bow_position_slider"].go_to_speed_or_relative_position(00)
+    controllers.motors["bow_height"].go_to_speed_or_relative_position(0)
+    controllers.motors["bow_rotation"].go_to_speed_or_relative_position(0)
+    time.sleep(5)
+
+
+
 
 class Macro_Functions:
     def __init__(

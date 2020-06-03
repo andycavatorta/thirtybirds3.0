@@ -15,6 +15,7 @@ from thirtybirds3.reporting.exceptions import capture_exceptions
 #@capture_exceptions.Class
 class Board(threading.Thread):
     def __init__(self, path, controller_ref, add_to_controller_queue):
+        print("path", path)
         threading.Thread.__init__(self)
         self.serial_device_path = path
         self.controller_ref = controller_ref
