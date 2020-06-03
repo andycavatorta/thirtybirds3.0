@@ -1323,7 +1323,7 @@ class Controllers(threading.Thread):
         # todo: this can much more terse and pythonic
         # todo: handle mismatches or incomplete processes
         mcu_ids_in_config = []  #list(self.boards_config.keys())
-        for board_name in self.boards_config:
+        for board_name in list(self.boards_config.keys()):
             print("self.boards_config", self.boards_config)
             mcu_ids_in_config.append(self.boards_config[board_name]).mcu_id
 
