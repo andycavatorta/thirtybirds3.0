@@ -1325,7 +1325,7 @@ class Controllers(threading.Thread):
         mcu_ids_in_config = []  #list(self.boards_config.keys())
         for board_name in list(self.boards_config.keys()):
             print("self.boards_config", self.boards_config[board_name])
-            mcu_ids_in_config.append(self.boards_config[board_name]).mcu_id
+            mcu_ids_in_config.append(self.boards_config[board_name])[mcu_id]
 
         print("mcu_ids_in_config", mcu_ids_in_config)
 
