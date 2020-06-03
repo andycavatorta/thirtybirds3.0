@@ -15,7 +15,6 @@ from thirtybirds3.reporting.exceptions import capture_exceptions
 #@capture_exceptions.Class
 class Board(threading.Thread):
     def __init__(self, path, controller_ref, add_to_controller_queue):
-        print("path", path)
         threading.Thread.__init__(self)
         self.serial_device_path = path
         self.controller_ref = controller_ref
@@ -1324,7 +1323,10 @@ class Controllers(threading.Thread):
         # todo: this can much more terse and pythonic
         # todo: handle mismatches or incomplete processes
         mcu_ids_in_config = list(self.boards_config.keys())
+        print("mcu_ids_in_config", mcu_ids_in_config)
+
         for board in self.boards_to_device_path.values():
+            print("board", board, board.read_internal_mcu_id())            
             mcu_ids_in_config.remove(board.read_internal_mcu_id())
 
         if len(mcu_ids_in_config) == 0:
