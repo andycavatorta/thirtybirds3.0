@@ -1322,11 +1322,14 @@ class Controllers(threading.Thread):
         # this method verifies that all mcu_ids listed in config can be matched with discovered boards.
         # todo: this can much more terse and pythonic
         # todo: handle mismatches or incomplete processes
-        mcu_ids_in_config = list(self.boards_config.keys())
+        mcu_ids_in_config = []  #list(self.boards_config.keys())
+        for board_name in self.boards_config:
+            mcu_ids_in_config.append(self.boards_config[board_name]).mcu_id
+
         print("mcu_ids_in_config", mcu_ids_in_config)
 
         for board in self.boards_to_device_path.values():
-            print("board", board, board.read_internal_mcu_id())            
+            print("board", board, board.read_internal_mcu_id())
             mcu_ids_in_config.remove(board.read_internal_mcu_id())
 
         if len(mcu_ids_in_config) == 0:
