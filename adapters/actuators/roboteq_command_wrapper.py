@@ -1324,13 +1324,10 @@ class Controllers(threading.Thread):
         # todo: handle mismatches or incomplete processes
         mcu_ids_in_config = []  #list(self.boards_config.keys())
         for board_name in list(self.boards_config.keys()):
-            print("self.boards_config", self.boards_config[board_name])
             mcu_ids_in_config.append(self.boards_config[board_name])["mcu_id"]
 
-        print("mcu_ids_in_config", mcu_ids_in_config)
 
         for board in self.boards_to_device_path.values():
-            print("board", board, board.read_internal_mcu_id())
             mcu_ids_in_config.remove(board.read_internal_mcu_id())
 
         if len(mcu_ids_in_config) == 0:
@@ -1343,6 +1340,7 @@ class Controllers(threading.Thread):
             self.create_motors()
 
     def create_motors(self):
+        print("-----------0")
         device_path_by_mcu_id = {}
         for serial_id in self.boards:
             device_path_by_mcu_id[self.boards[serial_id].read_internal_mcu_id()] = serial_id
@@ -1355,6 +1353,7 @@ class Controllers(threading.Thread):
                 self.status_receiver
             )
         time.sleep(0.5)
+        print("-----------1")
         self.data_receiver({"internal_event":"motors_initialized"})
 
     def get_device_id_list(self):
