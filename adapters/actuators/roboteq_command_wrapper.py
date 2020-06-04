@@ -1330,7 +1330,7 @@ class Macro(threading.Thread):
             self
         ):
         # send status message confirming process started
-        switch_closed = GPIO.input(limit_switch_pin) == GPIO.HIGH
+        switch_closed = GPIO.input(self.limit_switch_pin) == GPIO.HIGH
         print("switch_closed", switch_closed)
         if switch_closed:
             # send status message confirming process finished    
