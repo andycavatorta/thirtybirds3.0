@@ -1438,12 +1438,12 @@ class Controllers(threading.Thread):
                 self.motors_config[motor_name]["channel"],
                 self.status_receiver
             )
-            self.motors[motor_name] = Macro(
+            self.macros[motor_name] = Macro(
                 motor_name, 
                 self.motors[motor_name], 
                 self.status_receiver
             )
-        time.sleep(0.5)
+        time.sleep(3.5)
         self.data_receiver({"internal_event":"motors_initialized"})
 
     def get_device_id_list(self):
