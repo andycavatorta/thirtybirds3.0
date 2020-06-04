@@ -1438,13 +1438,20 @@ class Controllers(threading.Thread):
                 self.motors_config[motor_name]["channel"],
                 self.status_receiver
             )
-            self.macros[motor_name] = Macro(
-                motor_name, 
-                self.motors[motor_name], 
-                self.status_receiver, 
-                self.motors_config[motor_name]["limit_switch_pin"],
-                self.motors_config[motor_name]["limit_switch_direction"]
-            )
+            try:
+                self.macros[motor_name] = Macro(
+                    motor_name, 
+                    self.motors[motor_name], 
+                    self.status_receiver, 
+                    self.motors_config[motor_name]["limit_switch_pin"],
+                    self.motors_config[motor_name]["limit_switch_direction"]
+                )
+            except KeyError:
+                self.macros[motor_name] = Macro(
+                    motor_name, 
+                    self.motors[motor_name], 
+                    self.status_receiver
+                )
 
         time.sleep(3.5)
         self.data_receiver({"internal_event":"motors_initialized"})
