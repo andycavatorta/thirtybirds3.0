@@ -374,6 +374,9 @@ class Board(threading.Thread):
     def set_name(self, board_name):
         self.board_name = board_name
 
+    def get_name(self):
+        return self.board_name
+
     def read_internal_mcu_id(self):
         return self.mcu_id
 
@@ -536,7 +539,7 @@ class Motor(threading.Thread):
 
     def read_operating_mode(self, response=None):
         if response is not None:
-            self.board.add_to_controller_queue(self.board_name , self.channel, "read_operating_mode", response)
+            self.board.add_to_controller_queue(self.board.get_name() , self.channel, "read_operating_mode", response)
         else:
             serial_command = "~MMOD {}".format(self.channel)
             self.board.add_to_queue(serial_command, self.read_operating_mode)
