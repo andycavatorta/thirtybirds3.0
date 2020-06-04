@@ -1396,6 +1396,7 @@ class Controllers(threading.Thread):
         self.queue = queue.Queue()
         self.boards_to_device_path = {} 
         self.boards = {}
+        self.macros = {}
         self.motors = {}
         self.mcu_serial_device_paths = self.get_device_id_list()
         #self.status_receiver("self.mcu_serial_device_paths",self.mcu_serial_device_paths)
