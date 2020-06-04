@@ -1409,7 +1409,6 @@ class Controllers(threading.Thread):
         # this method verifies that all mcu_ids listed in config can be matched with discovered boards.
         # todo: this can much more terse and pythonic
         # todo: handle mismatches or incomplete processes
-
         mcu_ids_in_config = []  #list(self.boards_config.keys())
         for board_name in list(self.boards_config.keys()):
             mcu_ids_in_config.append(self.boards_config[board_name]["mcu_id"])
@@ -1442,8 +1441,11 @@ class Controllers(threading.Thread):
             self.macros[motor_name] = Macro(
                 motor_name, 
                 self.motors[motor_name], 
-                self.status_receiver
+                self.status_receiver, 
+                self.boards_config[board_name]["limit_switch_pin"],
+                self.boards_config[board_name]["limit_switch_direction"]
             )
+
         time.sleep(3.5)
         self.data_receiver({"internal_event":"motors_initialized"})
 
