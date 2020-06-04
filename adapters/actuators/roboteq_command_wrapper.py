@@ -3,6 +3,7 @@
 import glob
 import os
 import queue
+import RPi.GPIO as GPIO 
 import serial
 import sys
 import time
@@ -12,6 +13,11 @@ root_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(root_path[0:root_path.find("/thirtybirds")])
 from thirtybirds3.reporting.exceptions import capture_exceptions
 
+GPIO.setwarnings(False) 
+GPIO.setmode(GPIO.BCM)
+
+
+
 #@capture_exceptions.Class
 class Board(threading.Thread):
     def __init__(self, path, controller_ref, add_to_controller_queue):
@@ -20,6 +26,7 @@ class Board(threading.Thread):
         self.controller_ref = controller_ref
         self.add_to_controller_queue = add_to_controller_queue
         self.mcu_id = ""
+        self.name = ""
         self.queue = queue.Queue()
         self.serial = serial.Serial(
             port=self.serial_device_path,
@@ -52,7 +59,7 @@ class Board(threading.Thread):
 
     def read_mixed_mode(self, response=None):
         if response:
-            self.add_to_controller_queue(self.serial_device_path, None, "read_mixed_mode", response)
+            self.add_to_controller_queue(self.board_name , None, "read_mixed_mode", response)
         else:
             serial_command = "~MXMD"
             self.add_to_queue(serial_command, self.read_mixed_mode)
@@ -70,7 +77,7 @@ class Board(threading.Thread):
 
     def read_pwm_frequency(self, response=None):
         if response:
-            self.add_to_controller_queue(self.serial_device_path, None, "read_pwm_frequency", response)
+            self.add_to_controller_queue(self.board_name , None, "read_pwm_frequency", response)
         else:
             serial_command = "~PWMF"
             self.add_to_queue(serial_command, self.read_pwm_frequency)
@@ -89,7 +96,7 @@ class Board(threading.Thread):
         ditions.
         """
         if response:
-            self.add_to_controller_queue(self.serial_device_path, None, "read_volts", response)
+            self.add_to_controller_queue(self.board_name , None, "read_volts", response)
         else:
             serial_command = "?V"
             self.add_to_queue(serial_command, self.read_volts)
@@ -108,7 +115,7 @@ class Board(threading.Thread):
 
     def read_serial_data_watchdog(self, response=None):
         if response:
-            self.add_to_controller_queue(self.serial_device_path, None, "read_serial_data_watchdog", response)
+            self.add_to_controller_queue(self.board_name , None, "read_serial_data_watchdog", response)
         else:
             serial_command = "~RWD"
             self.add_to_queue(serial_command, self.read_serial_data_watchdog)
@@ -125,7 +132,7 @@ class Board(threading.Thread):
 
     def read_overvoltage_hysteresis(self, response=None):
         if response:
-            self.add_to_controller_queue(self.serial_device_path, None, "read_overvoltage_hysteresis", response)
+            self.add_to_controller_queue(self.board_name , None, "read_overvoltage_hysteresis", response)
         else:
             serial_command = "~OVH"
             self.add_to_queue(serial_command, self.read_overvoltage_hysteresis)
@@ -148,7 +155,7 @@ class Board(threading.Thread):
 
     def read_overvoltage_cutoff_threhold(self, response=None):
         if response:
-            self.add_to_controller_queue(self.serial_device_path, None, "read_overvoltage_cutoff_threhold", response)
+            self.add_to_controller_queue(self.board_name , None, "read_overvoltage_cutoff_threhold", response)
         else:
             serial_command = "~OVL"
             self.add_to_queue(serial_command, self.read_overvoltage_cutoff_threhold)
@@ -169,7 +176,7 @@ class Board(threading.Thread):
 
     def read_short_circuit_detection_threshold(self, response=None):
         if response:
-            self.add_to_controller_queue(self.serial_device_path, None, "read_short_circuit_detection_threshold", response)
+            self.add_to_controller_queue(self.board_name , None, "read_short_circuit_detection_threshold", response)
         else:
             serial_command = "~THLD"
             self.add_to_queue(serial_command, self.read_short_circuit_detection_threshold)
@@ -185,7 +192,7 @@ class Board(threading.Thread):
 
     def read_undervoltage_limit(self, response=None):
         if response:
-            self.add_to_controller_queue(self.serial_device_path, None, "read_undervoltage_limit", response)
+            self.add_to_controller_queue(self.board_name , None, "read_undervoltage_limit", response)
         else:
             serial_command = "~UVL"
             self.add_to_queue(serial_command, self.read_undervoltage_limit)
@@ -201,7 +208,7 @@ class Board(threading.Thread):
 
     def read_brake_activation_delay(self, response=None):
         if response:
-            self.add_to_controller_queue(self.serial_device_path, None, "read_brake_activation_delay", response)
+            self.add_to_controller_queue(self.board_name , None, "read_brake_activation_delay", response)
         else:
             serial_command = "~BKD"
             self.add_to_queue(serial_command, self.read_brake_activation_delay)
@@ -228,7 +235,7 @@ class Board(threading.Thread):
 
     def read_command_priorities(self, response=None):
         if response:
-            self.add_to_controller_queue(self.serial_device_path, None, "read_command_priorities", response)
+            self.add_to_controller_queue(self.board_name , None, "read_command_priorities", response)
         else:
             serial_command = "~CPRI"
             self.add_to_queue(serial_command)
@@ -244,7 +251,7 @@ class Board(threading.Thread):
 
     def read_serial_echo(self, response=None):
         if response:
-            self.add_to_controller_queue(self.serial_device_path, None, "read_serial_echo", response)
+            self.add_to_controller_queue(self.board_name , None, "read_serial_echo", response)
         else:
             serial_command = "~ECHOF"
             self.add_to_queue(serial_command, self.read_serial_echo)
@@ -268,7 +275,7 @@ class Board(threading.Thread):
 
     def read_rs232_bit_rate(self, response=None):
         if response:
-            self.add_to_controller_queue(self.serial_device_path, None, "read_rs232_bit_rate", response)
+            self.add_to_controller_queue(self.board_name , None, "read_rs232_bit_rate", response)
         else:
             serial_command = "~RSBR"
             self.add_to_queue(serial_command, self.read_rs232_bit_rate)
@@ -280,7 +287,7 @@ class Board(threading.Thread):
         if response:
             self.add_mcu_id(response)
             self.controller_ref.match_boards_to_config(self.serial_device_path, response)
-            #self.add_to_controller_queue(self.serial_device_path, None, "read_mcu_id", response)
+            #self.add_to_controller_queue(self.board_name , None, "read_mcu_id", response)
         else:
             serial_command = "?UID"
             self.add_to_queue(serial_command, self.read_mcu_id)
@@ -294,7 +301,7 @@ class Board(threading.Thread):
         self.add_to_queue(serial_command, self._read_user_boolean_value_)
 
     def _read_user_boolean_value_(self, response):
-        self.add_to_controller_queue(self.serial_device_path, None, "read_user_boolean_value", response)
+        self.add_to_controller_queue(self.board_name , None, "read_user_boolean_value", response)
 
     def set_user_variable(self, position, value):
         serial_command = "!VAR {} {}".format(position, value)
@@ -305,7 +312,7 @@ class Board(threading.Thread):
         self.add_to_queue(serial_command, self._read_user_variable_)
 
     def _read_user_variable_(self, response):
-        self.add_to_controller_queue(self.serial_device_path, None, "read_user_variable", response)
+        self.add_to_controller_queue(self.board_name , None, "read_user_variable", response)
 
     def set_user_data_in_ram(self, address, data):
         """
@@ -351,7 +358,7 @@ class Board(threading.Thread):
 
     def read_script_auto_start(self, response=None):
         if response:
-            self.add_to_controller_queue(self.serial_device_path, None, "read_script_auto_start", response)
+            self.add_to_controller_queue(self.board_name , None, "read_script_auto_start", response)
         else:
             serial_command = "~BRUN"
             self.add_to_queue(serial_command, self.read_script_auto_start)
@@ -363,6 +370,10 @@ class Board(threading.Thread):
     ##############################################
     #    CLASS INTERNALS                         #
     ##############################################
+
+    def set_name(self, board_name):
+        self.board_name = board_name
+
     def read_internal_mcu_id(self):
         return self.mcu_id
 
@@ -403,7 +414,7 @@ class Board(threading.Thread):
                 callback(resp_str)
             except TypeError as e: #if callback == None
                 pass
-            #self.add_to_controller_queue(self.serial_device_path, serial_command, resp_str, callback)
+            #self.add_to_controller_queue(self.board_name , serial_command, resp_str, callback)
 
 
 
@@ -523,9 +534,20 @@ class Motor(threading.Thread):
         serial_command = "^MMOD {} {}".format(self.channel, mode)
         self.board.add_to_queue(serial_command)
 
-    def read_operating_mode(self):
-        serial_command = "~MMOD {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def read_operating_mode(self, response=None):
+        if response is not None:
+            self.board.add_to_controller_queue(self.board_name , self.channel, "read_operating_mode", response)
+        else:
+            serial_command = "~MMOD {}".format(self.channel)
+            self.board.add_to_queue(serial_command, self.read_operating_mode)
+
+        #serial_command = "~MMOD {}".format(self.channel)
+        #self.board.add_to_queue(serial_command)
+
+
+
+
+
 
     def set_default_velocity_in_position_mode(self, velocity):
         """
@@ -1280,6 +1302,70 @@ class Motor(threading.Thread):
 
 
 
+#@capture_exceptions.Class
+class Macro(threading.Thread):
+    def __init__(
+            self, 
+            motor_name, 
+            motor_obj, 
+            status_receiver,
+            limit_switch_pin = None,
+            limit_switch_direction = 0
+        ):
+        threading.Thread.__init__(self)
+        self.motor_name = motor_name
+        self.motor_obj = motor_obj
+        self.status_receiver = status_receiver
+        self.limit_switch_pin = limit_switch_pin
+        self.limit_switch_direction = limit_switch_direction
+        self.queue = queue.Queue()
+        if limit_switch_pin is not None and limit_switch_direction != 0:
+
+
+            GPIO.setup(limit_switch_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        self.start()
+
+
+    def go_to_limit_switch(
+            self
+        ):
+        # send status message confirming process started
+        switch_closed = GPIO.input(limit_switch_pin) == GPIO.HIGH
+        print("switch_closed", switch_closed)
+        if switch_closed:
+            # send status message confirming process finished    
+            return
+        # read and record initial motor mode
+        self.motor_obj.read_operating_mode()
+        # read and record initial deceleration setting
+        # read and record initial speed setting
+        # set motor mode to closed loop speed
+        # set speed low
+
+        # start motion in direction
+        # read motor current 
+        # loop 
+            # read motor current, position, and limit switch
+            # when limit switch triggers or position stops changing or current spikes
+                # stop motor
+                # set encoder to zero or adjusted near-zero value
+        # restore initial deceleration setting
+        # restore initial speed setting
+        # restore initial motor mode
+        # send status message confirming process finished
+        #motor = self.controllers.motors[motor_name]
+
+
+
+
+    def add_to_queue(self, message):
+        #print("-add_to_queue-",mcu_serial_device_path, channel, method, resp_str)
+        self.queue.put(message)
+
+    def run(self):
+        while True:
+            message = self.queue.get(True)
+            #print(mcu_serial_device_path, channel, method, resp_str)
 
 
 
@@ -1323,31 +1409,24 @@ class Controllers(threading.Thread):
         # todo: this can much more terse and pythonic
         # todo: handle mismatches or incomplete processes
 
-        print("-----------a")
         mcu_ids_in_config = []  #list(self.boards_config.keys())
         for board_name in list(self.boards_config.keys()):
-            print("-----------a1")
             mcu_ids_in_config.append(self.boards_config[board_name]["mcu_id"])
-            print("-----------a2")
 
-
-        print("-----------b")
         for board in self.boards_to_device_path.values():
             mcu_ids_in_config.remove(board.read_internal_mcu_id())
 
-        print("-----------c")
         if len(mcu_ids_in_config) == 0:
             for board_name in self.boards_config:
                 mcu_id_from_config = self.boards_config[board_name]["mcu_id"]
                 for board_object in self.boards_to_device_path.values():
                     if board_object.read_internal_mcu_id() == mcu_id_from_config:
                         self.boards[board_name] = board_object
+                        board_object.set_name(board_name)
                         break
             self.create_motors()
-            print("-----------d")
 
     def create_motors(self):
-        print("-----------0")
         device_path_by_mcu_id = {}
         for serial_id in self.boards:
             device_path_by_mcu_id[self.boards[serial_id].read_internal_mcu_id()] = serial_id
@@ -1359,8 +1438,12 @@ class Controllers(threading.Thread):
                 self.motors_config[motor_name]["channel"],
                 self.status_receiver
             )
+            self.motors[motor_name] = Macro(
+                motor_name, 
+                self.motors[motor_name], 
+                self.status_receiver
+            )
         time.sleep(0.5)
-        print("-----------1")
         self.data_receiver({"internal_event":"motors_initialized"})
 
     def get_device_id_list(self):
@@ -1369,11 +1452,11 @@ class Controllers(threading.Thread):
             matching_mcu_serial_device_paths.extend(glob.glob(mcu_serial_device_path_pattern))
         return matching_mcu_serial_device_paths
 
-    def add_to_queue(self, mcu_serial_device_path, channel, method, resp_str):
+    def add_to_queue(self, board_name, channel, method, resp_str):
         #print("-add_to_queue-",mcu_serial_device_path, channel, method, resp_str)
-        self.queue.put(( mcu_serial_device_path, channel, method, resp_str))
+        self.queue.put(( board_name, channel, method, resp_str))
 
     def run(self):
         while True:
-            mcu_serial_device_path, channel, method, resp_str = self.queue.get(True)
-            #print(mcu_serial_device_path, channel, method, resp_str)
+            board_name, channel, method, resp_str = self.queue.get(True)
+            print("Controllers.run", board_name, channel, method, resp_str)

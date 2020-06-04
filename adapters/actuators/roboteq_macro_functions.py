@@ -23,7 +23,7 @@ class Controllers(threading.Thread):
             settings_for_boards,
             settings_for_motors
         )
-        self.app_status_receiver = app_status_receiver
+        self.app_data_receiver = app_data_receiver
         self.queue = queue.Queue()
 
         self.controllers = roboteq_command_wrapper_controller(
@@ -33,21 +33,23 @@ class Controllers(threading.Thread):
             settings_for_boards,
             settings_for_motors
         )
-
+        self.boards = self.controllers.boards
+        self.motors = self.controllers.motors
+        self.macros = {}
+        for motor_name, motor_object in self.motors.items():
+            self.macros[motor_name] = Macro(motor_name, motor_object)
         self.start()
 
-    def 
+    def data_receiver(self, message):
+        self.queue.put(("", topic, message))
 
-
-
-
-
-    def add_to_queue(self, message):
-        self.queue.put(message)
+    def add_to_queue(self, genus, topic, message):
+        self.queue.put((genus, topic, message))
 
     def run(self):
         while True:
-            message = self.queue.get(True)
+            genus, topic, message = self.queue.get(True)
+            print(genus, topic, message)
 
 
 
@@ -58,9 +60,8 @@ class Controllers(threading.Thread):
 
 
 
-
-class Roboteq_Data_Receiver(threading.Thread):
-    def __init__(self):
+class Macro(threading.Thread):
+    def __init__(self,motor_name, motor_object):
         threading.Thread.__init__(self)
         self.queue = queue.Queue()
         self.start()
