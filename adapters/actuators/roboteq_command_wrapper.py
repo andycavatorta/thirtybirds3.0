@@ -1442,8 +1442,8 @@ class Controllers(threading.Thread):
                 motor_name, 
                 self.motors[motor_name], 
                 self.status_receiver, 
-                self.boards_config[motor_name]["limit_switch_pin"],
-                self.boards_config[motor_name]["limit_switch_direction"]
+                self.motors_config[motor_name]["limit_switch_pin"],
+                self.motors_config[motor_name]["limit_switch_direction"]
             )
 
         time.sleep(3.5)
