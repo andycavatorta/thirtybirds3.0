@@ -1337,7 +1337,7 @@ class Macro(threading.Thread):
             response = None
         ):
         print("go_to_limit_switch", response)
-        self.motor.board.read_max_power_reverse()
+        self.motor.read_max_power_reverse()
         # send status message confirming process started
         #switch_closed = GPIO.input(self.limit_switch_pin) == GPIO.HIGH
         #print("switch_closed", switch_closed)
