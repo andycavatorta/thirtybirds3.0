@@ -537,7 +537,10 @@ class Motor(threading.Thread):
         serial_command = "^MMOD {} {}".format(self.channel, mode)
         self.board.add_to_queue(serial_command)
 
-    def read_operating_mode(self, response=None):
+    def read_operating_mode(
+            self, 
+            response=None
+        ):
         if response is not None:
             self.board.add_to_controller_queue(self.board.get_name() , self.channel, "read_operating_mode", response)
         else:
@@ -763,7 +766,7 @@ class Motor(threading.Thread):
         serial_command = "^ICAP {} {}".format(self.channel, cap)
         self.board.add_to_queue(serial_command)
 
-    def read_pid_integrap_cap(self):
+    def read_pid_integral_cap(self):
         serial_command = "~ICAP {}".format(self.channel)
         self.board.add_to_queue(serial_command)
 
@@ -1317,7 +1320,7 @@ class Macro(threading.Thread):
         ):
         threading.Thread.__init__(self)
         self.motor_name = motor_name
-        self.motor_obj = motor_obj
+        self.motor = motor_obj
         self.status_receiver = status_receiver
         self.limit_switch_pin = limit_switch_pin
         self.limit_switch_direction = limit_switch_direction
@@ -1330,16 +1333,19 @@ class Macro(threading.Thread):
 
 
     def go_to_limit_switch(
-            self
+            self,
+            response = None
         ):
+        print("go_to_limit_switch", response)
+        self.motor.board.read_max_power_reverse()
         # send status message confirming process started
-        switch_closed = GPIO.input(self.limit_switch_pin) == GPIO.HIGH
-        print("switch_closed", switch_closed)
-        if switch_closed:
-            # send status message confirming process finished    
-            return
+        #switch_closed = GPIO.input(self.limit_switch_pin) == GPIO.HIGH
+        #print("switch_closed", switch_closed)
+        #if switch_closed:
+            # send status message confirming process finished
+        #    return
         # read and record initial motor mode
-        self.motor_obj.read_operating_mode()
+        # self.motor_obj.read_operating_mode(callback = self.go_to_limit_switch)
         # read and record initial deceleration setting
         # read and record initial speed setting
         # set motor mode to closed loop speed
@@ -1357,9 +1363,6 @@ class Macro(threading.Thread):
         # restore initial motor mode
         # send status message confirming process finished
         #motor = self.controllers.motors[motor_name]
-
-
-
 
     def add_to_queue(self, message):
         #print("-add_to_queue-",mcu_serial_device_path, channel, method, resp_str)
