@@ -394,7 +394,7 @@ class Board(threading.Thread):
             #print(resp_char)
             resp_str += resp_char.decode('utf-8')
         resp_str = resp_str[:-1] # trim /r from end
-        #print(self.serial_device_path, "resp_str",resp_str)
+        print("resp_str",resp_str)
         resp_l = resp_str.split('=')
         if len(resp_l) == 1:
             return resp_str
