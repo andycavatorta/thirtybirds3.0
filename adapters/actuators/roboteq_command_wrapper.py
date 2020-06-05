@@ -383,7 +383,7 @@ class Board(threading.Thread):
     def add_mcu_id(self,mcu_id):
         self.mcu_id = mcu_id
 
-    def add_to_queue(self, serial_command, callback=None):
+    def add_to_queue(self, serial_command, callback=None, evt=None):
         self.queue.put((serial_command, callback))
 
     def _readSerial(self):
@@ -406,10 +406,9 @@ class Board(threading.Thread):
     def run(self):
         while True:
             serial_command, callback = self.queue.get(True)
-            time.sleep(0.05)
+            #time.sleep(0.01)
             self.serial.write(str.encode(serial_command +'\r'))
             echo_str = self._readSerial() # for serial echo
-            print("echo_str=", echo_str)
             resp_str = self._readSerial()
             print("resp_str=", resp_str)
             #print("callback",callback)
