@@ -80,7 +80,7 @@ class Board(threading.Thread):
 
         time.sleep(0.5) # give serial a moment
         self.start()
-        self.get_mcu_id()
+        #self.get_mcu_id()
         #self.read_mcu_id()
 
     ##############################################
