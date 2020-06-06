@@ -1505,11 +1505,16 @@ class Controllers(threading.Thread):
         # create board objects and read their mcu_ids
 
         for mcu_serial_device_path in self.mcu_serial_device_paths:
-            print("--------a", mcu_serial_device_path)
-            self.boards_to_device_path[mcu_serial_device_path] = Board(mcu_serial_device_path, self, self.add_to_queue)
-            print("--------b")
-            self.boards_to_device_path[mcu_serial_device_path].get_mcu_id()
-            print("--------c")
+            board = Board(mcu_serial_device_path, self, self.add_to_queue)
+            mcu_id = board.get_mcu_id()
+            for name, val in self.boards_config.items():
+                if val["mcu_id"] == mcu_id:
+                    self.boards[name] = board
+                    break
+        print("todo: make sure all boards in config are matched to serial device paths")
+
+        self.create_motors()
+        
         """
         mcu_ids_in_config = []  #list(self.boards_config.keys())
         for board_name in list(self.boards_config.keys()):
