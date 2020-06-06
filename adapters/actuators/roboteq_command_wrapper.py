@@ -329,21 +329,36 @@ class Board(threading.Thread):
     ##############################################
 
     def get_mcu_id(self, force_update = False):
+        print(">>00")
         if self.states["UID"] is None or force_update:
+            print(">>01")
             event = threading.Event()
+            print(">>02")
             event.wait()
+            print(">>03")
             self.add_to_queue(
                 serial_command = serial_command, 
                 callback = self.read_mcu_id,
                 event = event
             )
+            print(">>04")
             event.set()
+            print(">>05")
         print("get_mcu_id=", self.states["UID"])
+        print(">>06")
         return self.states["UID"]
 
     def _store_mcu_id_(self, values_str, event):
+        print(">>10")
         self.states["UID"] = values_str
+        print(">>11")
         event.clear()
+        print(">>12")
+
+
+
+
+
 
 
 
