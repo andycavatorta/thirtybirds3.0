@@ -1510,14 +1510,14 @@ class Controllers(threading.Thread):
             print("--------b")
             self.boards_to_device_path[mcu_serial_device_path].get_mcu_id()
             print("--------c")
-
+        """
         mcu_ids_in_config = []  #list(self.boards_config.keys())
         for board_name in list(self.boards_config.keys()):
             mcu_ids_in_config.append(self.boards_config[board_name]["mcu_id"])
 
         for board in self.boards_to_device_path.values():
             mcu_ids_in_config.remove(board.get_mcu_id())
-
+        """
 
     def match_boards_to_config(self, mcu_serial_device_path, resp_str):
         # this method verifies that all mcu_ids listed in config can be matched with discovered boards.
