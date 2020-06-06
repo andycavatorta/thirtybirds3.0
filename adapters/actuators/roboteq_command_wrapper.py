@@ -352,6 +352,7 @@ class Board(threading.Thread):
     def _store_mcu_id_(self, values_str, event):
         print(">>10", self.states["UID"])
         self.states["UID"] = values_str
+        self.mcu_id = mcu_id
         print(">>11", self.states["UID"])
         event.clear()
         print(">>12")
@@ -1501,8 +1502,18 @@ class Controllers(threading.Thread):
         #self.status_receiver("self.mcu_serial_device_paths",self.mcu_serial_device_paths)
         self.start()
         # create board objects and read their mcu_ids
+
         for mcu_serial_device_path in self.mcu_serial_device_paths:
             self.boards_to_device_path[mcu_serial_device_path] = Board(mcu_serial_device_path, self, self.add_to_queue)
+            self.boards_to_device_path[mcu_serial_device_path].get_mcu_id()
+
+        mcu_ids_in_config = []  #list(self.boards_config.keys())
+        for board_name in list(self.boards_config.keys()):
+            mcu_ids_in_config.append(self.boards_config[board_name]["mcu_id"])
+            
+        for board in self.boards_to_device_path.values():
+            mcu_ids_in_config.remove(board.get_mcu_id())
+
 
     def match_boards_to_config(self, mcu_serial_device_path, resp_str):
         # this method verifies that all mcu_ids listed in config can be matched with discovered boards.
