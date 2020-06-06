@@ -72,7 +72,7 @@ class Board(threading.Thread):
             "RSBR":None,
             "RWD":None,
             "THLD":None,
-            "UID":_store_mcu_id_,
+            "UID":self._store_mcu_id_,
             "UVL":None,
             "V":None,
             "VAR":None,
