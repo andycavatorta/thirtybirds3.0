@@ -334,6 +334,7 @@ class Board(threading.Thread):
             print(">>01")
             event = threading.Event()
             print(">>02")
+            serial_command = "?UID"
             self.add_to_queue(
                 serial_command = serial_command, 
                 callback = self.read_mcu_id,
