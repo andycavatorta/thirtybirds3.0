@@ -352,7 +352,7 @@ class Board(threading.Thread):
     def _store_mcu_id_(self, values_str, event):
         print(">>10", self.states["UID"])
         self.states["UID"] = values_str
-        self.mcu_id = mcu_id
+        self.mcu_id = values_str
         print(">>11", self.states["UID"])
         event.clear()
         print(">>12")
