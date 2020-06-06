@@ -1513,7 +1513,7 @@ class Controllers(threading.Thread):
                     break
         print("todo: make sure all boards in config are matched to serial device paths")
 
-        #self.create_motors()
+        self.create_motors()
         
         """
         mcu_ids_in_config = []  #list(self.boards_config.keys())
