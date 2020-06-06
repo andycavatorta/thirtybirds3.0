@@ -478,10 +478,10 @@ class Board(threading.Thread):
                     print("todo: response == '-' pass message of failure")
                 else:# this is a command echo string.  now fetch command response
                     resp = self._readSerial_()
-                        if len(resp)!=2:
-                            print("todo: response == '-' pass message of failure")
-                        else:
-                            self.handlers[resp[0]](resp[1], event)
+                    if len(resp)!=2:
+                        print("todo: response == '-' pass message of failure")
+                    else:
+                        self.handlers[resp[0]](resp[1], event)
             """
             echo_str = self._readSerial_() # for serial echo
             command_str, resp_str = self._readSerial_()
