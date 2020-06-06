@@ -1555,7 +1555,7 @@ class Controllers(threading.Thread):
                         self.motors_config[motor_name]["channel"],
                         self.status_receiver
                     )
-                    
+                    print(self.motors[motor_name])
                     try:
                         self.macros[motor_name] = Macro(
                             motor_name, 
