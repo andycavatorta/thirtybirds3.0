@@ -35,8 +35,52 @@ class Board(threading.Thread):
             stopbits=serial.STOPBITS_ONE,
             parity=serial.PARITY_NONE,
         )
+
+        self.states = {
+            "B":None,
+            "BKD":None,
+            "BRUN":None,
+            "CPRI":None,
+            "ECHOF":None,
+            "EE":None,
+            "LK":None,
+            "MXMD":None,
+            "OVH":None,
+            "OVL":None,
+            "PWMF":None,
+            "RSBR":None,
+            "RWD":None,
+            "THLD":None,
+            "UID":None,
+            "UVL":None,
+            "V":None,
+            "VAR":None,
+        }
+
+        self.handlers = {
+            "B":None,
+            "BKD":None,
+            "BRUN":None,
+            "CPRI":None,
+            "ECHOF":None,
+            "EE":None,
+            "LK":None,
+            "MXMD":None,
+            "OVH":None,
+            "OVL":None,
+            "PWMF":None,
+            "RSBR":None,
+            "RWD":None,
+            "THLD":None,
+            "UID":_store_mcu_id_,
+            "UVL":None,
+            "V":None,
+            "VAR":None,
+        }
+
         time.sleep(0.5) # give serial a moment
         self.start()
+        self.get_mcu_id()
         self.read_mcu_id()
 
     ##############################################
@@ -283,6 +327,26 @@ class Board(threading.Thread):
     ##############################################
     #    MEMORY                                  #
     ##############################################
+
+    def get_mcu_id(self, force_update = False):
+        if self.states["UID"] is None or force_update:
+            event = threading.Event()
+            event.wait()
+            self.add_to_queue(
+                serial_command = serial_command, 
+                callback = self.read_mcu_id,
+                event = event
+            )
+            event.set()
+        print("get_mcu_id=", self.states["UID"])
+        return self.states["UID"]
+
+    def _store_mcu_id_(self, values_str, event):
+        self.states["UID"] = values_str
+        event.clear()
+
+
+
     def read_mcu_id(self, response=None):
         if response:
             self.add_mcu_id(response)
@@ -383,41 +447,54 @@ class Board(threading.Thread):
     def add_mcu_id(self,mcu_id):
         self.mcu_id = mcu_id
 
-    def add_to_queue(self, serial_command, callback=None, evt=None):
-        self.queue.put((serial_command, callback))
+    def add_to_queue(
+            self, 
+            serial_command, 
+            callback=None, 
+            event=None):
+        self.queue.put((serial_command, callback, event))
 
-    def _readSerial(self):
+    def _readSerial_(self):
         resp_char = " "
         resp_str = ""
         while ord(resp_char) != 13:
             resp_char = self.serial.read(1)
-            #print(resp_char)
             resp_str += resp_char.decode('utf-8')
         resp_str = resp_str[:-1] # trim /r from end
-        print("resp_str",resp_str)
         resp_l = resp_str.split('=')
-        if len(resp_l) == 1:
-            return resp_str
-        else:
-            return resp_l[1]
-        #resp_str = resp_str.split('=')[1]
-        #return resp_str[:-1]
+        return resp_l
 
     def run(self):
         while True:
-            serial_command, callback = self.queue.get(True)
-            #time.sleep(0.01)
+            serial_command, callback, event = self.queue.get(True)
             self.serial.write(str.encode(serial_command +'\r'))
-            echo_str = self._readSerial() # for serial echo
-            resp_str = self._readSerial()
-            print("resp_str=", resp_str)
-            #print("callback",callback)
+
+            resp = self._readSerial_()
+            if len(resp)==1:
+                if resp[0]=="+":
+                    pass
+                    # todo: do we need to pass affirmation?
+                elif resp[0]=="-":
+                    print("todo: response == '-' pass message of failure")
+                else:# this is a command echo string.  now fetch command response
+                    resp = self._readSerial_()
+                        if len(resp)!=2:
+                            print("todo: response == '-' pass message of failure")
+                        else:
+                            self.handlers[resp[0]](resp[1], event)
+            """
+            echo_str = self._readSerial_() # for serial echo
+            command_str, resp_str = self._readSerial_()
+            try:
+                event.clear()
+            except Exception:
+                pass
             try:
                 callback(resp_str)
             except TypeError as e: #if callback == None
                 pass
             #self.add_to_controller_queue(self.board_name , serial_command, resp_str, callback)
-
+            """
 
 
 
