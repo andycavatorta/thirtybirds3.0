@@ -353,7 +353,7 @@ class Board(threading.Thread):
         self.states["UID"] = values_str
         self.mcu_id = values_str
         print(">>11", self.states["UID"])
-        event.clear()
+        event.set()
         print(">>12")
 
 
@@ -469,7 +469,7 @@ class Board(threading.Thread):
             callback=None, 
             event=None):
         if event is not None:
-            event.set()
+            event.clear()
         self.queue.put((serial_command, callback, event))
 
     def _readSerial_(self):
