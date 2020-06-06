@@ -81,7 +81,7 @@ class Board(threading.Thread):
         time.sleep(0.5) # give serial a moment
         self.start()
         self.get_mcu_id()
-        self.read_mcu_id()
+        #self.read_mcu_id()
 
     ##############################################
     #    MOTORS CONFIG                           #
@@ -341,6 +341,7 @@ class Board(threading.Thread):
                 event = event
             )
             event.wait()
+            #event.set()
             print(">>03")
             print(">>04")
             print(">>05")
