@@ -341,7 +341,7 @@ class Board(threading.Thread):
                 event = event
             )
             event.wait()
-            #event.set()
+            event.set()
             print(">>03")
             print(">>04")
             print(">>05")
@@ -468,8 +468,6 @@ class Board(threading.Thread):
             serial_command, 
             callback=None, 
             event=None):
-        if event is not None:
-            event.set()
         self.queue.put((serial_command, callback, event))
 
     def _readSerial_(self):
