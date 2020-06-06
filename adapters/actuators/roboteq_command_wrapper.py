@@ -1546,6 +1546,32 @@ class Controllers(threading.Thread):
             self.create_motors()
 
     def create_motors(self):
+        for motor_name in self.motors_config:
+            for name, val in self.boards_config.items():
+                if val["mcu_id"] == self.motors_config[motor_name]["mcu_id"]:
+                    self.motors[motor_name] = Motor(
+                        motor_name,
+                        self.boards[name],
+                        self.motors_config[motor_name]["channel"],
+                        self.status_receiver
+                    )
+                    
+                    try:
+                        self.macros[motor_name] = Macro(
+                            motor_name, 
+                            self.motors[motor_name], 
+                            self.status_receiver, 
+                            self.motors_config[motor_name]["limit_switch_pin"],
+                            self.motors_config[motor_name]["limit_switch_direction"]
+                        )
+                    except KeyError:
+                        self.macros[motor_name] = Macro(
+                            motor_name, 
+                            self.motors[motor_name], 
+                            self.status_receiver
+                        )
+
+        """
         device_path_by_mcu_id = {}
         for serial_id in self.boards:
             device_path_by_mcu_id[self.boards[serial_id].read_internal_mcu_id()] = serial_id
@@ -1574,6 +1600,7 @@ class Controllers(threading.Thread):
 
         time.sleep(3.5)
         self.data_receiver({"internal_event":"motors_initialized"})
+        """
 
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
