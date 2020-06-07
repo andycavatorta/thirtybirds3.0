@@ -1236,6 +1236,39 @@ class Motor(threading.Thread):
         serial_command = "~CLERD {}".format(self.channel)
         self.board.add_to_queue(serial_command)
 
+
+
+
+
+
+    def get_closed_loop_error_detection(self, force_update = False):
+        """
+            Defines a minimum count value at which the controller will trigger an action when the
+            counter dips below that number. This feature is useful for setting up 
+            limit switches.This value, together with the High Count Limit, are also used in the position
+            mode to determine the travel range when commanding the controller with a relative posi-
+            tion command. In this case, the Low Limit Count is the desired position when a command
+            of -1000 is received.
+
+            Type: Signed 32-bit
+            Min: -2147M
+            Default: -20000 Max: 2147M
+        """
+        if self.states["CLERD"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~CLERD {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_closed_loop_error_detection_)
+            event.wait()
+        return self.states["CLERD"]
+
+    def _store_closed_loop_error_detection_(self, values_str, event):
+        self.states["CLERD"] = int(values_str)
+        event.set()
+
+
+
+
+
     def set_encoder_high_count_limit(self, limit):
         """
         Defines a maximum count value at which the controller will trigger an action when the
@@ -1252,9 +1285,29 @@ class Motor(threading.Thread):
         serial_command = "^EHL {} {}".format(self.channel, limit)
         self.board.add_to_queue(serial_command)
 
-    def read_encoder_high_count_limit(self):
-        serial_command = "~EHL {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_encoder_high_count_limit(self, force_update = False):
+        """
+            Defines a minimum count value at which the controller will trigger an action when the
+            counter dips below that number. This feature is useful for setting up 
+            limit switches.This value, together with the High Count Limit, are also used in the position
+            mode to determine the travel range when commanding the controller with a relative posi-
+            tion command. In this case, the Low Limit Count is the desired position when a command
+            of -1000 is received.
+
+            Type: Signed 32-bit
+            Min: -2147M
+            Default: -20000 Max: 2147M
+        """
+        if self.states["EHL"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~EHL {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_encoder_high_count_limit_)
+            event.wait()
+        return self.states["EHL"]
+
+    def _store_encoder_high_count_limit_(self, values_str, event):
+        self.states["EHL"] = int(values_str)
+        event.set()
 
     def set_encoder_high_limit_action(self, action):
         """
@@ -1275,13 +1328,20 @@ class Motor(threading.Thread):
             8: Load counter with home value
             mm = mot1*16 + mot2*32 + mot3*48
         """
-
         serial_command = "^EHLA {} {}".format(self.channel, action + self.bit_offset)
         self.board.add_to_queue(serial_command)
 
-    def read_encoder_high_limit_action(self):
-        serial_command = "~EHLA {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_encoder_high_limit_action(self, force_update = False):
+        if self.states["EHLA"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~EHLA {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_encoder_high_limit_action_)
+            event.wait()
+        return self.states["EHLA"]
+
+    def _store_encoder_high_limit_action_(self, values_str, event):
+        self.states["EHLA"] = int(values_str)
+        event.set()
 
     def set_encoder_low_count_limit(self, limit):
         """
@@ -1299,12 +1359,19 @@ class Motor(threading.Thread):
         serial_command = "^ELL {} {}".format(self.channel, limit)
         self.board.add_to_queue(serial_command)
 
-    def read_encoder_low_count_limit(self):
-        serial_command = "~ELL {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_encoder_low_count_limit(self, force_update = False):
+        """
+            Defines a minimum count value at which the controller will trigger an action when the
+            counter dips below that number. This feature is useful for setting up 
+            limit switches.This value, together with the High Count Limit, are also used in the position
+            mode to determine the travel range when commanding the controller with a relative posi-
+            tion command. In this case, the Low Limit Count is the desired position when a command
+            of -1000 is received.
 
-
-    def get_encoder_low_count_limit(self, force_update = True):
+            Type: Signed 32-bit
+            Min: -2147M
+            Default: -20000 Max: 2147M
+        """
         if self.states["ELL"] is None or force_update:
             event = threading.Event()
             serial_command = "~ELL {}".format(self.channel)
@@ -1315,9 +1382,6 @@ class Motor(threading.Thread):
     def _store_encoder_low_count_limit_(self, values_str, event):
         self.states["ELL"] = int(values_str)
         event.set()
-
-
-
 
     def set_encoder_low_limit_action(self, action):
         """
@@ -1340,7 +1404,7 @@ class Motor(threading.Thread):
         serial_command = "^ELLA {} {}".format(self.channel, action + self.bit_offset)
         self.board.add_to_queue(serial_command)
 
-    def get_encoder_low_limit_action(self, force_update = True):
+    def get_encoder_low_limit_action(self, force_update = False):
         """
         In closed-loop modes, returns the difference between the desired speed or position and
         the measured feedback. This query can be used to detect when the motor has reached
@@ -1374,7 +1438,7 @@ class Motor(threading.Thread):
         self.states["E"] = int(values_str)
         event.set()
 
-    def get_runtime_status_flags(self, force_update = False):
+    def get_runtime_status_flags(self, force_update = True):
         """
         Report the runtime status of each motor. The response to that query is a single number
         which must be converted into binary in order to evaluate each of the individual status bits
@@ -1411,8 +1475,7 @@ class Motor(threading.Thread):
         }
         event.set()
 
-
-    def get_temperature(self, force_update = False):
+    def get_temperature(self, force_update = True):
         """
         Reports the temperature at each of the Heatsink sides and on the internal MCU silicon
         chip. The reported value is in degrees C with a one degree resolution.
@@ -1456,6 +1519,19 @@ class Motor(threading.Thread):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 #@capture_exceptions.Class
 class Macro(threading.Thread):
     def __init__(
@@ -1478,9 +1554,8 @@ class Macro(threading.Thread):
         self.start()
 
     def go_to_limit_switch(self):
-        self.motor.set_encoder_low_limit_action(0)
-        print("get_encoder_low_limit_action", self.motor.get_encoder_low_limit_action())
-        print("get_encoder_low_limit_action", self.motor.get_encoder_low_count_limit())
+        
+        print("get_encoder_low_limit_action", self.motor.get_closed_loop_error_detection())
         
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
