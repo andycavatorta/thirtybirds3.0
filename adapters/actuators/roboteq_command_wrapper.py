@@ -1482,13 +1482,12 @@ class Macro(threading.Thread):
         self.limit_switch_direction = limit_switch_direction
         self.queue = queue.Queue()
         if limit_switch_pin is not None and limit_switch_direction != 0:
-
-
             GPIO.setup(limit_switch_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         self.start()
 
-
     def go_to_limit_switch(self):
+        print("get_encoder_low_limit_action", self.motor.get_encoder_low_limit_action())
+        print("set_encoder_low_limit_action", self.motor.set_encoder_low_limit_action(1))
         print("get_encoder_low_limit_action", self.motor.get_encoder_low_limit_action())
         
         #self.motor.read_max_power_reverse()
