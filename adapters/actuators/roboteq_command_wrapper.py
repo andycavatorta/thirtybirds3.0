@@ -104,6 +104,47 @@ class Board(threading.Thread):
     ##############################################
     #    SAFETY                                  #
     ##############################################
+
+
+    def get_runtime_fault_flags(self, force_update = False):
+        """
+        Reports the status of the controller fault conditions that can occur during operation. The
+        response to that query is a single number which must be converted into binary in order to
+        evaluate each of the individual status bits that compose it.
+
+        f1 = Overheat
+        f2 = Overvoltage
+        f3 = Undervoltage
+        f4 = Short circuit
+        f5 = Emergency stop
+        f6 = Brushless sensor fault
+        f7 = MOSFET failure
+        f8 = Default configuration loaded at startup
+
+        FM = f1 + f2*2 + f3*4 + ... + fn*2n-1
+        """
+        if self.states["FF"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?FF"
+            self.add_to_queue(serial_command, event, self._store_runtime_fault_flags_)
+            event.wait()
+        return self.states["FF"]
+
+    def _store_runtime_fault_flags_(self, values_str, event):
+        values_int = int(values_str)
+        self.states["FF"] = {
+            "overheat":self._get_bit_(values_int, 0),
+            "overvoltage":self._get_bit_(values_int, 1),
+            "undervoltage":self._get_bit_(values_int, 2),
+            "short_circuit":self._get_bit_(values_int, 3),
+            "emergency_stop":self._get_bit_(values_int, 4),
+            "brushless_sensor_fault":self._get_bit_(values_int, 5),
+            "MOSFET_failure":self._get_bit_(values_int, 6),
+            "default_configuration_loaded_at_startup":self._get_bit_(values_int, 7),
+        }
+        event.set()
+
+
     def read_volts(self, response=None):
         """
         Reports the voltages measured inside the controller at three locations: the main battery
@@ -1325,7 +1366,7 @@ class Motor(threading.Thread):
         event.set()
 
 
-    def get_closed_loop_error(self):
+    def get_closed_loop_error(self, force_update = True):
         """
         In closed-loop modes, returns the difference between the desired speed or position and
         the measured feedback. This query can be used to detect when the motor has reached
@@ -1333,51 +1374,13 @@ class Motor(threading.Thread):
         """
         if self.states["E"] is None or force_update:
             event = threading.Event()
-            serial_command = "?E"
-            self.add_to_queue(serial_command, event=event, callback=self._store_closed_loop_error_)
+            serial_command = "?E{}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_closed_loop_error_)
             event.wait()
         return self.states["E"]
 
     def _store_closed_loop_error_(self, values_str, event):
         self.states["E"] = int(values_str)
-        event.set()
-
-    def get_runtime_fault_flags(self, force_update = False):
-        """
-        Reports the status of the controller fault conditions that can occur during operation. The
-        response to that query is a single number which must be converted into binary in order to
-        evaluate each of the individual status bits that compose it.
-
-        f1 = Overheat
-        f2 = Overvoltage
-        f3 = Undervoltage
-        f4 = Short circuit
-        f5 = Emergency stop
-        f6 = Brushless sensor fault
-        f7 = MOSFET failure
-        f8 = Default configuration loaded at startup
-
-        FM = f1 + f2*2 + f3*4 + ... + fn*2n-1
-        """
-        if self.states["FF"] is None or force_update:
-            event = threading.Event()
-            serial_command = "?FF"
-            self.board.add_to_queue(serial_command, event, self._store_runtime_fault_flags_)
-            event.wait()
-        return self.states["FF"]
-
-    def _store_runtime_fault_flags_(self, values_str, event):
-        values_int = int(values_str)
-        self.states["FF"] = {
-            "overheat":self._get_bit_(values_int, 0),
-            "overvoltage":self._get_bit_(values_int, 1),
-            "undervoltage":self._get_bit_(values_int, 2),
-            "short_circuit":self._get_bit_(values_int, 3),
-            "emergency_stop":self._get_bit_(values_int, 4),
-            "brushless_sensor_fault":self._get_bit_(values_int, 5),
-            "MOSFET_failure":self._get_bit_(values_int, 6),
-            "default_configuration_loaded_at_startup":self._get_bit_(values_int, 7),
-        }
         event.set()
 
     def get_runtime_status_flags(self, force_update = False):
@@ -1487,7 +1490,7 @@ class Macro(threading.Thread):
 
 
     def go_to_limit_switch(self):
-        print("get_runtime_fault_flags", self.motor.get_runtime_fault_flags())
+        print("get_closed_loop_error", self.motor.get_closed_loop_error())
         
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
