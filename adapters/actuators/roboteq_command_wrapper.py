@@ -1483,12 +1483,18 @@ class Macro(threading.Thread):
         self.start()
 
 
-    def go_to_limit_switch(
-            self,
-            response = None
-        ):
+    def go_to_limit_switch(self):
         print("go_to_limit_switch", response)
-        self.motor.read_max_power_reverse()
+        self.motor.go_to_speed_or_relative_position(100)
+        time.sleep(2)
+        self.motor.go_to_speed_or_relative_position(-100)
+        time.sleep(2)
+        self.motor.go_to_speed_or_relative_position(100)
+        time.sleep(2)
+        self.motor.go_to_speed_or_relative_position(-100)
+        time.sleep(2)
+        self.motor.go_to_speed_or_relative_position(00)
+        #self.motor.read_max_power_reverse()
         # send status message confirming process started
         #switch_closed = GPIO.input(self.limit_switch_pin) == GPIO.HIGH
         #print("switch_closed", switch_closed)
@@ -1581,7 +1587,7 @@ class Controllers(threading.Thread):
                         self.motors_config[motor_name]["channel"],
                         self.status_receiver
                     )
-                    print(self.motors[motor_name])
+                    #print(self.motors[motor_name])
                     try:
                         self.macros[motor_name] = Macro(
                             motor_name, 
