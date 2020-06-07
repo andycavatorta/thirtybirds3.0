@@ -1490,9 +1490,7 @@ class Macro(threading.Thread):
 
 
     def go_to_limit_switch(self):
-        print(1)
-        print("go_to_limit_switch", self.motor.get_temperature())
-        print(2)
+        print("get_runtime_status_flags", self.motor.get_runtime_status_flags())
         
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
