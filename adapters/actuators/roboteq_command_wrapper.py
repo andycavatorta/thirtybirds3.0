@@ -1304,21 +1304,6 @@ class Motor(threading.Thread):
         self.board.add_to_queue(serial_command)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     def set_encoder_low_limit_action(self, action):
         """
         This parameter lets you select what kind of action should be taken when the low limit
@@ -1338,15 +1323,8 @@ class Motor(threading.Thread):
             8: Load counter with home value
             mm = mot1*16 + mot2*32 + mot3*48
         """
-        serial_command = "^ELLA {} {}".format(str(self.channel), str(int(action) + int(self.bit_offset)))
+        serial_command = "^ELLA {} {}".format(self.channel, action + self.bit_offset)
         self.board.add_to_queue(serial_command)
-
-
-
-
-
-
-
 
     def get_encoder_low_limit_action(self, force_update = True):
         """
