@@ -526,7 +526,7 @@ class Motor(threading.Thread):
         self.name = name
         self.channel = channel
         self.status_receiver = status_receiver
-        self.bit_offset = self.channel * 16
+        self.bit_offset = int(self.channel) * 16
         self.queue = queue.Queue()
         self.states = {
             "MAC":None,
