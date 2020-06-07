@@ -1400,7 +1400,7 @@ class Motor(threading.Thread):
         if self.states["FM"] is None or force_update:
             event = threading.Event()
             serial_command = "?FM"
-            self.add_to_queue(serial_command, event=event, callback=self._store_runtime_status_flags_)
+            self.board.add_to_queue(serial_command, event, self._store_runtime_status_flags_)
             event.wait()
         return self.states["FM"]
 
@@ -1427,31 +1427,20 @@ class Motor(threading.Thread):
             T= cc
             Type: Signed 8-bit Min: -40 Max: 125
         """
-        print(3)
         if self.states["T"] is None or force_update:
-            print(4)
             event = threading.Event()
-            print(5)
             serial_command = "?T"
-            print(6)
             self.board.add_to_queue(serial_command, event, self._store_temperature_)
-            print(7)
             event.wait()
-            print(8)
-        print(9)
         return self.states["T"]
 
     def _store_temperature_(self, values_str, event):
-        print(10, values_str)
         channel_1, channel_2 = values_str.split(":")
-        print(11, channel_1, channel_2)
-        self.states["UID"] = {
+        self.states["T"] = {
             "channel_1":channel_1, 
             "channel_2":channel_2
         }
-        print(12)
         event.set()
-        print(13)
 
 
     ##############################################
