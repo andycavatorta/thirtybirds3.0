@@ -1348,7 +1348,7 @@ class Motor(threading.Thread):
 
 
 
-    def get_encoder_low_limit_action(self):
+    def get_encoder_low_limit_action(self, force_update = True):
         """
         In closed-loop modes, returns the difference between the desired speed or position and
         the measured feedback. This query can be used to detect when the motor has reached
