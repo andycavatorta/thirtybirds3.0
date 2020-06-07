@@ -1399,7 +1399,7 @@ class Motor(threading.Thread):
         """
         if self.states["FM"] is None or force_update:
             event = threading.Event()
-            serial_command = "?FM"
+            serial_command = "?FM {}".format(self.channel)
             self.board.add_to_queue(serial_command, event, self._store_runtime_status_flags_)
             event.wait()
         return self.states["FM"]
@@ -1429,7 +1429,7 @@ class Motor(threading.Thread):
         """
         if self.states["T"] is None or force_update:
             event = threading.Event()
-            serial_command = "?T"
+            serial_command = "?T {}".format(self.channel)
             self.board.add_to_queue(serial_command, event, self._store_temperature_)
             event.wait()
         return self.states["T"]
