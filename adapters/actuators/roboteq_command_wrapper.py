@@ -1427,7 +1427,7 @@ class Motor(threading.Thread):
             print(5)
             serial_command = "?T"
             print(6)
-            self.add_to_queue(serial_command, event, self._store_temperature_)
+            self.board.add_to_queue(serial_command, event, self._store_temperature_)
             print(7)
             event.wait()
             print(8)
