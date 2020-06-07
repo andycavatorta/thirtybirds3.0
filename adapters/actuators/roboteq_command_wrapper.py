@@ -1423,7 +1423,7 @@ class Motor(threading.Thread):
         if self.states["T"] is None or force_update:
             event = threading.Event()
             serial_command = "?T"
-            self.add_to_queue(serial_command, event=event, callback=self._store_temperature_)
+            self.add_to_queue(serial_command, event, self._store_temperature_)
             event.wait()
         return self.states["T"]
 
