@@ -1435,11 +1435,8 @@ class Motor(threading.Thread):
         return self.states["T"]
 
     def _store_temperature_(self, values_str, event):
-        channel_1, channel_2 = values_str.split(":")
-        self.states["T"] = {
-            "channel_1":channel_1, 
-            "channel_2":channel_2
-        }
+        #channel_1, channel_2 = values_str.split(":")
+        self.states["T"] = int(values_str)
         event.set()
 
 
