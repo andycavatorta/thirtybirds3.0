@@ -1443,10 +1443,9 @@ class Motor(threading.Thread):
 
     def _store_temperature_(self, values_str, event):
         print(10, values_str)
-        mcu, channel_1, channel_2 = values_str.split(" ")
-        print(11, mcu, channel_1, channel_2)
+        channel_1, channel_2 = values_str.split(":")
+        print(11, channel_1, channel_2)
         self.states["UID"] = {
-            "mcu":mcu,
             "channel_1":channel_1, 
             "channel_2":channel_2
         }
