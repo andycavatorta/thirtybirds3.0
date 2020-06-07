@@ -1486,6 +1486,7 @@ class Macro(threading.Thread):
         self.start()
 
     def go_to_limit_switch(self):
+        self.motor.set_encoder_low_limit_action(0)
         print("get_encoder_low_limit_action", self.motor.get_encoder_low_limit_action())
         self.motor.set_encoder_low_limit_action(1)
         print("get_encoder_low_limit_action", self.motor.get_encoder_low_limit_action())
