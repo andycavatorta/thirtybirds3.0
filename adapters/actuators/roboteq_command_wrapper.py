@@ -1338,7 +1338,7 @@ class Motor(threading.Thread):
             8: Load counter with home value
             mm = mot1*16 + mot2*32 + mot3*48
         """
-        serial_command = "^ELLA {} {}".format(str(self.channel), str(action + self.bit_offset))
+        serial_command = "^ELLA {} {}".format(str(self.channel), str(int(action) + int(self.bit_offset)))
         self.board.add_to_queue(serial_command)
 
 
