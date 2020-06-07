@@ -1487,7 +1487,7 @@ class Macro(threading.Thread):
 
     def go_to_limit_switch(self):
         print("get_encoder_low_limit_action", self.motor.get_encoder_low_limit_action())
-        print("set_encoder_low_limit_action", self.motor.set_encoder_low_limit_action(1))
+        self.motor.set_encoder_low_limit_action(1)
         print("get_encoder_low_limit_action", self.motor.get_encoder_low_limit_action())
         
         #self.motor.read_max_power_reverse()
