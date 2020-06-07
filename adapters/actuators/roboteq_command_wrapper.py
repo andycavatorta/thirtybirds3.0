@@ -1374,7 +1374,7 @@ class Motor(threading.Thread):
         """
         if self.states["E"] is None or force_update:
             event = threading.Event()
-            serial_command = "?E{}".format(self.channel)
+            serial_command = "?E {}".format(self.channel)
             self.board.add_to_queue(serial_command, event, self._store_closed_loop_error_)
             event.wait()
         return self.states["E"]
