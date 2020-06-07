@@ -414,7 +414,7 @@ class Board(threading.Thread):
             callback=None):
         if event is not None:
             event.clear()
-        self.queue.put((serial_command, event))
+        self.queue.put((serial_command, event, callback))
 
     def _readSerial_(self):
         resp_char = " "
@@ -1292,6 +1292,12 @@ class Motor(threading.Thread):
         """
         serial_command = "^ELLA {} {}".format(self.channel, action + self.bit_offset)
         self.board.add_to_queue(serial_command)
+
+
+
+
+
+
 
 
     def get_encoder_low_limit_action(self):
