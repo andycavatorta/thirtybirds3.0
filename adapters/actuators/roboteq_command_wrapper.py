@@ -1304,13 +1304,27 @@ class Motor(threading.Thread):
         self.board.add_to_queue(serial_command)
 
 
+    def get_encoder_low_count_limit(self, force_update = True):
+        if self.states["ELL"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~ELL {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_encoder_low_count_limit_)
+            event.wait()
+        return self.states["ELL"]
+
+    def _store_encoder_low_count_limit_(self, values_str, event):
+        self.states["ELL"] = int(values_str)
+        event.set()
+
+
+
+
     def set_encoder_low_limit_action(self, action):
         """
         This parameter lets you select what kind of action should be taken when the low limit
         count is reached on the encoder. The list of action is the same as in the DINA digital input
         action list Embedded in the parameter is the motor channel(s) to which the action should
         apply.
-
         action =
             0: No action
             1: Safety stop
@@ -1466,8 +1480,7 @@ class Macro(threading.Thread):
     def go_to_limit_switch(self):
         self.motor.set_encoder_low_limit_action(0)
         print("get_encoder_low_limit_action", self.motor.get_encoder_low_limit_action())
-        self.motor.set_encoder_low_limit_action(1)
-        print("get_encoder_low_limit_action", self.motor.get_encoder_low_limit_action())
+        print("get_encoder_low_limit_action", self.motor.get_encoder_low_count_limit())
         
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
