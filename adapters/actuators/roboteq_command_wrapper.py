@@ -1420,21 +1420,32 @@ class Motor(threading.Thread):
             T= cc
             Type: Signed 8-bit Min: -40 Max: 125
         """
+        print(3)
         if self.states["T"] is None or force_update:
+            print(4)
             event = threading.Event()
+            print(5)
             serial_command = "?T"
+            print(6)
             self.add_to_queue(serial_command, event, self._store_temperature_)
+            print(7)
             event.wait()
+            print(8)
+        print(9)
         return self.states["T"]
 
     def _store_temperature_(self, values_str, event):
+        print(10)
         mcu, channel_1, channel_2 = values_str.split(" ")
+        print(11, mcu, channel_1, channel_2)
         self.states["UID"] = {
             "mcu":mcu,
             "channel_1":channel_1, 
             "channel_2":channel_2
         }
+        print(12)
         event.set()
+        print(13)
 
 
     ##############################################
@@ -1484,7 +1495,9 @@ class Macro(threading.Thread):
 
 
     def go_to_limit_switch(self):
+        print(1)
         print("go_to_limit_switch", self.motor.get_temperature())
+        print(2)
         
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
