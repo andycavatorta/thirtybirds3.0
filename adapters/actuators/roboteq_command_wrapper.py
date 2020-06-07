@@ -16,8 +16,6 @@ from thirtybirds3.reporting.exceptions import capture_exceptions
 GPIO.setwarnings(False) 
 GPIO.setmode(GPIO.BCM)
 
-
-
 #@capture_exceptions.Class
 class Board(threading.Thread):
     def __init__(self, path, controller_ref, add_to_controller_queue):
@@ -57,31 +55,8 @@ class Board(threading.Thread):
             "VAR":None,
         }
 
-        self.handlers = {
-            "B":None,
-            "BKD":None,
-            "BRUN":None,
-            "CPRI":None,
-            "ECHOF":None,
-            "EE":None,
-            "LK":None,
-            "MXMD":None,
-            "OVH":None,
-            "OVL":None,
-            "PWMF":None,
-            "RSBR":None,
-            "RWD":None,
-            "THLD":None,
-            "UID":self._store_mcu_id_,
-            "UVL":None,
-            "V":None,
-            "VAR":None,
-        }
-
         time.sleep(0.5) # give serial a moment
         self.start()
-        #self.get_mcu_id()
-        #self.read_mcu_id()
 
     ##############################################
     #    MOTORS CONFIG                           #
@@ -329,48 +304,17 @@ class Board(threading.Thread):
     ##############################################
 
     def get_mcu_id(self, force_update = False):
-        print(">>00")
         if self.states["UID"] is None or force_update:
-            print(">>01")
             event = threading.Event()
-            print(">>02")
             serial_command = "?UID"
-            self.add_to_queue(
-                serial_command = serial_command, 
-                callback = self.read_mcu_id,
-                event = event
-            )
+            self.add_to_queue(serial_command, event, self._store_mcu_id_)
             event.wait()
-            print(">>03")
-            print(">>04")
-            print(">>05")
-        print("get_mcu_id=", self.states["UID"])
-        print(">>06")
         return self.states["UID"]
 
     def _store_mcu_id_(self, values_str, event):
-        print(">>10", self.states["UID"])
         self.states["UID"] = values_str
         self.mcu_id = values_str
-        print(">>11", self.states["UID"])
         event.set()
-        print(">>12")
-
-
-
-
-
-
-
-
-    def read_mcu_id(self, response=None):
-        if response:
-            self.add_mcu_id(response)
-            self.controller_ref.match_boards_to_config(self.serial_device_path, response)
-            #self.add_to_controller_queue(self.board_name , None, "read_mcu_id", response)
-        else:
-            serial_command = "?UID"
-            self.add_to_queue(serial_command, self.read_mcu_id)
 
     def set_user_boolean_variable(self, position, value):
         serial_command = "!B {} {}".format(position, value)
@@ -466,11 +410,11 @@ class Board(threading.Thread):
     def add_to_queue(
             self, 
             serial_command, 
-            callback=None, 
-            event=None):
+            event=None,
+            callback=None):
         if event is not None:
             event.clear()
-        self.queue.put((serial_command, callback, event))
+        self.queue.put((serial_command, event))
 
     def _readSerial_(self):
         resp_char = " "
@@ -480,14 +424,12 @@ class Board(threading.Thread):
             resp_str += resp_char.decode('utf-8')
         resp_str = resp_str[:-1] # trim /r from end
         resp_l = resp_str.split('=')
-        print("resp_l",resp_l)
         return resp_l
 
     def run(self):
         while True:
-            serial_command, callback, event = self.queue.get(True)
+            serial_command, event, callback = self.queue.get(True)
             self.serial.write(str.encode(serial_command +'\r'))
-
             resp = self._readSerial_()
             if len(resp)==1:
                 if resp[0]=="+":
@@ -500,27 +442,8 @@ class Board(threading.Thread):
                     if len(resp)!=2:
                         print("todo: response == '-' pass message of failure")
                     else:
-                        self.handlers[resp[0]](resp[1], event)
-            """
-            echo_str = self._readSerial_() # for serial echo
-            command_str, resp_str = self._readSerial_()
-            try:
-                event.clear()
-            except Exception:
-                pass
-            try:
-                callback(resp_str)
-            except TypeError as e: #if callback == None
-                pass
-            #self.add_to_controller_queue(self.board_name , serial_command, resp_str, callback)
-            """
-
-
-
-
-
-
-
+                        if callback is not None:
+                            callback(resp[1], event)
 
 
 
@@ -557,6 +480,44 @@ class Motor(threading.Thread):
         self.status_receiver = status_receiver
         self.bit_offset = self.channel * 16
         self.queue = queue.Queue()
+        self.states = {
+            "MAC":None,
+            "MDEC":None,
+            "MMOD":None,
+            "MVEL":None,
+            "MXPF":None,
+            "MXPR":None,
+            "MXRPM":None,
+            "ICAP":None,
+            "KD":None,
+            "KI":None,
+            "KP":None,
+            "BLFB":None,
+            "EMOD":None,
+            "EPPR":None,
+            "CR":None,
+            "ALIM":None,
+            "ATGA":None,
+            "ATGD":None,
+            "ATRIG":None,
+            "BLSTD":None,
+            "CLERD":None,
+            "EHL":None,
+            "ELL":None,
+            "ELLA":None,
+            "P":None,
+            "A":None,
+            "TR":None,
+            "C":None,
+            "F":None,
+            "SR":None,
+            "FS":None,
+            "E":None,
+            "FF":None,
+            "FM":None,
+            "T":None,
+        }
+
         self.start()
         #self.status_receiver("starting motor instance", self.name)
 
@@ -1294,6 +1255,22 @@ class Motor(threading.Thread):
         serial_command = "~ELL {}".format(self.channel)
         self.board.add_to_queue(serial_command)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     def set_encoder_low_limit_action(self, action):
         """
         This parameter lets you select what kind of action should be taken when the low limit
@@ -1316,20 +1293,43 @@ class Motor(threading.Thread):
         serial_command = "^ELLA {} {}".format(self.channel, action + self.bit_offset)
         self.board.add_to_queue(serial_command)
 
-    def read_encoder_low_limit_action(self):
-        serial_command = "~ELLA {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
 
-    def read_closed_loop_error(self):
+    def get_encoder_low_limit_action(self):
         """
         In closed-loop modes, returns the difference between the desired speed or position and
         the measured feedback. This query can be used to detect when the motor has reached
         the desired speed or position. In open loop mode, this query returns 0.
         """
-        serial_command = "?E {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+        if self.states["ELLA"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~ELLA"
+            self.add_to_queue(serial_command, event=event, callback=self._store_encoder_low_limit_action_)
+            event.wait()
+        return self.states["ELLA"]
 
-    def read_fault_flags(self):
+    def _store_encoder_low_limit_action_(self, values_str, event):
+        self.states["ELLA"] = int(values_str)
+        event.set()
+
+
+    def get_closed_loop_error(self):
+        """
+        In closed-loop modes, returns the difference between the desired speed or position and
+        the measured feedback. This query can be used to detect when the motor has reached
+        the desired speed or position. In open loop mode, this query returns 0.
+        """
+        if self.states["E"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?E"
+            self.add_to_queue(serial_command, event=event, callback=self._store_closed_loop_error_)
+            event.wait()
+        return self.states["E"]
+
+    def _store_closed_loop_error_(self, values_str, event):
+        self.states["E"] = int(values_str)
+        event.set()
+
+    def get_runtime_fault_flags(self):
         """
         Reports the status of the controller fault conditions that can occur during operation. The
         response to that query is a single number which must be converted into binary in order to
@@ -1346,10 +1346,28 @@ class Motor(threading.Thread):
 
         FM = f1 + f2*2 + f3*4 + ... + fn*2n-1
         """
-        serial_command = "?FF {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+        if self.states["FF"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?FF"
+            self.add_to_queue(serial_command, event=event, callback=self._store_runtime_fault_flags_)
+            event.wait()
+        return self.states["FF"]
 
-    def read_runtime_status_flags(self):
+    def _store_runtime_fault_flags_(self, values_str, event):
+        values_int = int(values_str)
+        self.states["FF"] = {
+            "overheat":self._get_bit_(values_int, 0),
+            "overvoltage":self._get_bit_(values_int, 1),
+            "undervoltage":self._get_bit_(values_int, 2),
+            "short_circuit":self._get_bit_(values_int, 3),
+            "emergency_stop":self._get_bit_(values_int, 4),
+            "brushless_sensor_fault":self._get_bit_(values_int, 5),
+            "MOSFET_failure":self._get_bit_(values_int, 6),
+            "default_configuration_loaded_at_startup":self._get_bit_(values_int, 7),
+        }
+        event.set()
+
+    def get_runtime_status_flags(self):
         """
         Report the runtime status of each motor. The response to that query is a single number
         which must be converted into binary in order to evaluate each of the individual status bits
@@ -1366,10 +1384,28 @@ class Motor(threading.Thread):
 
             FM = f1 + f2*2 + f3*4 + ... + fn*2n-1
         """
-        serial_command = "?FM {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+        if self.states["FM"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?FM"
+            self.add_to_queue(serial_command, event=event, callback=self._store_runtime_status_flags_)
+            event.wait()
+        return self.states["FM"]
 
-    def read_temperature(self, response = None):
+    def _store_runtime_status_flags_(self, values_str, event):
+        values_int = int(values_str)
+        self.states["FM"] = {
+            "amps_limit_activated":self._get_bit_(values_int, 0),
+            "motor_stalled":self._get_bit_(values_int, 1),
+            "loop_error_detected":self._get_bit_(values_int, 2),
+            "safety_stop_active":self._get_bit_(values_int, 3),
+            "forward_limit_triggered":self._get_bit_(values_int, 4),
+            "reverse_limit_triggered":self._get_bit_(values_int, 5),
+            "amps_trigger_activated":self._get_bit_(values_int, 6),
+        }
+        event.set()
+
+
+    def get_temperature(self, force_update = False):
         """
         Reports the temperature at each of the Heatsink sides and on the internal MCU silicon
         chip. The reported value is in degrees C with a one degree resolution.
@@ -1378,12 +1414,30 @@ class Motor(threading.Thread):
             T= cc
             Type: Signed 8-bit Min: -40 Max: 125
         """
-        serial_command = "?T {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+        if self.states["T"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?T"
+            self.add_to_queue(serial_command, event=event, callback=self._store_temperature_)
+            event.wait()
+        return self.states["T"]
+
+    def _store_temperature_(self, values_str, event):
+        mcu, channel_1, channel_2 = values_str.split(" ")
+        self.states["UID"] = {
+            "mcu":mcu,
+            "channel_1":channel_1, 
+            "channel_2":channel_2
+        }
+        event.set()
+
 
     ##############################################
     #    CLASS INTERNALS                         #
     ##############################################
+
+    def _get_bit_(self, number, place):
+        return (number & (1 << place)) >> place
+
 
     def add_to_queue(self, serial_command, value, callback):
         self.queue.put((serial_command, value, callback))
@@ -1394,10 +1448,6 @@ class Motor(threading.Thread):
             serial_command, value, callback = self.queue.get(block=True) #, timeout=0.5)
             #except queue.Empty:
             #    self.read_encoder_counter_absolute()
-
-
-
-
 
 
 
@@ -1515,36 +1565,6 @@ class Controllers(threading.Thread):
 
         self.create_motors()
         
-        """
-        mcu_ids_in_config = []  #list(self.boards_config.keys())
-        for board_name in list(self.boards_config.keys()):
-            mcu_ids_in_config.append(self.boards_config[board_name]["mcu_id"])
-
-        for board in self.boards_to_device_path.values():
-            mcu_ids_in_config.remove(board.get_mcu_id())
-        """
-
-    def match_boards_to_config(self, mcu_serial_device_path, resp_str):
-        # this method verifies that all mcu_ids listed in config can be matched with discovered boards.
-        # todo: this can much more terse and pythonic
-        # todo: handle mismatches or incomplete processes
-        mcu_ids_in_config = []  #list(self.boards_config.keys())
-        for board_name in list(self.boards_config.keys()):
-            mcu_ids_in_config.append(self.boards_config[board_name]["mcu_id"])
-
-        for board in self.boards_to_device_path.values():
-            mcu_ids_in_config.remove(board.read_internal_mcu_id())
-
-        if len(mcu_ids_in_config) == 0:
-            for board_name in self.boards_config:
-                mcu_id_from_config = self.boards_config[board_name]["mcu_id"]
-                for board_object in self.boards_to_device_path.values():
-                    if board_object.read_internal_mcu_id() == mcu_id_from_config:
-                        self.boards[board_name] = board_object
-                        board_object.set_name(board_name)
-                        break
-            self.create_motors()
-
     def create_motors(self):
         for motor_name in self.motors_config:
             for name, val in self.boards_config.items():
@@ -1570,37 +1590,6 @@ class Controllers(threading.Thread):
                             self.motors[motor_name], 
                             self.status_receiver
                         )
-
-        """
-        device_path_by_mcu_id = {}
-        for serial_id in self.boards:
-            device_path_by_mcu_id[self.boards[serial_id].read_internal_mcu_id()] = serial_id
-
-        for motor_name in self.motors_config:
-            self.motors[motor_name] = Motor(
-                motor_name,
-                self.boards[device_path_by_mcu_id[self.motors_config[motor_name]["mcu_id"]]],
-                self.motors_config[motor_name]["channel"],
-                self.status_receiver
-            )
-            try:
-                self.macros[motor_name] = Macro(
-                    motor_name, 
-                    self.motors[motor_name], 
-                    self.status_receiver, 
-                    self.motors_config[motor_name]["limit_switch_pin"],
-                    self.motors_config[motor_name]["limit_switch_direction"]
-                )
-            except KeyError:
-                self.macros[motor_name] = Macro(
-                    motor_name, 
-                    self.motors[motor_name], 
-                    self.status_receiver
-                )
-
-        time.sleep(3.5)
-        self.data_receiver({"internal_event":"motors_initialized"})
-        """
 
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
