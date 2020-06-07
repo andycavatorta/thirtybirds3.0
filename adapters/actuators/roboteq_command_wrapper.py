@@ -1356,15 +1356,14 @@ class Motor(threading.Thread):
         """
         if self.states["ELLA"] is None or force_update:
             event = threading.Event()
-            serial_command = "~ELLA"
-            self.add_to_queue(serial_command, event=event, callback=self._store_encoder_low_limit_action_)
+            serial_command = "~ELLA {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_encoder_low_limit_action_)
             event.wait()
         return self.states["ELLA"]
 
     def _store_encoder_low_limit_action_(self, values_str, event):
         self.states["ELLA"] = int(values_str)
         event.set()
-
 
     def get_closed_loop_error(self, force_update = True):
         """
@@ -1490,7 +1489,7 @@ class Macro(threading.Thread):
 
 
     def go_to_limit_switch(self):
-        print("get_closed_loop_error", self.motor.get_closed_loop_error())
+        print("get_encoder_low_limit_action", self.motor.get_encoder_low_limit_action())
         
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
