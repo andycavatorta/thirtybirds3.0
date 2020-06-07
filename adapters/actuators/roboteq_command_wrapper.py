@@ -1342,7 +1342,7 @@ class Motor(threading.Thread):
         self.states["E"] = int(values_str)
         event.set()
 
-    def get_runtime_fault_flags(self):
+    def get_runtime_fault_flags(self, force_update = False):
         """
         Reports the status of the controller fault conditions that can occur during operation. The
         response to that query is a single number which must be converted into binary in order to
@@ -1362,7 +1362,7 @@ class Motor(threading.Thread):
         if self.states["FF"] is None or force_update:
             event = threading.Event()
             serial_command = "?FF"
-            self.add_to_queue(serial_command, event=event, callback=self._store_runtime_fault_flags_)
+            self.board.add_to_queue(serial_command, event, self._store_runtime_fault_flags_)
             event.wait()
         return self.states["FF"]
 
@@ -1380,7 +1380,7 @@ class Motor(threading.Thread):
         }
         event.set()
 
-    def get_runtime_status_flags(self):
+    def get_runtime_status_flags(self, force_update = False):
         """
         Report the runtime status of each motor. The response to that query is a single number
         which must be converted into binary in order to evaluate each of the individual status bits
@@ -1487,7 +1487,7 @@ class Macro(threading.Thread):
 
 
     def go_to_limit_switch(self):
-        print("get_temperature", self.motor.get_temperature())
+        print("get_runtime_fault_flags", self.motor.get_runtime_fault_flags())
         
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
