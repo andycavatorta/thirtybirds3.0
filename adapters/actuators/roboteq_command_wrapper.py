@@ -573,8 +573,11 @@ class Board(threading.Thread):
 
     def run(self):
         while True:
+            print("run 1")
             serial_command, event, callback = self.queue.get(True)
+            print("run 2")
             self.serial.write(str.encode(serial_command +'\r'))
+            print("run 3")
             resp = self._readSerial_()
             print("resp >>",resp)
             if len(resp)==1:
