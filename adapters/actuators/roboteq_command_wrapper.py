@@ -531,6 +531,9 @@ class Board(threading.Thread):
     #    CLASS INTERNALS                         #
     ##############################################
 
+    def _get_bit_(self, number, place):
+        return (number & (1 << place)) >> place
+
     def set_name(self, board_name):
         self.board_name = board_name
 
@@ -1752,7 +1755,6 @@ class Motor(threading.Thread):
 
     def _get_bit_(self, number, place):
         return (number & (1 << place)) >> place
-
 
     def add_to_queue(self, serial_command, value, callback):
         self.queue.put((serial_command, value, callback))
