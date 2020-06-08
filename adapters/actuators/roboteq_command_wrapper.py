@@ -1844,6 +1844,23 @@ class Macro(threading.Thread):
         print("")
         
         print("get_mixed_mode", self.motor.board.get_mixed_mode())
+        print("get_pwm_frequency", self.motor.board.get_pwm_frequency())
+        print("get_runtime_fault_flags", self.motor.board.get_runtime_fault_flags())
+        print("get_volts", self.motor.board.get_volts())
+        print("get_serial_data_watchdog", self.motor.board.get_serial_data_watchdog())
+        print("get_overvoltage_hysteresis", self.motor.board.get_overvoltage_hysteresis())
+        print("get_overvoltage_cutoff_threhold", self.motor.board.get_overvoltage_cutoff_threhold())
+        print("get_short_circuit_detection_threshold", self.motor.board.get_short_circuit_detection_threshold())
+        print("get_undervoltage_limit", self.motor.board.get_undervoltage_limit())
+        print("get_brake_activation_delay", self.motor.board.get_brake_activation_delay())
+        print("get_command_priorities", self.motor.board.get_command_priorities())
+        print("get_serial_echo", self.motor.board.get_serial_echo())
+        print("get_rs232_bit_rate", self.motor.board.get_rs232_bit_rate())
+        print("get_user_boolean_value", self.motor.board.get_user_boolean_value())
+        print("get_user_variable", self.motor.board.get_user_variable())
+        print("get_user_data_in_ram", self.motor.board.get_user_data_in_ram())
+        print("get_lock_status", self.motor.board.get_lock_status())
+        print("get_script_auto_start", self.motor.board.get_script_auto_start())
         
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
