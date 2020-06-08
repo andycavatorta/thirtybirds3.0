@@ -659,13 +659,13 @@ class Motor(threading.Thread):
         }
 
         self.settings_to_methods = {
-            "motor_acceleration_rate":set_motor_acceleration_rate,
-            "motor_deceleration_rate":set_motor_deceleration_rate,
-            "operating_mode":set_operating_mode,
-            "pid_differential_gain":set_pid_differential_gain,
-            "pid_integral_gain":set_pid_integral_gain,
-            "pid_proportional_gain":set_pid_proportional_gain,
-            "encoder_ppr_value":set_encoder_ppr_value
+            "motor_acceleration_rate":self.set_motor_acceleration_rate,
+            "motor_deceleration_rate":self.set_motor_deceleration_rate,
+            "operating_mode":self.set_operating_mode,
+            "pid_differential_gain":self.set_pid_differential_gain,
+            "pid_integral_gain":self.set_pid_integral_gain,
+            "pid_proportional_gain":self.set_pid_proportional_gain,
+            "encoder_ppr_value":self.set_encoder_ppr_value
         }
 
         self.start()
