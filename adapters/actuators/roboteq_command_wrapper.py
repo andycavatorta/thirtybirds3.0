@@ -76,13 +76,6 @@ class Board(threading.Thread):
         serial_command = "^MXMD {}".format(mode)
         self.add_to_queue(serial_command)
 
-    def read_mixed_mode(self, response=None):
-        if response:
-            self.add_to_controller_queue(self.board_name , None, "read_mixed_mode", response)
-        else:
-            serial_command = "~MXMD"
-            self.add_to_queue(serial_command, self.read_mixed_mode)
-
     def get_mixed_mode(self, force_update = False):
         if self.states["MXMD"] is None or force_update:
             event = threading.Event()
@@ -1007,7 +1000,7 @@ class Motor(threading.Thread):
         return self.states["A"]
 
     def _store_motor_amps_(self, values_str, event):
-        self.states["A"] = values_str
+        self.states["A"] = float(values_str)
         event.set()
 
     ##############################################
@@ -1816,7 +1809,42 @@ class Macro(threading.Thread):
 
     def go_to_limit_switch(self):
         
-        print("get_encoder_low_limit_action", self.motor.get_current_limit_min_period())
+        print("get_motor_acceleration_rate", self.motor.get_motor_acceleration_rate())
+        print("get_motor_deceleration_rate", self.motor.get_motor_deceleration_rate())
+        print("get_operating_mode", self.motor.get_operating_mode())
+        print("get_default_velocity_in_position_mode", self.motor.get_default_velocity_in_position_mode())
+        print("get_max_power_forward", self.motor.get_max_power_forward())
+        print("get_max_power_reverse", self.motor.get_max_power_reverse())
+        print("get_max_rpm", self.motor.get_max_rpm())
+        print("get_motor_power_output_applied", self.motor.get_motor_power_output_applied())
+        print("get_motor_amps", self.motor.get_motor_amps())
+        print("get_pid_integral_cap", self.motor.get_pid_integral_cap())
+        print("get_pid_differential_gain", self.motor.get_pid_differential_gain())
+        print("get_pid_integral_gain", self.motor.get_pid_integral_gain())
+        print("get_pid_proportional_gain", self.motor.get_pid_proportional_gain())
+        print("get_expected_motor_position", self.motor.get_expected_motor_position())
+        print("get_sensor_type_select", self.motor.get_sensor_type_select())
+        print("get_encoder_usage", self.motor.get_encoder_usage())
+        print("get_encoder_ppr_value", self.motor.get_encoder_ppr_value())
+        print("get_encoder_counter_absolute", self.motor.get_encoder_counter_absolute())
+        print("get_feedback", self.motor.get_feedback())
+        print("get_encoder_counter_relative", self.motor.get_encoder_counter_relative())
+        print("get_encoder_motor_speed_in_rpm", self.motor.get_encoder_motor_speed_in_rpm())
+        print("get_encoder_speed_relative", self.motor.get_encoder_speed_relative())
+        print("get_config_flags", self.motor.get_config_flags())
+        print("get_current_limit", self.motor.get_current_limit())
+        print("get_current_limit_action", self.motor.get_current_limit_action())
+        print("get_current_limit_min_period", self.motor.get_current_limit_min_period())
+        print("get_current_limit_amps", self.motor.get_current_limit_amps())
+        print("get_stall_detection", self.motor.get_stall_detection())
+        print("get_closed_loop_error_detection", self.motor.get_closed_loop_error_detection())
+        print("get_encoder_high_count_limit", self.motor.get_encoder_high_count_limit())
+        print("get_encoder_high_limit_action", self.motor.get_encoder_high_limit_action())
+        print("get_encoder_low_count_limit", self.motor.get_encoder_low_count_limit())
+        print("get_encoder_low_limit_action", self.motor.get_encoder_low_limit_action())
+        print("get_closed_loop_error", self.motor.get_closed_loop_error())
+        print("get_runtime_status_flags", self.motor.get_runtime_status_flags())
+        print("get_temperature", self.motor.get_temperature())
         
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
