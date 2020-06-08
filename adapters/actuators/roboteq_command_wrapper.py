@@ -1760,27 +1760,27 @@ class Motor(threading.Thread):
         self.states["T"] = int(values_str)
         event.set()
 
-
     ##############################################
     #    CLASS INTERNALS                         #
     ##############################################
 
     def _apply_settings_(self):
         for setting in self.motors_config:
-            print("setting", setting, self.motors_config[setting])
+            if setting == "motor_acceleration_rate":
+                self.set_motor_acceleration_rate(self.motors_config[setting])
+            elif setting == "motor_deceleration_rate":
+                self.set_motor_deceleration_rate(self.motors_config[setting])
+            elif setting == "operating_mode":
+                self.set_operating_mode(self.motors_config[setting])
+            elif setting == "pid_differential_gain":
+                self.set_pid_differential_gain(self.motors_config[setting])
+            elif setting == "pid_integral_gain":
+                self.set_pid_integral_gain(self.motors_config[setting])
+            elif setting == "pid_proportional_gain":
+                self.set_pid_proportional_gain(self.motors_config[setting])
+            elif setting == "encoder_ppr_value":
+                self.set_encoder_ppr_value(self.motors_config[setting])
 
-
-        """
-        self.settings_to_methods = {
-            "motor_acceleration_rate":set_motor_acceleration_rate,
-            "motor_deceleration_rate":set_motor_deceleration_rate,
-            "operating_mode":set_operating_mode,
-            "pid_differential_gain":set_pid_differential_gain,
-            "pid_integral_gain":set_pid_integral_gain,
-            "pid_proportional_gain":set_pid_proportional_gain,
-            "encoder_ppr_value":set_encoder_ppr_value
-        }
-        """
     def _get_bit_(self, number, place):
         return (number & (1 << place)) >> place
 
