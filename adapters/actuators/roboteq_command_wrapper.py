@@ -1857,7 +1857,7 @@ class Macro(threading.Thread):
 
         self.motor.set_motor_speed(0)
 
-        time.sleep(1)
+        time.sleep(10)
 
         self.motor.set_motor_acceleration_rate(original_motor_acceleration_rate)
         self.motor.set_motor_deceleration_rate(original_motor_deceleration_rate)
