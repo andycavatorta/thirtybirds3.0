@@ -670,7 +670,7 @@ class Motor(threading.Thread):
         }
 
         self.start()
-        self._apply_settings_(self.motors_config)
+        self._apply_settings_()
         #self.status_receiver("starting motor instance", self.name)
 
     ##############################################
@@ -1765,9 +1765,11 @@ class Motor(threading.Thread):
     #    CLASS INTERNALS                         #
     ##############################################
 
-    def _apply_settings_(self, motor_settings):
-        for setting in motor_settings:
-            print("setting", setting)
+    def _apply_settings_(self):
+        for setting in self.motors_config:
+            print("setting", setting, self.motors_config[setting])
+
+
         """
         self.settings_to_methods = {
             "motor_acceleration_rate":set_motor_acceleration_rate,
