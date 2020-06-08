@@ -641,6 +641,7 @@ class Motor(threading.Thread):
             "ELL":None,
             "ELLA":None,
             "P":None,
+            "S":None,
             "A":None,
             "TR":None,
             "C":None,
