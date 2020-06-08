@@ -1877,7 +1877,7 @@ class Macro(threading.Thread):
         self.motor.set_max_rpm(60)
 
         time.sleep(10)
-        self.motor.go_to_speed_or_relative_position(0)
+        self.motor.go_to_speed_or_relative_position(-5000)
 
 
         
