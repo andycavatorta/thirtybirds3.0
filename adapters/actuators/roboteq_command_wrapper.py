@@ -611,11 +611,12 @@ class Board(threading.Thread):
 
 #@capture_exceptions.Class
 class Motor(threading.Thread):
-    def __init__(self,name,board,channel,status_receiver):
+    def __init__(self,name,board,channel,motors_config,status_receiver):
         threading.Thread.__init__(self)
         self.board = board
         self.name = name
         self.channel = channel
+        self.motors_config = motors_config
         self.status_receiver = status_receiver
         self.bit_offset = int(self.channel) * 16
         self.queue = queue.Queue()
@@ -669,7 +670,7 @@ class Motor(threading.Thread):
         }
 
         self.start()
-        self._apply_settings_()
+        self._apply_settings_(self.motors_config)
         #self.status_receiver("starting motor instance", self.name)
 
     ##############################################
@@ -1980,6 +1981,7 @@ class Controllers(threading.Thread):
                         motor_name,
                         self.boards[name],
                         self.motors_config[motor_name]["channel"],
+                        self.motors_config,
                         self.status_receiver
                     )
                     #print(self.motors[motor_name])
