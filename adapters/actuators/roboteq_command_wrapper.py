@@ -1858,9 +1858,12 @@ class Macro(threading.Thread):
     def go_to_limit_switch(self, params, callback):
 
         time.sleep(2)
+        self.motor.go_to_absolute_position(000)
+        time.sleep(2)
         self.motor.go_to_absolute_position(1000)
         time.sleep(2)
-
+        self.motor.go_to_absolute_position(000)
+        """
         original_motor_acceleration_rate = self.motor.get_motor_acceleration_rate()
         original_motor_deceleration_rate = self.motor.get_motor_deceleration_rate()
         original_operating_mode = self.motor.get_operating_mode()
@@ -1879,13 +1882,13 @@ class Macro(threading.Thread):
         self.motor.set_motor_deceleration_rate(original_motor_deceleration_rate)
         self.motor.set_operating_mode(original_operating_mode)
 
-        #self.motor.set_max_rpm(60)
-
         time.sleep(2)
         self.motor.go_to_absolute_position(0)
         time.sleep(2)
 
         print("get_operating_mode", self.motor.get_operating_mode(True))
+
+        """
         #if switch_closed:
             # send status message confirming process finished
         #    return
