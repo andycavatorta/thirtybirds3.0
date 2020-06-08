@@ -564,27 +564,20 @@ class Board(threading.Thread):
     def run(self):
         while True:
             serial_command, event, callback = self.queue.get(True)
-            print(">>>1",serial_command)
             self.serial.write(str.encode(serial_command +'\r'))
-            print(">>>2")
             resp = self._readSerial_()
-            print(">>>3",resp)
             if len(resp)==1:
-                print(">>>4")
                 if resp[0]=="+":
-                    print(">>>5")
                     pass
                     # todo: do we need to pass affirmation?
                 elif resp[0]=="-":
                     print("todo: response == '-' pass message of failure")
                 else:# this is a command echo string.  now fetch command response
                     resp = self._readSerial_()
-                    print(">>>6", resp)
                     if len(resp)!=2:
                         print("todo: response == '-' pass message of failure")
                     else:
                         if callback is not None:
-                            print(">>>7",resp[1])
                             callback(resp[1], event)
 
 
