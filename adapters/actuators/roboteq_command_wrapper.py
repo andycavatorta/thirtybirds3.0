@@ -1885,7 +1885,6 @@ class Macro(threading.Thread):
         self.motor.go_to_absolute_position(0)
         time.sleep(2)
 
-
         print("get_operating_mode", self.motor.get_operating_mode(True))
         #if switch_closed:
             # send status message confirming process finished
