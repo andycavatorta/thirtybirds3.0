@@ -543,8 +543,8 @@ class Board(threading.Thread):
     ##############################################
 
     def _apply_settings_(self):
-        config = self.boards_config[self.name]
-        for setting in config[self.name]:
+        config = self.boards_config[self.board_name]
+        for setting in config:
             print("setting", setting)
             if setting == "serial_data_watchdog":
                 self.set_serial_data_watchdog(config[setting])
