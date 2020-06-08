@@ -658,7 +658,18 @@ class Motor(threading.Thread):
             "T":None,
         }
 
+        self.settings_to_methods = {
+            "motor_acceleration_rate":set_motor_acceleration_rate,
+            "motor_deceleration_rate":set_motor_deceleration_rate,
+            "operating_mode":set_operating_mode,
+            "pid_differential_gain":set_pid_differential_gain,
+            "pid_integral_gain":set_pid_integral_gain,
+            "pid_proportional_gain":set_pid_proportional_gain,
+            "encoder_ppr_value":set_encoder_ppr_value
+        }
+
         self.start()
+        self._apply_settings_()
         #self.status_receiver("starting motor instance", self.name)
 
     ##############################################
@@ -1753,6 +1764,20 @@ class Motor(threading.Thread):
     #    CLASS INTERNALS                         #
     ##############################################
 
+    def _apply_settings_(self, motor_settings):
+        for setting in motor_settings:
+            print("setting", setting)
+        """
+        self.settings_to_methods = {
+            "motor_acceleration_rate":set_motor_acceleration_rate,
+            "motor_deceleration_rate":set_motor_deceleration_rate,
+            "operating_mode":set_operating_mode,
+            "pid_differential_gain":set_pid_differential_gain,
+            "pid_integral_gain":set_pid_integral_gain,
+            "pid_proportional_gain":set_pid_proportional_gain,
+            "encoder_ppr_value":set_encoder_ppr_value
+        }
+        """
     def _get_bit_(self, number, place):
         return (number & (1 << place)) >> place
 
