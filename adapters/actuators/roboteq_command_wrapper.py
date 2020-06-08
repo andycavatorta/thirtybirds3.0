@@ -1860,13 +1860,13 @@ class Macro(threading.Thread):
         time.sleep(10)
         self.motor.go_to_relative_position(000)
         time.sleep(10)
-        self.motor.go_to_relative_position(1000)
+        self.motor.go_to_relative_position(10000)
         time.sleep(10)
         self.motor.go_to_relative_position(000)
 
 
 
-        
+
         """
         original_motor_acceleration_rate = self.motor.get_motor_acceleration_rate()
         original_motor_deceleration_rate = self.motor.get_motor_deceleration_rate()
