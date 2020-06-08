@@ -1850,7 +1850,7 @@ class Macro(threading.Thread):
         self.motor.set_motor_deceleration_rate(500000)
 
         time.sleep(1)
-        print("get_operating_mode", self.motor.get_operating_mode())
+        print("get_operating_mode", self.motor.get_operating_mode(True))
         self.motor.set_motor_speed(50)
 
         time.sleep(10)
@@ -1863,7 +1863,7 @@ class Macro(threading.Thread):
         self.motor.set_motor_deceleration_rate(original_motor_deceleration_rate)
         self.motor.set_operating_mode(original_operating_mode)
 
-        print("get_operating_mode", self.motor.get_operating_mode())
+        print("get_operating_mode", self.motor.get_operating_mode(True))
         """
         print("get_motor_acceleration_rate", self.motor.get_motor_acceleration_rate())
         print("get_motor_deceleration_rate", self.motor.get_motor_deceleration_rate())
