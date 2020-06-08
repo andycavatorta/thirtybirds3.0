@@ -1858,9 +1858,9 @@ class Macro(threading.Thread):
         print("get_command_priorities", self.motor.board.get_command_priorities())
         print("get_serial_echo", self.motor.board.get_serial_echo())
         print("get_rs232_bit_rate", self.motor.board.get_rs232_bit_rate())
-        print("get_user_boolean_value", self.motor.board.get_user_boolean_value())
-        print("get_user_variable", self.motor.board.get_user_variable())
-        print("get_user_data_in_ram", self.motor.board.get_user_data_in_ram())
+        print("get_user_boolean_value", self.motor.board.get_user_boolean_value(0))
+        print("get_user_variable", self.motor.board.get_user_variable(0))
+        print("get_user_data_in_ram", self.motor.board.get_user_data_in_ram(0))
         print("get_lock_status", self.motor.board.get_lock_status())
         print("get_script_auto_start", self.motor.board.get_script_auto_start())
         
