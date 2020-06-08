@@ -1857,11 +1857,11 @@ class Macro(threading.Thread):
 
     def go_to_limit_switch(self, params, callback):
 
-        time.sleep(10)
+        time.sleep(3)
         self.motor.go_to_relative_position(000)
-        time.sleep(10)
-        self.motor.go_to_relative_position(10000)
-        time.sleep(10)
+        time.sleep(3)
+        self.motor.go_to_relative_position(100000)
+        time.sleep(3)
         self.motor.go_to_relative_position(000)
 
 
