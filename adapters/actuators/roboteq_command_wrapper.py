@@ -406,7 +406,7 @@ class Board(threading.Thread):
     #    MEMORY                                  #
     ##############################################
 
-    def get_rs232_bit_rate(self, force_update = False):
+    def get_mcu_id(self, force_update = False):
         if self.states["UID"] is None or force_update:
             event = threading.Event()
             serial_command = "?UID"
