@@ -563,7 +563,6 @@ class Board(threading.Thread):
             resp_str += resp_char.decode('utf-8')
         resp_str = resp_str[:-1] # trim /r from end
         resp_l = resp_str.split('=')
-        print(resp_l)
         return resp_l
 
     def run(self):
@@ -571,6 +570,7 @@ class Board(threading.Thread):
             serial_command, event, callback = self.queue.get(True)
             self.serial.write(str.encode(serial_command +'\r'))
             resp = self._readSerial_()
+            print("resp",resp)
             if len(resp)==1:
                 if resp[0]=="+":
                     pass
