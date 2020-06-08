@@ -687,7 +687,7 @@ class Motor(threading.Thread):
         }
 
         self.start()
-        self._apply_settings_()
+        #self._apply_settings_()
         #self.status_receiver("starting motor instance", self.name)
 
     ##############################################
