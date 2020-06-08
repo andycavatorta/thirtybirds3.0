@@ -556,13 +556,19 @@ class Board(threading.Thread):
         self.queue.put((serial_command, event, callback))
 
     def _readSerial_(self):
+        print("_readSerial_ 1",)
         resp_char = " "
         resp_str = ""
         while ord(resp_char) != 13:
+            print("_readSerial_ 2",)
             resp_char = self.serial.read(1)
+            print("_readSerial_ 3",)
             resp_str += resp_char.decode('utf-8')
+            print("_readSerial_ 4",)
         resp_str = resp_str[:-1] # trim /r from end
+        print("_readSerial_ 5",)
         resp_l = resp_str.split('=')
+        print("_readSerial_ 6",)
         return resp_l
 
     def run(self):
