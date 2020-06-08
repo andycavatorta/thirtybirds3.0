@@ -570,6 +570,7 @@ class Board(threading.Thread):
             serial_command, event, callback = self.queue.get(True)
             self.serial.write(str.encode(serial_command +'\r'))
             resp = self._readSerial_()
+            print("run 1: ",resp)
             if len(resp)==1:
                 if resp[0]=="+":
                     pass
@@ -582,7 +583,7 @@ class Board(threading.Thread):
                         if resp == ['-']:
                             print("todo: response == '-' pass message of failure")
                     else:
-                        print("run: ",resp)
+                        print("run 2: ",resp)
                         if callback is not None:
                             callback(resp[1], event)
 
@@ -750,7 +751,6 @@ class Motor(threading.Thread):
         """
         This parameter lets you select the operating mode for that channel. See manual for de-
         scription of each mode
-
         nn =
             0: Open-loop
             1: Closed-loop speed
@@ -1843,6 +1843,7 @@ class Macro(threading.Thread):
         #original_pid_integral_gain = self.motor.get_pid_integral_gain()
         #original_pid_proportional_gain = self.motor.get_pid_proportional_gain()
 
+        time.sleep(1)
         self.motor.set_operating_mode(1)
         self.motor.set_motor_acceleration_rate(5000)
         self.motor.set_motor_deceleration_rate(500000)
