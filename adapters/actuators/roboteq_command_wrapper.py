@@ -638,6 +638,7 @@ class Motor(threading.Thread):
             "BLSTD":None,
             "CLERD":None,
             "EHL":None,
+            "EHLA":None,
             "ELL":None,
             "ELLA":None,
             "P":None,
