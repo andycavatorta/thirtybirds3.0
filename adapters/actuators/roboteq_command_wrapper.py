@@ -1838,17 +1838,27 @@ class Macro(threading.Thread):
         original_motor_acceleration_rate = self.motor.get_motor_acceleration_rate()
         original_motor_deceleration_rate = self.motor.get_motor_deceleration_rate()
         original_operating_mode = self.motor.get_operating_mode()
-        original_pid_differential_gain = self.motor.get_pid_differential_gain()
-        original_pid_integral_gain = self.motor.get_pid_integral_gain()
-        original_pid_proportional_gain = self.motor.get_pid_proportional_gain()
+        #original_pid_differential_gain = self.motor.get_pid_differential_gain()
+        #original_pid_integral_gain = self.motor.get_pid_integral_gain()
+        #original_pid_proportional_gain = self.motor.get_pid_proportional_gain()
+
+        self.motor.set_motor_acceleration_rate(5000)
+        self.motor.set_motor_deceleration_rate(500000)
+        self.motor.set_operating_mode(1)
 
 
-        print(original_motor_acceleration_rate)
-        print(original_motor_deceleration_rate)
-        print(original_operating_mode)
-        print(original_pid_differential_gain)
-        print(original_pid_integral_gain)
-        print(original_pid_proportional_gain)
+        self.motor.set_motor_speed(500)
+
+        time.sleep(10)
+
+        self.motor.set_motor_speed(0)
+
+        time.sleep(1)
+        
+        self.motor.set_motor_acceleration_rate(original_motor_acceleration_rate)
+        self.motor.set_motor_deceleration_rate(original_motor_deceleration_rate)
+        self.motor.set_operating_mode(original_operating_mode)
+
 
         """
         print("get_motor_acceleration_rate", self.motor.get_motor_acceleration_rate())
