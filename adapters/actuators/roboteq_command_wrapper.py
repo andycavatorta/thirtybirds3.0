@@ -545,7 +545,7 @@ class Board(threading.Thread):
 
     def _apply_settings_(self):
         for setting in self.boards_config:
-            print("setting", _apply_settings_)
+            print("setting", setting)
             if setting == "serial_data_watchdog":
                 self.set_serial_data_watchdog(self.boards_config[setting])
             elif setting == "serial_echo":
