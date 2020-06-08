@@ -1874,11 +1874,16 @@ class Macro(threading.Thread):
         self.motor.set_motor_deceleration_rate(original_motor_deceleration_rate)
         self.motor.set_operating_mode(original_operating_mode)
 
+        self.motor.set_max_rpm(60)
+
+        time.sleep(10)
+        self.motor.set_motor_speed(0)
+
+
+        go_to_speed_or_relative_position
+
+
         print("get_operating_mode", self.motor.get_operating_mode(True))
-        #self.motor.read_max_power_reverse()
-        # send status message confirming process started
-        #switch_closed = GPIO.input(self.limit_switch_pin) == GPIO.HIGH
-        #print("switch_closed", switch_closed)
         #if switch_closed:
             # send status message confirming process finished
         #    return
