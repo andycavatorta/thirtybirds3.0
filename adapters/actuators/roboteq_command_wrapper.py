@@ -1283,7 +1283,7 @@ class Motor(threading.Thread):
         """
         if self.states["CR"] is None or force_update:
             event = threading.Event()
-            serial_command = "~CR {}".format(self.channel)
+            serial_command = "?CR {}".format(self.channel)
             self.board.add_to_queue(serial_command, event, self._store_encoder_counter_relative_)
             event.wait()
         return self.states["CR"]
