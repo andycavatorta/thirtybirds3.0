@@ -1165,7 +1165,7 @@ class Motor(threading.Thread):
     def get_sensor_type_select(self, force_update = False):
         if self.states["BLFB"] is None or force_update:
             event = threading.Event()
-            serial_command = "~BLFB {}".format(self.channel)
+            serial_command = "~BLFB"
             self.board.add_to_queue(serial_command, event, self._store_sensor_type_select_)
             event.wait()
         return self.states["BLFB"]
