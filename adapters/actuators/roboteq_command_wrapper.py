@@ -1141,7 +1141,7 @@ class Motor(threading.Thread):
             event.wait()
         return self.states["TR"]
 
-    def _store_sensor_expected_motor_position_(self, values_str, event):
+    def _store_expected_motor_position_(self, values_str, event):
         self.states["TR"] = values_str
         event.set()
 
