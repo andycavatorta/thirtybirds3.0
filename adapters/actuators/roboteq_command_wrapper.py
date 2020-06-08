@@ -1843,9 +1843,9 @@ class Macro(threading.Thread):
         #original_pid_integral_gain = self.motor.get_pid_integral_gain()
         #original_pid_proportional_gain = self.motor.get_pid_proportional_gain()
 
+        self.motor.set_operating_mode(1)
         self.motor.set_motor_acceleration_rate(5000)
         self.motor.set_motor_deceleration_rate(500000)
-        self.motor.set_operating_mode(1)
 
         time.sleep(1)
         print("get_operating_mode", self.motor.get_operating_mode())
