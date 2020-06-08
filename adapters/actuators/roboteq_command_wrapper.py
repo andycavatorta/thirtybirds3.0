@@ -1175,6 +1175,36 @@ class Motor(threading.Thread):
         serial_command = "~ATGD {}".format(self.channel)
         self.board.add_to_queue(serial_command)
 
+
+
+
+    def get_current_limit_min_period(self, force_update = False):
+        """
+            Defines a minimum count value at which the controller will trigger an action when the
+            counter dips below that number. This feature is useful for setting up 
+            limit switches.This value, together with the High Count Limit, are also used in the position
+            mode to determine the travel range when commanding the controller with a relative posi-
+            tion command. In this case, the Low Limit Count is the desired position when a command
+            of -1000 is received.
+
+            Type: Signed 32-bit
+            Min: -2147M
+            Default: -20000 Max: 2147M
+        """
+        if self.states["ATGD"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~ATGD {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_current_limit_min_period_)
+            event.wait()
+        return self.states["ATGD"]
+
+    def _store_current_limit_min_period_(self, values_str, event):
+        self.states["ATGD"] = values_str
+        event.set()
+
+
+
+
     def set_current_limit_amps(self, amps):
         """
         This parameter lets you select Amps threshold value that will trigger an action. This
@@ -1184,9 +1214,29 @@ class Motor(threading.Thread):
         serial_command = "^ATRIG {} {}".format(self.channel, amps*10)
         self.board.add_to_queue(serial_command)
 
-    def read_current_limit_amps(self):
-        serial_command = "~ATRIG {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_current_limit_amps(self, force_update = False):
+        """
+            Defines a minimum count value at which the controller will trigger an action when the
+            counter dips below that number. This feature is useful for setting up 
+            limit switches.This value, together with the High Count Limit, are also used in the position
+            mode to determine the travel range when commanding the controller with a relative posi-
+            tion command. In this case, the Low Limit Count is the desired position when a command
+            of -1000 is received.
+
+            Type: Signed 32-bit
+            Min: -2147M
+            Default: -20000 Max: 2147M
+        """
+        if self.states["ATRIG"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~ATRIG {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_current_limit_amps_)
+            event.wait()
+        return self.states["ATRIG"]
+
+    def _store_current_limit_amps_(self, values_str, event):
+        self.states["ATRIG"] = values_str
+        event.set()
 
     def set_stall_detection(self, threshold):
         """
@@ -1562,7 +1612,7 @@ class Macro(threading.Thread):
 
     def go_to_limit_switch(self):
         
-        print("get_encoder_low_limit_action", self.motor.get_stall_detection())
+        print("get_encoder_low_limit_action", self.motor.get_current_limit_min_period())
         
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
