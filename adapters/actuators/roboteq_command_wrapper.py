@@ -1857,11 +1857,11 @@ class Macro(threading.Thread):
 
     def go_to_limit_switch(self, params, callback):
 
-        time.sleep(2)
+        time.sleep(10)
         self.motor.go_to_absolute_position(000)
-        time.sleep(2)
+        time.sleep(10)
         self.motor.go_to_absolute_position(1000)
-        time.sleep(2)
+        time.sleep(10)
         self.motor.go_to_absolute_position(000)
         """
         original_motor_acceleration_rate = self.motor.get_motor_acceleration_rate()
