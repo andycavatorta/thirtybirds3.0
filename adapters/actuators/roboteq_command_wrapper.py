@@ -590,7 +590,7 @@ class Board(threading.Thread):
             serial_command, event, callback = self.queue.get(True)
             self.serial.write(str.encode(serial_command +'\r'))
             resp = self._readSerial_()
-            print("run 1: ",serial_command, resp)
+            #print("run 1: ",serial_command, resp)
             if len(resp)==1:
                 if resp[0]=="+":
                     pass
@@ -600,11 +600,11 @@ class Board(threading.Thread):
                 else:# this is a command echo string.  now fetch command response
                     resp = self._readSerial_()
                     if len(resp)!=2:
-                        print("run 2: ",serial_command, resp)
+                        #print("run 2: ",serial_command, resp)
                         if resp == ['-']:
                             print("todo: response == '-' pass message of failure")
                     else:
-                        print("run 3: ",serial_command, resp)
+                        #print("run 3: ",serial_command, resp)
                         if callback is not None:
                             callback(resp[1], event)
 
@@ -1856,28 +1856,22 @@ class Macro(threading.Thread):
         self.start()
 
     def go_to_limit_switch(self):
-        print("get_operating_mode", self.motor.get_operating_mode())
         original_motor_acceleration_rate = self.motor.get_motor_acceleration_rate()
         original_motor_deceleration_rate = self.motor.get_motor_deceleration_rate()
         original_operating_mode = self.motor.get_operating_mode()
         #original_pid_differential_gain = self.motor.get_pid_differential_gain()
         #original_pid_integral_gain = self.motor.get_pid_integral_gain()
         #original_pid_proportional_gain = self.motor.get_pid_proportional_gain()
-
-        time.sleep(1)
         self.motor.set_operating_mode(1)
         self.motor.set_motor_acceleration_rate(5000)
         self.motor.set_motor_deceleration_rate(500000)
 
-        time.sleep(10)
-        print("get_operating_mode", self.motor.get_operating_mode(True))
         self.motor.set_motor_speed(50)
 
         time.sleep(10)
 
         self.motor.set_motor_speed(0)
 
-        time.sleep(10)
 
         self.motor.set_motor_acceleration_rate(original_motor_acceleration_rate)
         self.motor.set_motor_deceleration_rate(original_motor_deceleration_rate)
