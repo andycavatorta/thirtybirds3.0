@@ -1208,9 +1208,29 @@ class Motor(threading.Thread):
         serial_command = "^BLSTD {} {}".format(self.channel, threshold)
         self.board.add_to_queue(serial_command)
 
-    def read_stall_detection(self):
-        serial_command = "~BLSTD {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_stall_detection(self, force_update = False):
+        """
+            Defines a minimum count value at which the controller will trigger an action when the
+            counter dips below that number. This feature is useful for setting up 
+            limit switches.This value, together with the High Count Limit, are also used in the position
+            mode to determine the travel range when commanding the controller with a relative posi-
+            tion command. In this case, the Low Limit Count is the desired position when a command
+            of -1000 is received.
+
+            Type: Signed 32-bit
+            Min: -2147M
+            Default: -20000 Max: 2147M
+        """
+        if self.states["BLSTD"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~BLSTD {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_stall_detection_)
+            event.wait()
+        return self.states["BLSTD"]
+
+    def _store_stall_detection_(self, values_str, event):
+        self.states["BLSTD"] = int(values_str)
+        event.set()
 
     def set_closed_loop_error_detection(self, threshold):
         """
@@ -1231,15 +1251,6 @@ class Motor(threading.Thread):
         """
         serial_command = "^CLERD {} {}".format(self.channel, threshold)
         self.board.add_to_queue(serial_command)
-
-    def read_closed_loop_error_detection(self):
-        serial_command = "~CLERD {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
-
-
-
-
-
 
     def get_closed_loop_error_detection(self, force_update = False):
         """
@@ -1264,10 +1275,6 @@ class Motor(threading.Thread):
     def _store_closed_loop_error_detection_(self, values_str, event):
         self.states["CLERD"] = int(values_str)
         event.set()
-
-
-
-
 
     def set_encoder_high_count_limit(self, limit):
         """
@@ -1555,7 +1562,7 @@ class Macro(threading.Thread):
 
     def go_to_limit_switch(self):
         
-        print("get_encoder_low_limit_action", self.motor.get_closed_loop_error_detection())
+        print("get_encoder_low_limit_action", self.motor.get_stall_detection())
         
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
