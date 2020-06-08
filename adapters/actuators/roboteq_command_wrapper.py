@@ -582,11 +582,12 @@ class Board(threading.Thread):
                     print("resp <<",resp)
                     if len(resp)!=2:
                         if resp[0]=="+":
-                            pass
+                            print("confirmed")
                         elif resp[0]=="-":
                             print("todo: response == '-' pass message of failure")
                         else:
                             if callback is not None:
+                                print("callback=",callback)
                                 callback(resp[1], event)
 
 
