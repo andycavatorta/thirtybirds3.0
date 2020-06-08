@@ -1855,7 +1855,7 @@ class Macro(threading.Thread):
             GPIO.setup(limit_switch_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         self.start()
 
-    def go_to_limit_switch(self):
+    def go_to_limit_switch(self, params, callback):
         original_motor_acceleration_rate = self.motor.get_motor_acceleration_rate()
         original_motor_deceleration_rate = self.motor.get_motor_deceleration_rate()
         original_operating_mode = self.motor.get_operating_mode()
@@ -1867,77 +1867,14 @@ class Macro(threading.Thread):
         self.motor.set_motor_deceleration_rate(500000)
 
         self.motor.set_motor_speed(50)
-
         time.sleep(10)
-
         self.motor.set_motor_speed(0)
-
 
         self.motor.set_motor_acceleration_rate(original_motor_acceleration_rate)
         self.motor.set_motor_deceleration_rate(original_motor_deceleration_rate)
         self.motor.set_operating_mode(original_operating_mode)
 
         print("get_operating_mode", self.motor.get_operating_mode(True))
-        """
-        print("get_motor_acceleration_rate", self.motor.get_motor_acceleration_rate())
-        print("get_motor_deceleration_rate", self.motor.get_motor_deceleration_rate())
-        print("get_operating_mode", self.motor.get_operating_mode())
-        print("get_default_velocity_in_position_mode", self.motor.get_default_velocity_in_position_mode())
-        print("get_max_power_forward", self.motor.get_max_power_forward())
-        print("get_max_power_reverse", self.motor.get_max_power_reverse())
-        print("get_max_rpm", self.motor.get_max_rpm())
-        print("get_motor_power_output_applied", self.motor.get_motor_power_output_applied())
-        print("get_motor_amps", self.motor.get_motor_amps())
-        print("get_pid_integral_cap", self.motor.get_pid_integral_cap())
-        print("get_pid_differential_gain", self.motor.get_pid_differential_gain())
-        print("get_pid_integral_gain", self.motor.get_pid_integral_gain())
-        print("get_pid_proportional_gain", self.motor.get_pid_proportional_gain())
-
-        print("get_expected_motor_position", self.motor.get_expected_motor_position())
-        print("get_sensor_type_select", self.motor.get_sensor_type_select())
-        print("get_encoder_usage", self.motor.get_encoder_usage())
-        print("get_encoder_ppr_value", self.motor.get_encoder_ppr_value())
-        print("get_encoder_counter_absolute", self.motor.get_encoder_counter_absolute())
-        print("get_feedback", self.motor.get_feedback())
-        print("get_encoder_counter_relative", self.motor.get_encoder_counter_relative())
-        print("get_encoder_motor_speed_in_rpm", self.motor.get_encoder_motor_speed_in_rpm())
-        print("get_encoder_speed_relative", self.motor.get_encoder_speed_relative())
-        print("get_config_flags", self.motor.get_config_flags())
-        print("get_current_limit", self.motor.get_current_limit())
-        print("get_current_limit_action", self.motor.get_current_limit_action())
-        print("get_current_limit_min_period", self.motor.get_current_limit_min_period())
-        print("get_current_limit_amps", self.motor.get_current_limit_amps())
-        print("get_stall_detection", self.motor.get_stall_detection())
-        print("get_closed_loop_error_detection", self.motor.get_closed_loop_error_detection())
-        print("get_encoder_high_count_limit", self.motor.get_encoder_high_count_limit())
-        print("get_encoder_high_limit_action", self.motor.get_encoder_high_limit_action())
-        print("get_encoder_low_count_limit", self.motor.get_encoder_low_count_limit())
-        print("get_encoder_low_limit_action", self.motor.get_encoder_low_limit_action())
-        print("get_closed_loop_error", self.motor.get_closed_loop_error())
-        print("get_runtime_status_flags", self.motor.get_runtime_status_flags())
-        print("get_temperature", self.motor.get_temperature())
-        
-        print("")
-        
-        print("get_mixed_mode", self.motor.board.get_mixed_mode())
-        print("get_pwm_frequency", self.motor.board.get_pwm_frequency())
-        print("get_runtime_fault_flags", self.motor.board.get_runtime_fault_flags())
-        print("get_volts", self.motor.board.get_volts())
-        print("get_serial_data_watchdog", self.motor.board.get_serial_data_watchdog())
-        print("get_overvoltage_hysteresis", self.motor.board.get_overvoltage_hysteresis())
-        print("get_overvoltage_cutoff_threhold", self.motor.board.get_overvoltage_cutoff_threhold())
-        print("get_short_circuit_detection_threshold", self.motor.board.get_short_circuit_detection_threshold())
-        print("get_undervoltage_limit", self.motor.board.get_undervoltage_limit())
-        print("get_brake_activation_delay", self.motor.board.get_brake_activation_delay())
-        print("get_command_priorities", self.motor.board.get_command_priorities())
-        print("get_serial_echo", self.motor.board.get_serial_echo())
-        print("get_rs232_bit_rate", self.motor.board.get_rs232_bit_rate())
-        print("get_user_boolean_value", self.motor.board.get_user_boolean_value(0))
-        print("get_user_variable", self.motor.board.get_user_variable(0))
-        print("get_user_data_in_ram", self.motor.board.get_user_data_in_ram(0))
-        print("get_lock_status", self.motor.board.get_lock_status())
-        print("get_script_auto_start", self.motor.board.get_script_auto_start())
-        """
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
         #switch_closed = GPIO.input(self.limit_switch_pin) == GPIO.HIGH
@@ -1965,13 +1902,14 @@ class Macro(threading.Thread):
         # send status message confirming process finished
         #motor = self.controllers.motors[motor_name]
 
-    def add_to_queue(self, message):
-        #print("-add_to_queue-",mcu_serial_device_path, channel, method, resp_str)
-        self.queue.put(message)
+    def add_to_queue(self, command, params={}, callback=None):
+        self.queue.put((command, params, callback))
 
     def run(self):
         while True:
-            message = self.queue.get(True)
+            command, params, callback = self.queue.get(True)
+            if command=="go_to_limit_switch":
+                self.go_to_limit_switch(params, callback)
             #print(mcu_serial_device_path, channel, method, resp_str)
 
 
