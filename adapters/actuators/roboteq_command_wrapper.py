@@ -1981,7 +1981,7 @@ class Controllers(threading.Thread):
                         motor_name,
                         self.boards[name],
                         self.motors_config[motor_name]["channel"],
-                        self.motors_config,
+                        self.motors_config[motor_name],
                         self.status_receiver
                     )
                     #print(self.motors[motor_name])
