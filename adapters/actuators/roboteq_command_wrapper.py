@@ -41,6 +41,7 @@ class Board(threading.Thread):
             "CPRI":None,
             "ECHOF":None,
             "EE":None,
+            "FF":None,
             "LK":None,
             "MXMD":None,
             "OVH":None,
@@ -650,7 +651,6 @@ class Motor(threading.Thread):
             "SR":None,
             "FS":None,
             "E":None,
-            "FF":None,
             "FM":None,
             "T":None,
         }
