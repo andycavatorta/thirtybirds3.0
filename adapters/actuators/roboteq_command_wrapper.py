@@ -83,6 +83,17 @@ class Board(threading.Thread):
             serial_command = "~MXMD"
             self.add_to_queue(serial_command, self.read_mixed_mode)
 
+    def get_mixed_mode(self, force_update = False):
+        if self.states["MXMD"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~MXMD"
+            self.add_to_queue(serial_command, event, self._store_mixed_mode_)
+            event.wait()
+        return self.states["MXMD"]
+
+    def _store_mixed_mode_(self, values_str, event):
+        self.states["MXMD"] = values_str
+        event.set()
 
     def set_pwm_frequency(self,kilohertz):
         """
@@ -94,12 +105,17 @@ class Board(threading.Thread):
         serial_command = "^PWMF {}".format(kilohertz)
         self.add_to_queue(serial_command)
 
-    def read_pwm_frequency(self, response=None):
-        if response:
-            self.add_to_controller_queue(self.board_name , None, "read_pwm_frequency", response)
-        else:
+    def get_pwm_frequency(self, force_update = False):
+        if self.states["PWMF"] is None or force_update:
+            event = threading.Event()
             serial_command = "~PWMF"
-            self.add_to_queue(serial_command, self.read_pwm_frequency)
+            self.add_to_queue(serial_command, event, self._store_pwm_frequency_)
+            event.wait()
+        return self.states["PWMF"]
+
+    def _store_pwm_frequency_(self, values_str, event):
+        self.states["PWMF"] = values_str
+        event.set()
 
     ##############################################
     #    SAFETY                                  #
@@ -144,8 +160,7 @@ class Board(threading.Thread):
         }
         event.set()
 
-
-    def read_volts(self, response=None):
+    def get_volts(self, force_update = False):
         """
         Reports the voltages measured inside the controller at three locations: the main battery
         voltage, the internal voltage at the motor driver stage, and the voltage that is available on
@@ -155,11 +170,17 @@ class Board(threading.Thread):
         range. The battery voltage is monitored for detecting the undervoltage or overvoltage con-
         ditions.
         """
-        if response:
-            self.add_to_controller_queue(self.board_name , None, "read_volts", response)
-        else:
+        if self.states["V"] is None or force_update:
+            event = threading.Event()
             serial_command = "?V"
-            self.add_to_queue(serial_command, self.read_volts)
+            self.add_to_queue(serial_command, event, self._store_volts_)
+            event.wait()
+        return self.states["V"]
+
+    def _store_volts_(self, values_str, event):
+        self.states["V"] = values_str
+        event.set()
+
 
     def emergency_stop(self):
         serial_command = "!EX"
@@ -173,13 +194,18 @@ class Board(threading.Thread):
         serial_command = "^RWD {}".format(miliseconds)
         self.add_to_queue(serial_command)
 
-    def read_serial_data_watchdog(self, response=None):
-        if response:
-            self.add_to_controller_queue(self.board_name , None, "read_serial_data_watchdog", response)
-        else:
+    def get_serial_data_watchdog(self, force_update = False):
+        if self.states["RWD"] is None or force_update:
+            event = threading.Event()
             serial_command = "~RWD"
-            self.add_to_queue(serial_command, self.read_serial_data_watchdog)
-        
+            self.add_to_queue(serial_command, event, self._store_serial_data_watchdog_)
+            event.wait()
+        return self.states["RWD"]
+
+    def _store_serial_data_watchdog_(self, values_str, event):
+        self.states["RWD"] = values_str
+        event.set()
+
     def set_overvoltage_hysteresis(self,volts):
         """
         This voltage gets subtracted to the overvoltage limit to set the voltage at which the over-
@@ -190,13 +216,19 @@ class Board(threading.Thread):
         serial_command = "^OVH {}".format(volts*10)
         self.add_to_queue(serial_command)
 
-    def read_overvoltage_hysteresis(self, response=None):
-        if response:
-            self.add_to_controller_queue(self.board_name , None, "read_overvoltage_hysteresis", response)
-        else:
+
+    def get_overvoltage_hysteresis(self, force_update = False):
+        if self.states["OVH"] is None or force_update:
+            event = threading.Event()
             serial_command = "~OVH"
-            self.add_to_queue(serial_command, self.read_overvoltage_hysteresis)
-        
+            self.add_to_queue(serial_command, event, self._store_overvoltage_hysteresis_)
+            event.wait()
+        return self.states["OVH"]
+
+    def _store_overvoltage_hysteresis_(self, values_str, event):
+        self.states["OVH"] = values_str
+        event.set()
+       
     def set_overvoltage_cutoff_threhold(self,volts):
         """
         Sets the voltage level at which the controller must turn off its power stage and signal an
@@ -213,12 +245,18 @@ class Board(threading.Thread):
         serial_command = "^OVL {}".format(volts*10)
         self.add_to_queue(serial_command)
 
-    def read_overvoltage_cutoff_threhold(self, response=None):
-        if response:
-            self.add_to_controller_queue(self.board_name , None, "read_overvoltage_cutoff_threhold", response)
-        else:
+    def get_overvoltage_cutoff_threhold(self, force_update = False):
+        if self.states["OVL"] is None or force_update:
+            event = threading.Event()
             serial_command = "~OVL"
-            self.add_to_queue(serial_command, self.read_overvoltage_cutoff_threhold)
+            self.add_to_queue(serial_command, event, self._store_overvoltage_cutoff_threhold_)
+            event.wait()
+        return self.states["OVL"]
+
+    def _store_overvoltage_cutoff_threhold_(self, values_str, event):
+        self.states["OVL"] = values_str
+        event.set()
+
 
     def set_short_circuit_detection_threshold(self, option):
         """
@@ -234,12 +272,17 @@ class Board(threading.Thread):
         serial_command = "^THLD {}".format(option)
         self.add_to_queue(serial_command)
 
-    def read_short_circuit_detection_threshold(self, response=None):
-        if response:
-            self.add_to_controller_queue(self.board_name , None, "read_short_circuit_detection_threshold", response)
-        else:
+    def get_short_circuit_detection_threshold(self, force_update = False):
+        if self.states["THLD"] is None or force_update:
+            event = threading.Event()
             serial_command = "~THLD"
-            self.add_to_queue(serial_command, self.read_short_circuit_detection_threshold)
+            self.add_to_queue(serial_command, event, self._store_short_circuit_detection_threshold_)
+            event.wait()
+        return self.states["THLD"]
+
+    def _store_short_circuit_detection_threshold_(self, values_str, event):
+        self.states["THLD"] = values_str
+        event.set()
 
     def set_undervoltage_limit(self,volts):
         """
@@ -250,12 +293,17 @@ class Board(threading.Thread):
         serial_command = "^UVL {}".format(volts*10)
         self.add_to_queue(serial_command)
 
-    def read_undervoltage_limit(self, response=None):
-        if response:
-            self.add_to_controller_queue(self.board_name , None, "read_undervoltage_limit", response)
-        else:
+    def get_undervoltage_limit(self, force_update = False):
+        if self.states["UVL"] is None or force_update:
+            event = threading.Event()
             serial_command = "~UVL"
-            self.add_to_queue(serial_command, self.read_undervoltage_limit)
+            self.add_to_queue(serial_command, event, self._store_undervoltage_limit_)
+            event.wait()
+        return self.states["UVL"]
+
+    def _store_undervoltage_limit_(self, values_str, event):
+        self.states["UVL"] = values_str
+        event.set()
 
     def set_brake_activation_delay(self,miliseconds):
         """
@@ -266,12 +314,17 @@ class Board(threading.Thread):
         serial_command = "^BKD {}".format(miliseconds)
         self.add_to_queue(serial_command)
 
-    def read_brake_activation_delay(self, response=None):
-        if response:
-            self.add_to_controller_queue(self.board_name , None, "read_brake_activation_delay", response)
-        else:
+    def get_brake_activation_delay(self, force_update = False):
+        if self.states["BKD"] is None or force_update:
+            event = threading.Event()
             serial_command = "~BKD"
-            self.add_to_queue(serial_command, self.read_brake_activation_delay)
+            self.add_to_queue(serial_command, event, self._store_brake_activation_delay_)
+            event.wait()
+        return self.states["BKD"]
+
+    def _store_brake_activation_delay_(self, values_str, event):
+        self.states["BKD"] = values_str
+        event.set()
 
     ##############################################
     #    SERIAL                                  #
@@ -293,12 +346,17 @@ class Board(threading.Thread):
         serial_command = "^CPRI {} {}".format(priority, source)
         self.add_to_queue(serial_command)
 
-    def read_command_priorities(self, response=None):
-        if response:
-            self.add_to_controller_queue(self.board_name , None, "read_command_priorities", response)
-        else:
+    def get_command_priorities(self, force_update = False):
+        if self.states["CPRI"] is None or force_update:
+            event = threading.Event()
             serial_command = "~CPRI"
-            self.add_to_queue(serial_command)
+            self.add_to_queue(serial_command, event, self._store_command_priorities_)
+            event.wait()
+        return self.states["CPRI"]
+
+    def _store_command_priorities_(self, values_str, event):
+        self.states["CPRI"] = values_str
+        event.set()
 
     def set_serial_echo(self, enable_disable):
         """
@@ -309,12 +367,17 @@ class Board(threading.Thread):
         serial_command = "^ECHOF {}".format(enable_disable)
         self.add_to_queue(serial_command)
 
-    def read_serial_echo(self, response=None):
-        if response:
-            self.add_to_controller_queue(self.board_name , None, "read_serial_echo", response)
-        else:
+    def get_serial_echo(self, force_update = False):
+        if self.states["ECHOF"] is None or force_update:
+            event = threading.Event()
             serial_command = "~ECHOF"
-            self.add_to_queue(serial_command, self.read_serial_echo)
+            self.add_to_queue(serial_command, event, self._store_serial_echo_)
+            event.wait()
+        return self.states["ECHOF"]
+
+    def _store_serial_echo_(self, values_str, event):
+        self.states["ECHOF"] = values_str
+        event.set()
 
     def set_rs232_bit_rate(self, bit_rate_code):
         """
@@ -333,12 +396,18 @@ class Board(threading.Thread):
         serial_command = "^RSBR {}".format(bit_rate_code)
         self.add_to_queue(serial_command)
 
-    def read_rs232_bit_rate(self, response=None):
-        if response:
-            self.add_to_controller_queue(self.board_name , None, "read_rs232_bit_rate", response)
-        else:
+    def get_rs232_bit_rate(self, force_update = False):
+        if self.states["RSBR"] is None or force_update:
+            event = threading.Event()
             serial_command = "~RSBR"
-            self.add_to_queue(serial_command, self.read_rs232_bit_rate)
+            self.add_to_queue(serial_command, event, self._store_rs232_bit_rate_)
+            event.wait()
+        return self.states["RSBR"]
+
+    def _store_rs232_bit_rate_(self, values_str, event):
+        self.states["RSBR"] = values_str
+        event.set()
+
 
     ##############################################
     #    MEMORY                                  #
@@ -361,23 +430,33 @@ class Board(threading.Thread):
         serial_command = "!B {} {}".format(position, value)
         self.add_to_queue(serial_command)
 
-    def read_user_boolean_value(self, position):
-        serial_command = "?B {}".format(position)
-        self.add_to_queue(serial_command, self._read_user_boolean_value_)
+    def get_user_boolean_value(self, position, force_update = False):
+        if self.states["B"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?B"
+            self.add_to_queue(serial_command, event, self._store_user_boolean_value_)
+            event.wait()
+        return self.states["B"]
 
-    def _read_user_boolean_value_(self, response):
-        self.add_to_controller_queue(self.board_name , None, "read_user_boolean_value", response)
+    def _store_user_boolean_value_(self, values_str, event):
+        self.states["B"] = values_str
+        event.set()
 
     def set_user_variable(self, position, value):
         serial_command = "!VAR {} {}".format(position, value)
         self.add_to_queue(serial_command)
 
-    def read_user_variable(self, position):
-        serial_command = "?VAR {}".format(position)
-        self.add_to_queue(serial_command, self._read_user_variable_)
+    def get_user_variable(self, position, force_update = False):
+        if self.states["VAR"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?VAR"
+            self.add_to_queue(serial_command, event, self._store_user_variable_)
+            event.wait()
+        return self.states["VAR"]
 
-    def _read_user_variable_(self, response):
-        self.add_to_controller_queue(self.board_name , None, "read_user_variable", response)
+    def _store_user_variable_(self, values_str, event):
+        self.states["VAR"] = values_str
+        event.set()
 
     def set_user_data_in_ram(self, address, data):
         """
@@ -389,24 +468,41 @@ class Board(threading.Thread):
         serial_command = "^EE {} {}".format(address, data)
         self.add_to_queue(serial_command)
 
-    def read_user_data_in_ram(self, address):
-        serial_command = "~EE {}".format(address)
-        self.add_to_queue(serial_command)
+    def get_user_data_in_ram(self, force_update = False):
+        if self.states["EE"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~EE"
+            self.add_to_queue(serial_command, event, self._store_user_data_in_ram_)
+            event.wait()
+        return self.states["EE"]
+
+    def _store_user_data_in_ram_(self, values_str, event):
+        self.states["EE"] = values_str
+        event.set()
+
 
     def save_configuration_in_eeprom(self):
         serial_command = "%EESAV"
         #serial_command = "!EES"
         self.add_to_queue(serial_command)
 
-    def read_lock_status(self):
+    def get_lock_status(self, force_update = False):
         """
         Returns the status of the lock flag. If the configuration is locked, then it will not be possi-
         ble to read any configuration parameters until the lock is removed or until the parameters
         are reset to factory default. This feature is useful to protect the controller configuration
         from being copied by unauthorized people
         """
-        serial_command = "?LK"
-        self.add_to_queue(serial_command)
+        if self.states["LK"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?LK"
+            self.add_to_queue(serial_command, event, self._store_lock_status_)
+            event.wait()
+        return self.states["LK"]
+
+    def _store_lock_status_(self, values_str, event):
+        self.states["LK"] = values_str
+        event.set()
 
     ##############################################
     #    SCRIPTS                                 #
@@ -421,12 +517,17 @@ class Board(threading.Thread):
         serial_command = "^BRUN {}".format(enable)
         self.add_to_queue(serial_command)
 
-    def read_script_auto_start(self, response=None):
-        if response:
-            self.add_to_controller_queue(self.board_name , None, "read_script_auto_start", response)
-        else:
+    def get_script_auto_start(self, force_update = False):
+        if self.states["BRUN"] is None or force_update:
+            event = threading.Event()
             serial_command = "~BRUN"
-            self.add_to_queue(serial_command, self.read_script_auto_start)
+            self.add_to_queue(serial_command, event, self._store_script_auto_start_)
+            event.wait()
+        return self.states["BRUN"]
+
+    def _store_script_auto_start_(self, values_str, event):
+        self.states["BRUN"] = values_str
+        event.set()
 
     def run_script(self):
         serial_command = "!R"
@@ -594,9 +695,17 @@ class Motor(threading.Thread):
         serial_command = "^MAC {} {}".format(self.channel, rate)
         self.board.add_to_queue(serial_command)
 
-    def read_motor_acceleration_rate(self):
-        serial_command = "~MAC {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_motor_acceleration_rate(self, force_update = False):
+        if self.states["MAC"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~MAC {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_motor_acceleration_rate_)
+            event.wait()
+        return self.states["MAC"]
+
+    def _store_motor_acceleration_rate_(self, values_str, event):
+        self.states["MAC"] = values_str
+        event.set()
 
     def set_motor_deceleration_rate(self, rate):
         """
@@ -620,9 +729,17 @@ class Motor(threading.Thread):
         serial_command = "^MDEC {} {}".format(self.channel, rate)
         self.board.add_to_queue(serial_command)
 
-    def read_motor_deceleration_rate(self):
-        serial_command = "~MDEC {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_motor_deceleration_rate(self, force_update = False):
+        if self.states["MDEC"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~MDEC {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_motor_deceleration_rate_)
+            event.wait()
+        return self.states["MDEC"]
+
+    def _store_motor_deceleration_rate_(self, values_str, event):
+        self.states["MDEC"] = values_str
+        event.set()
 
     def set_operating_mode(self, mode):
         """
@@ -641,23 +758,17 @@ class Motor(threading.Thread):
         serial_command = "^MMOD {} {}".format(self.channel, mode)
         self.board.add_to_queue(serial_command)
 
-    def read_operating_mode(
-            self, 
-            response=None
-        ):
-        if response is not None:
-            self.board.add_to_controller_queue(self.board.get_name() , self.channel, "read_operating_mode", response)
-        else:
+    def get_operating_mode(self, force_update = False):
+        if self.states["MMOD"] is None or force_update:
+            event = threading.Event()
             serial_command = "~MMOD {}".format(self.channel)
-            self.board.add_to_queue(serial_command, self.read_operating_mode)
+            self.board.add_to_queue(serial_command, event, self._store_operating_mode_)
+            event.wait()
+        return self.states["MMOD"]
 
-        #serial_command = "~MMOD {}".format(self.channel)
-        #self.board.add_to_queue(serial_command)
-
-
-
-
-
+    def _store_operating_mode_(self, values_str, event):
+        self.states["MMOD"] = values_str
+        event.set()
 
     def set_default_velocity_in_position_mode(self, velocity):
         """
@@ -674,9 +785,18 @@ class Motor(threading.Thread):
         serial_command = "^MVEL {} {}".format(self.channel, velocity)
         self.board.add_to_queue(serial_command)
 
-    def read_default_velocity_in_position_mode(self):
-        serial_command = "~MVEL {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+
+    def get_default_velocity_in_position_mode(self, force_update = False):
+        if self.states["MVEL"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~MVEL {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_default_velocity_in_position_mode_)
+            event.wait()
+        return self.states["MVEL"]
+
+    def _store_default_velocity_in_position_mode_(self, values_str, event):
+        self.states["MVEL"] = values_str
+        event.set()
 
     def set_max_power_forward(self, max_power):
         """
@@ -694,9 +814,17 @@ class Motor(threading.Thread):
         serial_command = "^MXPF {} {}".format(self.channel, max_power)
         self.board.add_to_queue(serial_command)
 
-    def read_max_power_forward(self):
-        serial_command = "~MXPF {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_max_power_forward(self, force_update = False):
+        if self.states["MXPF"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~MXPF {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_max_power_forward_)
+            event.wait()
+        return self.states["MXPF"]
+
+    def _store_max_power_forward_(self, values_str, event):
+        self.states["MXPF"] = values_str
+        event.set()
 
     def set_max_power_reverse(self, max_power):
         """
@@ -714,9 +842,18 @@ class Motor(threading.Thread):
         serial_command = "^MXPR {} {}".format(self.channel, max_power)
         self.board.add_to_queue(serial_command)
 
-    def read_max_power_reverse(self):
-        serial_command = "~MXPR {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+
+    def get_max_power_reverse(self, force_update = False):
+        if self.states["MXPR"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~MXPR {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_max_power_reverse_)
+            event.wait()
+        return self.states["MXPR"]
+
+    def _store_max_power_reverse_(self, values_str, event):
+        self.states["MXPR"] = values_str
+        event.set()
 
     def set_max_rpm(self, max_rpm):
         """
@@ -734,9 +871,17 @@ class Motor(threading.Thread):
         serial_command = "^MXRPM {} {}".format(self.channel, max_rpm)
         self.board.add_to_queue(serial_command)
 
-    def read_max_rpm(self):
-        serial_command = "~MXRPM {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_max_rpm(self, force_update = False):
+        if self.states["MXRPM"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~MXRPM {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_max_rpm_)
+            event.wait()
+        return self.states["MXRPM"]
+
+    def _store_max_rpm_(self, values_str, event):
+        self.states["MXRPM"] = values_str
+        event.set()
 
     ##############################################
     #    MOTOR RUNTIME                           #
@@ -825,7 +970,7 @@ class Motor(threading.Thread):
         serial_command = "!DC {} {}".format(self.channel, deceleration)
         self.board.add_to_queue(serial_command)
 
-    def read_motor_power_output_applied(self):
+    def get_motor_power_output_applied(self, force_update = False):
         """
         Reports the actual PWM level that is being applied to the motor at the power output
         stage. This value takes into account all the internal corrections and any limiting resulting
@@ -838,16 +983,32 @@ class Motor(threading.Thread):
         Min: -1000
         Max: 1000
         """
-        serial_command = "?P {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+        if self.states["P"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?P {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_motor_power_output_applied_)
+            event.wait()
+        return self.states["P"]
 
-    def read_motor_amps(self):
+    def _store_motor_power_output_applied_(self, values_str, event):
+        self.states["P"] = values_str
+        event.set()
+
+    def get_motor_amps(self, force_update = False):
         """
         Measures and reports the motor Amps for all operating channels. Note that the current
         flowing through the motors is often higher than this flowing through the battery.
         """
-        serial_command = "?A {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+        if self.states["A"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?A {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_motor_amps_)
+            event.wait()
+        return self.states["A"]
+
+    def _store_motor_amps_(self, values_str, event):
+        self.states["A"] = values_str
+        event.set()
 
     ##############################################
     #    PID SETUP                               #
@@ -870,9 +1031,18 @@ class Motor(threading.Thread):
         serial_command = "^ICAP {} {}".format(self.channel, cap)
         self.board.add_to_queue(serial_command)
 
-    def read_pid_integral_cap(self):
-        serial_command = "~ICAP {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+
+    def get_pid_integral_cap(self, force_update = False):
+        if self.states["ICAP"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~ICAP {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_pid_integral_cap_)
+            event.wait()
+        return self.states["ICAP"]
+
+    def _store_pid_integral_cap_(self, values_str, event):
+        self.states["ICAP"] = values_str
+        event.set()
 
     def set_pid_differential_gain(self, gain):
         """
@@ -894,9 +1064,19 @@ class Motor(threading.Thread):
         serial_command = "^KD {} {}".format(self.channel, gain*10)
         self.board.add_to_queue(serial_command)
 
-    def read_pid_differential_gain(self):
-        serial_command = "~KD {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_pid_differential_gain(self, force_update = False):
+        if self.states["KD"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~KD {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_pid_differential_gain_)
+            event.wait()
+        return self.states["KD"]
+
+    def _store_pid_differential_gain_(self, values_str, event):
+        self.states["KD"] = values_str
+        event.set()
+
+
 
     def set_pid_integral_gain(self, gain):
         """
@@ -913,9 +1093,17 @@ class Motor(threading.Thread):
         serial_command = "^KI {} {}".format(self.channel, gain*10)
         self.board.add_to_queue(serial_command)
 
-    def read_pid_integral_gain(self):
-        serial_command = "~KI {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_pid_integral_gain(self, force_update = False):
+        if self.states["KI"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~KI {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_pid_integral_gain_)
+            event.wait()
+        return self.states["KI"]
+
+    def _store_pid_integral_gain_(self, values_str, event):
+        self.states["KI"] = values_str
+        event.set()
 
     def set_pid_proportional_gain(self, gain):
         """
@@ -932,20 +1120,37 @@ class Motor(threading.Thread):
         serial_command = "^KP {} {}".format(self.channel, gain*10)
         self.board.add_to_queue(serial_command)
 
-    def read_pid_proportional_gain(self):
-        serial_command = "~KP {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_pid_proportional_gain(self, force_update = False):
+        if self.states["KP"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~KP {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_pid_proportional_gain_)
+            event.wait()
+        return self.states["KP"]
+
+    def _store_pid_proportional_gain_(self, values_str, event):
+        self.states["KP"] = values_str
+        event.set()
+
 
     ##############################################
     #    PID RUNTIME                             #
     ##############################################
-    def read_expected_motor_position(self):
+    def get_expected_motor_position(self, force_update = False):
         """
         Reads the real-time value of the expected motor position in the position tracking closed
         loop mode and in speed position
         """
-        serial_command = "?TR {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+        if self.states["TR"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?TR {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_expected_motor_position_)
+            event.wait()
+        return self.states["TR"]
+
+    def _store_sensor_expected_motor_position_(self, values_str, event):
+        self.states["TR"] = values_str
+        event.set()
 
     ##############################################
     #    ENCODERS SETUP                          #
@@ -971,9 +1176,17 @@ class Motor(threading.Thread):
         serial_command = "^BLFB {} {}".format(self.channel, encoder_or_other)
         self.board.add_to_queue(serial_command)
 
-    def read_sensor_type_select(self):
-        serial_command = "~BLFB {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_sensor_type_select(self, force_update = False):
+        if self.states["BLFB"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~BLFB {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_sensor_type_select_)
+            event.wait()
+        return self.states["BLFB"]
+
+    def _store_sensor_type_select_(self, values_str, event):
+        self.states["BLFB"] = values_str
+        event.set()
 
     def set_encoder_usage(self, action):
         """
@@ -992,9 +1205,17 @@ class Motor(threading.Thread):
         serial_command = "^EMOD {} {}".format(self.channel, action + self.bit_offset)
         self.board.add_to_queue(serial_command)
 
-    def read_encoder_usage(self):
-        serial_command = "~EMOD {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_encoder_usage(self, force_update = False):
+        if self.states["EMOD"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~EMOD {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_encoder_usage_)
+            event.wait()
+        return self.states["EMOD"]
+
+    def _store_encoder_usage_(self, values_str, event):
+        self.states["EMOD"] = values_str
+        event.set()
 
     def set_encoder_ppr_value(self, ppr):
         """
@@ -1013,14 +1234,23 @@ class Motor(threading.Thread):
         serial_command = "^EPPR {} {}".format(self.channel, ppr)
         self.board.add_to_queue(serial_command)
 
-    def read_encoder_ppr_value(self):
-        serial_command = "~EPPR {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_encoder_ppr_value(self, force_update = False):
+        if self.states["EPPR"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~EPPR {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_encoder_ppr_value_)
+            event.wait()
+        return self.states["EPPR"]
+
+    def _store_encoder_ppr_value_(self, values_str, event):
+        self.states["EPPR"] = values_str
+        event.set()
 
     ##############################################
     #    ENCODERS RUNTIME                        #
     ##############################################
-    def read_encoder_counter_absolute(self):
+
+    def get_encoder_counter_absolute(self, force_update = False):
         """
         Returns the encoder value as an absolute number. The counter is 32-bit with a range of
         +/- 2147483648 counts.
@@ -1029,10 +1259,18 @@ class Motor(threading.Thread):
         Min: -2147M
         Max: 2147M
         """
-        serial_command = "?C {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+        if self.states["C"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?C {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_encoder_counter_absolute_)
+            event.wait()
+        return self.states["C"]
 
-    def read_feedback(self):
+    def _store_encoder_counter_absolute_(self, values_str, event):
+        self.states["C"] = values_str
+        event.set()
+
+    def get_feedback(self, force_update = False):
         """
         Reports the value of the feedback sensors that are associated to each of the channels in
         closed-loop modes. The feedback source can be Encoder, Analog or Pulse. Selecting the
@@ -1040,44 +1278,53 @@ class Motor(threading.Thread):
         query is useful for verifying that the correct feedback source is used by the channel in the
         closed-loop mode and that its value is in range with expectations.
         """
-        serial_command = "?F {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+        if self.states["F"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?F {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_feedback_)
+            event.wait()
+        return self.states["F"]
 
-    def read_encoder_counter_relative(self):
+    def _store_feedback_(self, values_str, event):
+        self.states["F"] = values_str
+        event.set()
+
+    def get_encoder_counter_relative(self, force_update = False):
         """
         Returns the amount of counts that have been measured from the last time this query was
         made. Relative counter read is sometimes easier to work with, compared to full counter
         reading, as smaller numbers are usually returned.
         """
-        serial_command = "~CR {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+        if self.states["CR"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~CR {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_encoder_counter_relative_)
+            event.wait()
+        return self.states["CR"]
 
-    def read_encoder_speed_relative(self):
-        """
-        Returns the measured motor speed as a ratio of the Max RPM (MXRPM) configuration
-        parameter. The result is a value of between 0 and +/1000. As an example, if the Max RPM
-        is set at 3000 inside the encoder configuration parameter and the motor spins at 1500
-        RPM, then the returned value to this query will be 500, which is 50% of the 3000 max.
-        Note that if the motor spins faster than the Max RPM, the returned value will exceed
-        1000. However, a larger value is ignored by the controller for its internal operation
+    def _store_encoder_counter_relative_(self, values_str, event):
+        self.states["CR"] = values_str
+        event.set()
 
-        Reply:
-            SR = nn Type: Signed 16-bit
-            Min: -1000
-            Max: 1000
-        """
-        serial_command = "?SR {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
 
-    def read_encoder_motor_speed_in_rpm(self):
+    def get_encoder_motor_speed_in_rpm(self, force_update = False):
         """
         Reports the actual speed measured by the encoders as the actual RPM value. To report
         RPM accurately, the correct Pulses per Revolution (PPR) must be
         """
-        serial_command = "?S {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+        if self.states["S"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~S {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_encoder_motor_speed_in_rpm_)
+            event.wait()
+        return self.states["S"]
 
-    def read_encoder_speed_relative(self):
+    def _store_encoder_motor_speed_in_rpm_(self, values_str, event):
+        self.states["S"] = values_str
+        event.set()
+
+
+    def get_encoder_speed_relative(self, force_update = False):
         """
         Returns the measured motor speed as a ratio of the Max RPM (MXRPM) configuration
         parameter. The result is a value of between 0 and +/1000. As an example, if the Max RPM
@@ -1091,8 +1338,18 @@ class Motor(threading.Thread):
             Min: -1000
             Max: 1000
         """
-        serial_command = "?SR {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+        if self.states["SR"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?SR {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_encoder_speed_relative_)
+            event.wait()
+        return self.states["SR"]
+
+    def _store_encoder_speed_relative_(self, values_str, event):
+        self.states["SR"] = values_str
+        event.set()
+
+
 
     ##############################################
     #    SAFETY                                  #
@@ -1101,8 +1358,7 @@ class Motor(threading.Thread):
         serial_command = "!MS {}".format(self.channel)
         self.board.add_to_queue(serial_command)
 
-
-    def read_config_flags(self):
+    def get_config_flags(self, force_update = False):
         """
         Report the state of status flags used by the controller to indicate a number of internal
         conditions during normal operation. The response to this query is the single number for all
@@ -1121,18 +1377,33 @@ class Motor(threading.Thread):
 
         FS = f1 + f2*2 + f3*4 + ... + fn*2^n-1
         """
-        serial_command = "?FS {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+        if self.states["FS"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?FS {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_config_flags_)
+            event.wait()
+        return self.states["FS"]
 
+    def _store_config_flags_(self, values_str, event):
+        self.states["FS"] = values_str
+        event.set()
 
     def set_current_limit(self, amps):
         serial_command = "^ALIM {} {}".format(self.channel, amps * 10)
         self.board.add_to_queue(serial_command)
 
-    def read_current_limit(self):
-        serial_command = "~ALIM {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
-  
+    def get_current_limit(self, force_update = False):
+        if self.states["ALIM"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~ALIM {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_current_limit_)
+            event.wait()
+        return self.states["ALIM"]
+
+    def _store_current_limit_(self, values_str, event):
+        self.states["ALIM"] = values_str
+        event.set()
+
     def set_current_limit_action(self, action):
         """
             action =
@@ -1145,17 +1416,22 @@ class Motor(threading.Thread):
             6: Invert direction
             7: Run MicroBasic script
             8: Load counter with home value
-
-            
             mm = mot1*16 + mot2*32 + mot3*48
-
         """
         serial_command = "^ATGA {} {}".format(self.channel, action + self.bit_offset)
         self.board.add_to_queue(serial_command)
 
-    def read_current_limit_action(self):
-        serial_command = "~ATGA {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
+    def get_current_limit_action(self, force_update = False):
+        if self.states["ATGA"] is None or force_update:
+            event = threading.Event()
+            serial_command = "~ATGA {}".format(self.channel)
+            self.board.add_to_queue(serial_command, event, self._store_current_limit_action_)
+            event.wait()
+        return self.states["ATGA"]
+
+    def _store_current_limit_action_(self, values_str, event):
+        self.states["ATGA"] = values_str
+        event.set()
 
     def set_current_limit_min_period(self, milliseconds):
         """
@@ -1166,31 +1442,7 @@ class Motor(threading.Thread):
         serial_command = "^ATGD {} {}".format(self.channel, mililseconds)
         self.board.add_to_queue(serial_command)
 
-    def read_current_limit_min_period(self):
-        """
-        This parameter contains the time in milliseconds during which the Amps Trigger Level
-        (ATRIG) must be exceeded before the Amps Trigger Action (ATGA) is called. This parame-
-        ter is used to prevent Amps Trigger Actions to be taken in case of short duration spikes.
-        """
-        serial_command = "~ATGD {}".format(self.channel)
-        self.board.add_to_queue(serial_command)
-
-
-
-
     def get_current_limit_min_period(self, force_update = False):
-        """
-            Defines a minimum count value at which the controller will trigger an action when the
-            counter dips below that number. This feature is useful for setting up 
-            limit switches.This value, together with the High Count Limit, are also used in the position
-            mode to determine the travel range when commanding the controller with a relative posi-
-            tion command. In this case, the Low Limit Count is the desired position when a command
-            of -1000 is received.
-
-            Type: Signed 32-bit
-            Min: -2147M
-            Default: -20000 Max: 2147M
-        """
         if self.states["ATGD"] is None or force_update:
             event = threading.Event()
             serial_command = "~ATGD {}".format(self.channel)
@@ -1215,18 +1467,6 @@ class Motor(threading.Thread):
         self.board.add_to_queue(serial_command)
 
     def get_current_limit_amps(self, force_update = False):
-        """
-            Defines a minimum count value at which the controller will trigger an action when the
-            counter dips below that number. This feature is useful for setting up 
-            limit switches.This value, together with the High Count Limit, are also used in the position
-            mode to determine the travel range when commanding the controller with a relative posi-
-            tion command. In this case, the Low Limit Count is the desired position when a command
-            of -1000 is received.
-
-            Type: Signed 32-bit
-            Min: -2147M
-            Default: -20000 Max: 2147M
-        """
         if self.states["ATRIG"] is None or force_update:
             event = threading.Event()
             serial_command = "~ATRIG {}".format(self.channel)
@@ -1259,18 +1499,6 @@ class Motor(threading.Thread):
         self.board.add_to_queue(serial_command)
 
     def get_stall_detection(self, force_update = False):
-        """
-            Defines a minimum count value at which the controller will trigger an action when the
-            counter dips below that number. This feature is useful for setting up 
-            limit switches.This value, together with the High Count Limit, are also used in the position
-            mode to determine the travel range when commanding the controller with a relative posi-
-            tion command. In this case, the Low Limit Count is the desired position when a command
-            of -1000 is received.
-
-            Type: Signed 32-bit
-            Min: -2147M
-            Default: -20000 Max: 2147M
-        """
         if self.states["BLSTD"] is None or force_update:
             event = threading.Event()
             serial_command = "~BLSTD {}".format(self.channel)
@@ -1303,18 +1531,6 @@ class Motor(threading.Thread):
         self.board.add_to_queue(serial_command)
 
     def get_closed_loop_error_detection(self, force_update = False):
-        """
-            Defines a minimum count value at which the controller will trigger an action when the
-            counter dips below that number. This feature is useful for setting up 
-            limit switches.This value, together with the High Count Limit, are also used in the position
-            mode to determine the travel range when commanding the controller with a relative posi-
-            tion command. In this case, the Low Limit Count is the desired position when a command
-            of -1000 is received.
-
-            Type: Signed 32-bit
-            Min: -2147M
-            Default: -20000 Max: 2147M
-        """
         if self.states["CLERD"] is None or force_update:
             event = threading.Event()
             serial_command = "~CLERD {}".format(self.channel)
@@ -1343,18 +1559,6 @@ class Motor(threading.Thread):
         self.board.add_to_queue(serial_command)
 
     def get_encoder_high_count_limit(self, force_update = False):
-        """
-            Defines a minimum count value at which the controller will trigger an action when the
-            counter dips below that number. This feature is useful for setting up 
-            limit switches.This value, together with the High Count Limit, are also used in the position
-            mode to determine the travel range when commanding the controller with a relative posi-
-            tion command. In this case, the Low Limit Count is the desired position when a command
-            of -1000 is received.
-
-            Type: Signed 32-bit
-            Min: -2147M
-            Default: -20000 Max: 2147M
-        """
         if self.states["EHL"] is None or force_update:
             event = threading.Event()
             serial_command = "~EHL {}".format(self.channel)
