@@ -587,11 +587,13 @@ class Board(threading.Thread):
                     resp = self._readSerial_()
                     print("resp <<",resp)
                     if len(resp)!=2:
+                        print("run 10")
                         if resp[0]=="+":
                             print("confirmed")
                         elif resp[0]=="-":
                             print("todo: response == '-' pass message of failure")
                         else:
+                            print("run 11")
                             if callback is not None:
                                 print("callback=",callback)
                                 callback(resp[1], event)
