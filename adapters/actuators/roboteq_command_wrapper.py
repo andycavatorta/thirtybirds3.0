@@ -1858,8 +1858,9 @@ class Macro(threading.Thread):
     def go_to_limit_switch(self, params, callback):
 
         time.sleep(2)
-        self.motor.go_to_absolute_position(0)
-        
+        self.motor.go_to_absolute_position(1000)
+        time.sleep(2)
+
         original_motor_acceleration_rate = self.motor.get_motor_acceleration_rate()
         original_motor_deceleration_rate = self.motor.get_motor_deceleration_rate()
         original_operating_mode = self.motor.get_operating_mode()
@@ -1882,9 +1883,7 @@ class Macro(threading.Thread):
 
         time.sleep(2)
         self.motor.go_to_absolute_position(0)
-
-
-        
+        time.sleep(2)
 
 
         print("get_operating_mode", self.motor.get_operating_mode(True))
