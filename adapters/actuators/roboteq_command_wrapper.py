@@ -69,7 +69,6 @@ class Board(threading.Thread):
 
         time.sleep(0.5) # give serial a moment
         self.start()
-        self._apply_settings_()
 
     ##############################################
     #    MOTORS CONFIG                           #
@@ -544,13 +543,13 @@ class Board(threading.Thread):
     ##############################################
 
     def _apply_settings_(self):
-        for setting in self.boards_config:
+        config = self.boards_config[self.name]
+        for setting in config[self.name]:
             print("setting", setting)
             if setting == "serial_data_watchdog":
-                self.set_serial_data_watchdog(self.boards_config[setting])
+                self.set_serial_data_watchdog(config[setting])
             elif setting == "serial_echo":
-                self.set_serial_echo(self.boards_config[setting])
-
+                self.set_serial_echo(config[setting])
 
     def _get_bit_(self, number, place):
         return (number & (1 << place)) >> place
@@ -2027,6 +2026,7 @@ class Controllers(threading.Thread):
             for name, val in self.boards_config.items():
                 if val["mcu_id"] == mcu_id:
                     self.boards[name] = board
+                    self.boards[name]._apply_settings_()
                     break
         print("todo: make sure all boards in config are matched to serial device paths")
 
