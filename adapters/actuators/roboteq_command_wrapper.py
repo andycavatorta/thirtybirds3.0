@@ -1851,11 +1851,11 @@ class Macro(threading.Thread):
 
         time.sleep(10)
         print("get_operating_mode", self.motor.get_operating_mode(True))
-        self.motor.set_motor_speed(50)
+        self.motor.go_to_speed_or_relative_position(50)
 
         time.sleep(10)
 
-        self.motor.set_motor_speed(0)
+        self.motor.go_to_speed_or_relative_position(0)
 
         time.sleep(10)
 
