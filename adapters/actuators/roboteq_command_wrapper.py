@@ -2026,6 +2026,7 @@ class Controllers(threading.Thread):
             for name, val in self.boards_config.items():
                 if val["mcu_id"] == mcu_id:
                     self.boards[name] = board
+                    self.boards[name].set_name(name)
                     self.boards[name]._apply_settings_()
                     break
         print("todo: make sure all boards in config are matched to serial device paths")
