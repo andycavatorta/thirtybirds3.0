@@ -406,7 +406,7 @@ class Board(threading.Thread):
     #    MEMORY                                  #
     ##############################################
 
-    def get_mcu_id(self, force_update = False):
+    def get_rs232_bit_rate(self, force_update = False):
         if self.states["UID"] is None or force_update:
             event = threading.Event()
             serial_command = "?UID"
@@ -1840,6 +1840,10 @@ class Macro(threading.Thread):
         print("get_closed_loop_error", self.motor.get_closed_loop_error())
         print("get_runtime_status_flags", self.motor.get_runtime_status_flags())
         print("get_temperature", self.motor.get_temperature())
+        
+        print("")
+        
+        print("get_mixed_mode", self.motor.board.get_mixed_mode())
         
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
