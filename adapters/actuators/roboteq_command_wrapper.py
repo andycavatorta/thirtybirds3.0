@@ -1848,7 +1848,7 @@ class Macro(threading.Thread):
 
         time.sleep(1)
 
-        self.motor.set_motor_speed(500)
+        self.motor.set_motor_speed(50)
 
         time.sleep(10)
 
