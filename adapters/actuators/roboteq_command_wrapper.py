@@ -556,28 +556,19 @@ class Board(threading.Thread):
         self.queue.put((serial_command, event, callback))
 
     def _readSerial_(self):
-        print("_readSerial_ 1",)
         resp_char = " "
         resp_str = ""
         while ord(resp_char) != 13:
-            print("_readSerial_ 2",)
             resp_char = self.serial.read(1)
-            print("_readSerial_ 3",)
             resp_str += resp_char.decode('utf-8')
-            print("_readSerial_ 4",)
         resp_str = resp_str[:-1] # trim /r from end
-        print("_readSerial_ 5",)
         resp_l = resp_str.split('=')
-        print("_readSerial_ 6",)
         return resp_l
 
     def run(self):
         while True:
-            print("run 1")
             serial_command, event, callback = self.queue.get(True)
-            print("run 2")
             self.serial.write(str.encode(serial_command +'\r'))
-            print("run 3")
             resp = self._readSerial_()
             print("resp >>",resp)
             if len(resp)==1:
@@ -590,16 +581,10 @@ class Board(threading.Thread):
                     resp = self._readSerial_()
                     print("resp <<",resp)
                     if len(resp)!=2:
-                        print("run 10")
-                        if resp[0]=="+":
-                            print("confirmed")
-                        elif resp[0]=="-":
-                            print("todo: response == '-' pass message of failure")
-                        else:
-                            print("run 11")
-                            if callback is not None:
-                                print("callback=",callback)
-                                callback(resp[1], event)
+                        print("todo: response == '-' pass message of failure")
+                    else:
+                        if callback is not None:
+                            callback(resp[1], event)
 
 
 
@@ -687,7 +672,7 @@ class Motor(threading.Thread):
         }
 
         self.start()
-        #self._apply_settings_()
+        self._apply_settings_()
         #self.status_receiver("starting motor instance", self.name)
 
     ##############################################
