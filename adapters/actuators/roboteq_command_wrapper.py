@@ -1877,10 +1877,10 @@ class Macro(threading.Thread):
         self.motor.set_max_rpm(60)
 
         time.sleep(10)
-        self.motor.set_motor_speed(0)
+        self.motor.go_to_speed_or_relative_position(0)
 
 
-        go_to_speed_or_relative_position
+        
 
 
         print("get_operating_mode", self.motor.get_operating_mode(True))
