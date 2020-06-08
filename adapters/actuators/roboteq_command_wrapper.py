@@ -1835,7 +1835,21 @@ class Macro(threading.Thread):
         self.start()
 
     def go_to_limit_switch(self):
-        
+        original_motor_acceleration_rate = self.motor.get_motor_acceleration_rate()
+        original_motor_deceleration_rate = self.motor.get_motor_deceleration_rate()
+        original_operating_mode = self.motor.get_operating_mode()
+        original_pid_differential_gain = self.motor.get_pid_differential_gain()
+        original_pid_integral_gain = self.motor.get_pid_integral_gain()
+        original_pid_proportional_gain = self.motor.get_pid_proportional_gain()
+
+        print(original_motor_acceleration_rate)
+        print(original_motor_deceleration_rate)
+        print(original_operating_mode)
+        print(original_pid_differential_gain)
+        print(original_pid_integral_gain)
+        print(original_pid_proportional_gain)
+
+        """
         print("get_motor_acceleration_rate", self.motor.get_motor_acceleration_rate())
         print("get_motor_deceleration_rate", self.motor.get_motor_deceleration_rate())
         print("get_operating_mode", self.motor.get_operating_mode())
@@ -1849,6 +1863,7 @@ class Macro(threading.Thread):
         print("get_pid_differential_gain", self.motor.get_pid_differential_gain())
         print("get_pid_integral_gain", self.motor.get_pid_integral_gain())
         print("get_pid_proportional_gain", self.motor.get_pid_proportional_gain())
+
         print("get_expected_motor_position", self.motor.get_expected_motor_position())
         print("get_sensor_type_select", self.motor.get_sensor_type_select())
         print("get_encoder_usage", self.motor.get_encoder_usage())
@@ -1893,7 +1908,7 @@ class Macro(threading.Thread):
         print("get_user_data_in_ram", self.motor.board.get_user_data_in_ram(0))
         print("get_lock_status", self.motor.board.get_lock_status())
         print("get_script_auto_start", self.motor.board.get_script_auto_start())
-        
+        """
         #self.motor.read_max_power_reverse()
         # send status message confirming process started
         #switch_closed = GPIO.input(self.limit_switch_pin) == GPIO.HIGH
