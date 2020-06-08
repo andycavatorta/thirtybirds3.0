@@ -581,10 +581,13 @@ class Board(threading.Thread):
                     resp = self._readSerial_()
                     print("resp <<",resp)
                     if len(resp)!=2:
-                        print("todo: response == '-' pass message of failure")
-                    else:
-                        if callback is not None:
-                            callback(resp[1], event)
+                        if resp[0]=="+":
+                            pass
+                        elif resp[0]=="-":
+                            print("todo: response == '-' pass message of failure")
+                        else:
+                            if callback is not None:
+                                callback(resp[1], event)
 
 
 
