@@ -18,11 +18,17 @@ GPIO.setmode(GPIO.BCM)
 
 #@capture_exceptions.Class
 class Board(threading.Thread):
-    def __init__(self, path, controller_ref, add_to_controller_queue):
+    def __init__(
+            self, 
+            path, 
+            controller_ref, 
+            add_to_controller_queue,
+            boards_config):
         threading.Thread.__init__(self)
         self.serial_device_path = path
         self.controller_ref = controller_ref
         self.add_to_controller_queue = add_to_controller_queue
+        self.boards_config = boards_config
         self.mcu_id = ""
         self.name = ""
         self.queue = queue.Queue()
@@ -56,8 +62,14 @@ class Board(threading.Thread):
             "VAR":None,
         }
 
+        self.settings_to_methods = {
+            "serial_data_watchdog":self.set_serial_data_watchdog,
+            "serial_echo":self.set_serial_echo
+        }
+
         time.sleep(0.5) # give serial a moment
         self.start()
+        self._apply_settings_()
 
     ##############################################
     #    MOTORS CONFIG                           #
@@ -530,6 +542,14 @@ class Board(threading.Thread):
     ##############################################
     #    CLASS INTERNALS                         #
     ##############################################
+
+    def _apply_settings_(self):
+        for setting in self.boards_config:
+            if setting == "serial_data_watchdog":
+                self.set_serial_data_watchdog(self.boards_config[setting])
+            elif setting == "serial_echo":
+                self.set_serial_echo(self.boards_config[setting])
+
 
     def _get_bit_(self, number, place):
         return (number & (1 << place)) >> place
@@ -1851,11 +1871,11 @@ class Macro(threading.Thread):
 
         time.sleep(10)
         print("get_operating_mode", self.motor.get_operating_mode(True))
-        self.motor.go_to_speed_or_relative_position(50)
+        self.motor.set_motor_speed(50)
 
         time.sleep(10)
 
-        self.motor.go_to_speed_or_relative_position(0)
+        self.motor.set_motor_speed(0)
 
         time.sleep(10)
 
@@ -1997,7 +2017,11 @@ class Controllers(threading.Thread):
         # create board objects and read their mcu_ids
 
         for mcu_serial_device_path in self.mcu_serial_device_paths:
-            board = Board(mcu_serial_device_path, self, self.add_to_queue)
+            board = Board(
+                mcu_serial_device_path, 
+                self, 
+                self.add_to_queue,
+                self.boards_config)
             mcu_id = board.get_mcu_id()
             for name, val in self.boards_config.items():
                 if val["mcu_id"] == mcu_id:
