@@ -1865,11 +1865,15 @@ class Macro(threading.Thread):
         start_position = self.motor.get_encoder_counter_relative(True)
         print(start_position)
         self.motor.go_to_relative_position(position)
+        last_position = start_position
         while True:
+            current_position = self.motor.get_encoder_counter_relative(True)
+            print(current_position)
+            if last_position == current_position:
+                break
+            last_position = current_position
 
-        time.sleep(10)
-        start_position = self.motor.get_encoder_counter_relative(True)
-        print(start_position)
+        print("ta da!")
 
 
     def go_to_limit_switch(self, params, callback):
