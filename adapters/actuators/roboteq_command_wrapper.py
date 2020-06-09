@@ -1865,7 +1865,7 @@ class Macro(threading.Thread):
         time.sleep(3)
         self.motor.go_to_relative_position(10000)
         time.sleep(3)
-
+        """
         original_motor_acceleration_rate = self.motor.get_motor_acceleration_rate()
         original_motor_deceleration_rate = self.motor.get_motor_deceleration_rate()
         original_operating_mode = self.motor.get_operating_mode()
@@ -1889,7 +1889,7 @@ class Macro(threading.Thread):
         time.sleep(2)
 
         print("get_operating_mode", self.motor.get_operating_mode(True))
-
+        """
         #if switch_closed:
             # send status message confirming process finished
         #    return
