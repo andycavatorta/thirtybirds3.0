@@ -1869,8 +1869,9 @@ class Macro(threading.Thread):
         while True:
             current_position = self.motor.get_encoder_counter_relative(True)
             print(current_position)
-            if last_position == current_position:
-                break
+            if abs(current_position - position) < 1000:
+                if last_position == current_position:
+                    break
             last_position = current_position
 
         print("ta da!")
