@@ -1862,14 +1862,14 @@ class Macro(threading.Thread):
     def go_to_relative_position(self, position, speed=32000):
         self.motor.set_operating_mode(3)
         self.motor.set_motor_speed(speed)
-        start_position = self.motor.get_encoder_counter_absolute(True)
+        start_position = int(self.motor.get_encoder_counter_absolute(True))
         print(start_position)
         self.motor.go_to_relative_position(position)
         last_position = start_position
         while True:
             current_position = int(self.motor.get_encoder_counter_absolute(True))
-            print(current_position, last_position, abs(current_position - last_position))
-            if abs(current_position - last_position) < 1000:
+            print(current_position, start_position, abs(current_position - start_position))
+            if abs(current_position - start_position) < 1000:
                 if last_position == current_position:
                     break
             last_position = current_position
@@ -1878,7 +1878,7 @@ class Macro(threading.Thread):
 
 
     def go_to_limit_switch(self, params, callback):
-        self.go_to_relative_position(-1000000, 1000)
+        self.go_to_relative_position(1000000, 1000)
         """
         self.motor.set_max_rpm(65535)
         self.motor.set_motor_speed(32000)
