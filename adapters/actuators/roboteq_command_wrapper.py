@@ -1863,13 +1863,14 @@ class Macro(threading.Thread):
         self.motor.set_operating_mode(3)
         self.motor.set_motor_speed(speed)
         start_position = int(self.motor.get_encoder_counter_absolute(True))
+        destination_position = start_position + position
         print(start_position)
         self.motor.go_to_relative_position(position)
         last_position = start_position
         while True:
             current_position = int(self.motor.get_encoder_counter_absolute(True))
-            print(current_position, start_position, abs(current_position - start_position))
-            if abs(current_position - start_position) < 1000:
+            print(current_position, destination_position, abs(current_position - destination_position))
+            if abs(current_position - destination_position) < 1000:
                 if last_position == current_position:
                     break
             last_position = current_position
