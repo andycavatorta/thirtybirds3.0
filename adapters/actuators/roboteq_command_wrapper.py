@@ -1861,11 +1861,11 @@ class Macro(threading.Thread):
 
         self.motor.set_max_rpm(200)
         time.sleep(3)
-        self.motor.go_to_relative_position(000)
+        self.motor.go_to_relative_position(10000)
         time.sleep(3)
-        self.motor.go_to_relative_position(40000)
+        self.motor.go_to_relative_position(-10000)
         time.sleep(3)
-        self.motor.go_to_relative_position(000)
+        self.motor.go_to_relative_position(10000)
 
 
 
