@@ -1880,9 +1880,8 @@ class Macro(threading.Thread):
         self.motor.set_operating_mode(3)
         self.motor.set_motor_speed(speed)
         start_position = int(self.motor.get_encoder_counter_absolute(True))
-        destination_position = start_position + position
         self.motor.go_to_relative_position(position)
-        self.block_until_position_reached()
+        self.block_until_position_reached(start_position + position)
         """
         last_position = start_position
         while True:
