@@ -1856,6 +1856,7 @@ class Macro(threading.Thread):
         self.start()
 
     def go_to_limit_switch(self, params, callback):
+        self.motor.set_max_rpm(10000)
         self.motor.set_encoder_high_count_limit(2147000000)  
         self.motor.set_encoder_low_count_limit(2147000000)
         self.motor.set_motor_speed(5000)
