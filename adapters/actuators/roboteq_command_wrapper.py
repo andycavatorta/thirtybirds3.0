@@ -1861,7 +1861,7 @@ class Macro(threading.Thread):
         self.motor.set_encoder_low_count_limit(2147000000)
         self.motor.set_motor_speed(5000)
         time.sleep(3)
-        self.motor.go_to_relative_position(1000000)
+        self.motor.go_to_relative_position(-1000000)
         time.sleep(3)
         """
         original_motor_acceleration_rate = self.motor.get_motor_acceleration_rate()
