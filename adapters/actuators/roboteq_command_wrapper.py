@@ -1871,7 +1871,7 @@ class Macro(threading.Thread):
 
 
     def go_to_limit_switch(self, params, callback):
-        self.go_to_relative_position(-1000000)
+        self.go_to_relative_position(-1000000, 8000)
         """
         self.motor.set_max_rpm(65535)
         self.motor.set_motor_speed(32000)
