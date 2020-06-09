@@ -1290,7 +1290,7 @@ class Motor(threading.Thread):
             serial_command = "?C {}".format(self.channel)
             self.board.add_to_queue(serial_command, event, self._store_encoder_counter_absolute_)
             event.wait()
-        return self.states["C"]
+        return int(self.states["C"])
 
     def _store_encoder_counter_absolute_(self, values_str, event):
         self.states["C"] = values_str
@@ -1859,26 +1859,27 @@ class Macro(threading.Thread):
         self.motor.set_max_rpm(65535)
         self.start()
 
-    def go_to_relative_position(self, position, speed=32000):
+    def go_to_relative_position(self, position, speed=32000, timeout=10.0):
         self.motor.set_operating_mode(3)
         self.motor.set_motor_speed(speed)
         start_position = int(self.motor.get_encoder_counter_absolute(True))
         destination_position = start_position + position
+        start_time = time.time()
         self.motor.go_to_relative_position(position)
         last_position = start_position
         while True:
             current_position = int(self.motor.get_encoder_counter_absolute(True))
             print(current_position, destination_position, abs(current_position - destination_position))
+            if start_time + timeout >= time.time():
+                break
             if abs(current_position - destination_position) < 200:
                 if last_position == current_position:
                     break
             last_position = current_position
-
         print("ta da!")
 
-
     def go_to_limit_switch(self, params, callback):
-        self.go_to_relative_position(-1000000, 1000)
+        self.go_to_relative_position(1000000, 1000)
         """
         self.motor.set_max_rpm(65535)
         self.motor.set_motor_speed(32000)
