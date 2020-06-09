@@ -1862,12 +1862,12 @@ class Macro(threading.Thread):
     def go_to_relative_position(self, position, speed=32000):
         self.motor.set_operating_mode(3)
         self.motor.set_motor_speed(speed)
-        start_position = self.motor.get_encoder_counter_relative(True)
+        start_position = self.motor.get_encoder_counter_absolute(True)
         print(start_position)
-        self.motor.go_to_relative_position(position)
+        self.motor.get_encoder_counter_absolute(position)
         last_position = start_position
         while True:
-            current_position = int(self.motor.get_encoder_counter_relative(True))
+            current_position = int(self.motor.get_encoder_counter_absolute(True))
             print(current_position)
             if abs(current_position - position) < 1000:
                 if last_position == current_position:
