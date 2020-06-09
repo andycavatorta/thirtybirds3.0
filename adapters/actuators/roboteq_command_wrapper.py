@@ -1859,14 +1859,10 @@ class Macro(threading.Thread):
         self.motor.set_max_rpm(65535)
         self.start()
 
-    def go_to_relative_position(self, position, speed=32000, timeout=10.0):
-        self.motor.set_max_rpm(600)
-        self.motor.set_operating_mode(3)
-        self.motor.set_motor_speed(speed)
-        start_position = int(self.motor.get_encoder_counter_absolute(True))
-        destination_position = start_position + position
+
+    def block_until_position_reached(self, destination_position, timeout=10.0):
         start_time = time.time()
-        self.motor.go_to_relative_position(position)
+        start_position = int(self.motor.get_encoder_counter_absolute(True))
         last_position = start_position
         while True:
             current_position = int(self.motor.get_encoder_counter_absolute(True))
@@ -1876,6 +1872,28 @@ class Macro(threading.Thread):
                 if last_position == current_position:
                     break
             last_position = current_position
+
+
+
+    def go_to_relative_position(self, position, speed=32000):
+        self.motor.set_max_rpm(600)
+        self.motor.set_operating_mode(3)
+        self.motor.set_motor_speed(speed)
+        start_position = int(self.motor.get_encoder_counter_absolute(True))
+        destination_position = start_position + position
+        self.motor.go_to_relative_position(position)
+        self.block_until_position_reached()
+        """
+        last_position = start_position
+        while True:
+            current_position = int(self.motor.get_encoder_counter_absolute(True))
+            if start_time + timeout <= time.time():
+                break
+            if abs(current_position - destination_position) < 200:
+                if last_position == current_position:
+                    break
+            last_position = current_position
+        """
         print("ta da!")
 
     def go_to_limit_switch(self, params, callback):
