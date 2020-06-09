@@ -1853,17 +1853,30 @@ class Macro(threading.Thread):
         self.queue = queue.Queue()
         if limit_switch_pin is not None and limit_switch_direction != 0:
             GPIO.setup(limit_switch_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        self.start()
 
-    def go_to_limit_switch(self, params, callback):
-        self.motor.set_max_rpm(65535)
         self.motor.set_encoder_high_count_limit(2147000000)  
         self.motor.set_encoder_low_count_limit(2147000000)
+        self.start()
+
+    def go_to_relative_position(self, position, speed=32000):
+        self.motor.set_operating_mode(3)
+        self.motor.set_motor_speed(speed)
+        start_position = self.motor.get_encoder_counter_relative(True)
+        print(start_position)
+        self.motor.go_to_relative_position(position)
+        time.sleep(10)
+        print(start_position)
+        self.motor.go_to_relative_position(position)
+
+
+    def go_to_limit_switch(self, params, callback):
+        self.go_to_relative_position(-10000)
+        """
+        self.motor.set_max_rpm(65535)
         self.motor.set_motor_speed(32000)
         time.sleep(3)
-        self.motor.go_to_relative_position(1000000)
+        self.motor.go_to_relative_position(-1000000)
         time.sleep(3)
-        """
         original_motor_acceleration_rate = self.motor.get_motor_acceleration_rate()
         original_motor_deceleration_rate = self.motor.get_motor_deceleration_rate()
         original_operating_mode = self.motor.get_operating_mode()
