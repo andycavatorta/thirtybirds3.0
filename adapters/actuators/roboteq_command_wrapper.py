@@ -1856,19 +1856,11 @@ class Macro(threading.Thread):
         self.start()
 
     def go_to_limit_switch(self, params, callback):
-
-
         self.motor.set_encoder_high_count_limit(2147000000)  
         self.motor.set_encoder_low_count_limit(2147000000)
-
-
         self.motor.set_max_rpm(200)
         time.sleep(3)
-        self.motor.go_to_relative_position(10000)
-        time.sleep(3)
-        self.motor.go_to_relative_position(-10000)
-        time.sleep(3)
-        self.motor.go_to_relative_position(10000)
+        self.motor.go_to_relative_position(500000)
         time.sleep(3)
         """
         original_motor_acceleration_rate = self.motor.get_motor_acceleration_rate()
