@@ -1864,7 +1864,7 @@ class Macro(threading.Thread):
         self.motor.set_motor_speed(speed)
         start_position = self.motor.get_encoder_counter_absolute(True)
         print(start_position)
-        self.motor.get_encoder_counter_absolute(position)
+        self.motor.go_to_relative_position(position)
         last_position = start_position
         while True:
             current_position = int(self.motor.get_encoder_counter_absolute(True))
