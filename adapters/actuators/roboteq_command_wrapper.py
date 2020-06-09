@@ -1870,7 +1870,7 @@ class Macro(threading.Thread):
         while True:
             current_position = int(self.motor.get_encoder_counter_absolute(True))
             print(current_position, destination_position, abs(current_position - destination_position))
-            if start_time + timeout >= time.time():
+            if start_time + timeout <= time.time():
                 break
             if abs(current_position - destination_position) < 200:
                 if last_position == current_position:
