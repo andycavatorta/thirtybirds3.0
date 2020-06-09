@@ -1869,7 +1869,7 @@ class Macro(threading.Thread):
         while True:
             current_position = int(self.motor.get_encoder_counter_absolute(True))
             print(current_position, destination_position, abs(current_position - destination_position))
-            if abs(current_position - destination_position) < 1000:
+            if abs(current_position - destination_position) < 200:
                 if last_position == current_position:
                     break
             last_position = current_position
