@@ -1898,10 +1898,11 @@ class Macro(threading.Thread):
     def go_to_absolute_position(self, params, callback=None):
         print("go_to_absolute_position: start")
         position = params["position"]
+        speed = params["speed"]
         self.coast()
         time.sleep(1)
         self.motor.set_operating_mode(3)
-        self.motor.set_motor_speed(250)
+        self.motor.set_motor_speed(speed)
         time.sleep(1)
         self.motor.go_to_absolute_position(position)
         self.block_until_position_reached(position)
