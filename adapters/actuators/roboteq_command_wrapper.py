@@ -1813,7 +1813,7 @@ class Motor(threading.Thread):
     def run(self):
         while True:
             #try:
-            serial_command, value, callback = self.queue.get(block=True) #, timeout=0.5)
+            serial_command, value, callback = self.queue.get(block=True, timeout=None) #, timeout=0.5)
             #except queue.Empty:
             #    self.read_encoder_counter_absolute()
 
@@ -1842,7 +1842,8 @@ class Macro(threading.Thread):
             motor_obj, 
             status_receiver,
             limit_switch_pin = None,
-            limit_switch_direction = 0
+            limit_switch_direction = 0, 
+            limit_end_position = None
         ):
         threading.Thread.__init__(self)
         self.motor_name = motor_name
@@ -1850,6 +1851,7 @@ class Macro(threading.Thread):
         self.status_receiver = status_receiver
         self.limit_switch_pin = limit_switch_pin
         self.limit_switch_direction = limit_switch_direction
+        self.limit_end_position = limit_end_position 
         self.queue = queue.Queue()
         if limit_switch_pin is not None and limit_switch_direction != 0:
             GPIO.setup(limit_switch_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -1873,6 +1875,21 @@ class Macro(threading.Thread):
                     break
             last_position = current_position
 
+    def oscillate(self, range, speed):
+        pass
+
+    def coast(self):
+        self.motor.set_operating_mode(0)
+        self.motor.go_to_speed_or_relative_position(0)
+
+    def open_loop(self, power):
+        self.motor.set_operating_mode(0)
+        self.motor.go_to_speed_or_relative_position(power)
+
+    def set_speed(self, speed, target_position=None):
+        # end
+        pass
+
     def go_to_relative_position(self, position, speed=32000):
         self.motor.set_max_rpm(60)
         self.motor.set_operating_mode(3)
@@ -1882,8 +1899,18 @@ class Macro(threading.Thread):
 
         print("ta da!")
 
+    def go_to_absolute_position(self):
+        pass
+
+    def go_to_end_position(self):
+        pass
+
     def go_to_limit_switch(self, params, callback):
-        #self.go_to_relative_position(1000000, 1000)
+        print("aaaa")
+        self.go_to_relative_position(1000000, 1000)
+        print("bbbb")
+        self.motor.coast()
+        print("cccc")
         """
         last_button_state = GPIO.input(self.limit_switch_pin)
         while True:
@@ -1893,7 +1920,6 @@ class Macro(threading.Thread):
                 print(button_state)
                 last_button_state = button_state
 
-        """
         self.motor.set_motor_speed(32000)
         time.sleep(3)
         self.motor.go_to_relative_position(-1000000)
@@ -1921,6 +1947,7 @@ class Macro(threading.Thread):
         time.sleep(2)
 
         print("get_operating_mode", self.motor.get_operating_mode(True))
+        """
         #if switch_closed:
             # send status message confirming process finished
         #    return
@@ -1949,12 +1976,16 @@ class Macro(threading.Thread):
 
     def run(self):
         while True:
-            command, params, callback = self.queue.get(True)
-            if command=="go_to_limit_switch":
-                self.go_to_limit_switch(params, callback)
-            #print(mcu_serial_device_path, channel, method, resp_str)
-
-
+            try:
+                command, params, callback = self.queue.get(block=True, timeout=5)
+                if command=="go_to_limit_switch":
+                    self.go_to_limit_switch(params, callback)
+            except queue.Empty:
+                print(self.motor.get_motor_amps())
+                #print(mcu_serial_device_path, channel, method, resp_str)
+                #try:
+                #    serial_command, value, callback = self.queue.get(block=True, timeout=None) #, timeout=0.5)
+                #
 
 
 
@@ -2025,7 +2056,8 @@ class Controllers(threading.Thread):
                             self.motors[motor_name], 
                             self.status_receiver, 
                             self.motors_config[motor_name]["limit_switch_pin"],
-                            self.motors_config[motor_name]["limit_switch_direction"]
+                            self.motors_config[motor_name]["limit_switch_direction"],
+                            self.motors_config[motor_name]["limit_end_position"]
                         )
                     except KeyError:
                         self.macros[motor_name] = Macro(
