@@ -1876,25 +1876,27 @@ class Macro(threading.Thread):
     def go_to_relative_position(self, position, speed=32000):
         self.motor.set_max_rpm(60)
         self.motor.set_operating_mode(3)
-        #self.motor.set_motor_speed(speed)
         start_position = int(self.motor.get_encoder_counter_absolute(True))
         self.motor.go_to_relative_position(position)
         self.block_until_position_reached(start_position + position)
-        """
-        last_position = start_position
-        while True:
-            current_position = int(self.motor.get_encoder_counter_absolute(True))
-            if start_time + timeout <= time.time():
-                break
-            if abs(current_position - destination_position) < 200:
-                if last_position == current_position:
-                    break
-            last_position = current_position
-        """
+
         print("ta da!")
 
     def go_to_limit_switch(self, params, callback):
-        self.go_to_relative_position(-10000, 1000)
+        # self.go_to_relative_position(-10000, 1000)
+        last_button_state = GPIO.input(self.limit_switch_pin)
+        while True:
+            button_state = GPIO.input(self.limit_switch_pin)
+            time.sleep(0.1)
+            if last_button_state != button_state:
+                print(button_state)
+                last_button_state = button_state
+
+
+
+
+
+
         """
         self.motor.set_max_rpm(65535)
         self.motor.set_motor_speed(32000)
