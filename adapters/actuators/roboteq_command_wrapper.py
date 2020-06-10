@@ -1896,11 +1896,13 @@ class Macro(threading.Thread):
         self.block_until_position_reached(start_position + position)
 
     def go_to_absolute_position(self, params, callback=None):
+        print("go_to_absolute_position: start")
         position = params["position"]
         self.motor.set_operating_mode(3)
         self.motor.go_to_absolute_position(position)
         self.block_until_position_reached(position)
         self.coast()
+        print("go_to_absolute_position: done")
 
     def go_to_end_position(self):
         self.motor.set_operating_mode(3)
@@ -1909,8 +1911,7 @@ class Macro(threading.Thread):
         self.coast()
 
     def go_to_limit_switch(self, params, callback):
-        #self.go_to_relative_position(800000, 1000)
-        #self.coast()
+        print("go_to_limit_switch: start")
         if(self.get_limit_switch()):
             return
         self.motor.set_operating_mode(1)
@@ -1930,63 +1931,9 @@ class Macro(threading.Thread):
                     break
             last_button_state = button_state
         self.coast()
-                    
+        time.sleep(1)
+        print("go_to_limit_switch: done")
 
-            #time.sleep(0.01)
-            #if last_button_state != button_state:
-            #    print(button_state)
-            #    last_button_state = button_state
-        """
-        self.motor.set_motor_speed(32000)
-        time.sleep(3)
-        self.motor.go_to_relative_position(-1000000)
-        time.sleep(3)
-        original_motor_acceleration_rate = self.motor.get_motor_acceleration_rate()
-        original_motor_deceleration_rate = self.motor.get_motor_deceleration_rate()
-        original_operating_mode = self.motor.get_operating_mode()
-        #original_pid_differential_gain = self.motor.get_pid_differential_gain()
-        #original_pid_integral_gain = self.motor.get_pid_integral_gain()
-        #original_pid_proportional_gain = self.motor.get_pid_proportional_gain()
-        self.motor.set_operating_mode(1)
-        self.motor.set_motor_acceleration_rate(5000)
-        self.motor.set_motor_deceleration_rate(500000)
-
-        self.motor.set_motor_speed(50)
-        time.sleep(10)
-        self.motor.set_motor_speed(0)
-
-        self.motor.set_motor_acceleration_rate(original_motor_acceleration_rate)
-        self.motor.set_motor_deceleration_rate(original_motor_deceleration_rate)
-        self.motor.set_operating_mode(original_operating_mode)
-
-        time.sleep(2)
-        self.motor.go_to_absolute_position(0)
-        time.sleep(2)
-
-        print("get_operating_mode", self.motor.get_operating_mode(True))
-        """
-        #if switch_closed:
-            # send status message confirming process finished
-        #    return
-        # read and record initial motor mode
-        # self.motor_obj.read_operating_mode(callback = self.go_to_limit_switch)
-        # read and record initial deceleration setting
-        # read and record initial speed setting
-        # set motor mode to closed loop speed
-        # set speed low
-
-        # start motion in direction
-        # read motor current 
-        # loop 
-            # read motor current, position, and limit switch
-            # when limit switch triggers or position stops changing or current spikes
-                # stop motor
-                # set encoder to zero or adjusted near-zero value
-        # restore initial deceleration setting
-        # restore initial speed setting
-        # restore initial motor mode
-        # send status message confirming process finished
-        #motor = self.controllers.motors[motor_name]
 
     def add_to_queue(self, command, params={}, callback=None):
         self.queue.put((command, params, callback))
