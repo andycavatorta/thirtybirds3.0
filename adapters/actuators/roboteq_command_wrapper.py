@@ -1882,6 +1882,7 @@ class Macro(threading.Thread):
     def open_loop(self, power):
         self.motor.set_operating_mode(0)
         self.motor.go_to_speed_or_relative_position(power)
+        self.coast()
 
     def set_speed(self, speed, target_position=None):
         # end
@@ -1894,14 +1895,12 @@ class Macro(threading.Thread):
         self.motor.go_to_relative_position(position)
         self.block_until_position_reached(start_position + position)
 
-        print("ta da!")
-
     def go_to_absolute_position(self):
         pass
 
     def go_to_end_position(self):
+        self.motor.set_operating_mode(3)
         self.motor.go_to_absolute_position(self.limit_end_position)
-        pass
 
     def go_to_limit_switch(self, params, callback):
         #self.go_to_relative_position(800000, 1000)
@@ -1923,6 +1922,7 @@ class Macro(threading.Thread):
                     self.motor.set_encoder_counter(0)
                     print(self.motor.get_encoder_counter_absolute(True))
             last_button_state = button_state
+        self.coast()
                     
 
             #time.sleep(0.01)
