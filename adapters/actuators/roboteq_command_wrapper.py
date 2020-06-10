@@ -1923,8 +1923,11 @@ class Macro(threading.Thread):
                     print(self.motor.get_encoder_counter_absolute())
                     self.coast()
                     self.motor.set_encoder_counter(0)
+                    self.motor.set_encoder_counter(0)
+                    self.motor.set_encoder_counter(0)
+                    self.motor.set_encoder_counter(0)
                     print(self.motor.get_encoder_counter_absolute())
-                    last_button_state = button_state
+            last_button_state = button_state
                     
 
 
