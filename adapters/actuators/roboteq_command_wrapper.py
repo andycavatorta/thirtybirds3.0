@@ -1895,7 +1895,7 @@ class Macro(threading.Thread):
         self.motor.go_to_relative_position(position)
         self.block_until_position_reached(start_position + position)
 
-    def go_to_absolute_position(self, params):
+    def go_to_absolute_position(self, params, callback=None):
         position = params["position"]
         self.motor.set_operating_mode(3)
         self.motor.go_to_absolute_position(position)
