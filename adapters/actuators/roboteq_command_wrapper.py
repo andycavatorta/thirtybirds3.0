@@ -1845,7 +1845,7 @@ class Macro(threading.Thread):
         self.motor = motor_obj
         self.status_receiver = status_receiver
         self.limit_switch_pin = limit_switch_pin
-        self.limit_switch_direction = limit_switch_direction
+        self.limit_switch_direction = int(limit_switch_direction)
         self.limit_end_position = limit_end_position 
         self.queue = queue.Queue()
         if limit_switch_pin is not None and limit_switch_direction != 0:
@@ -1912,7 +1912,7 @@ class Macro(threading.Thread):
         self.motor.set_motor_acceleration_rate(5000)
         self.motor.set_motor_deceleration_rate(500000)
 
-        self.motor.set_motor_speed(-50)
+        self.motor.set_motor_speed(50*self.limit_switch_direction)
 
         last_button_state = self.get_limit_switch()
         while True:
@@ -1926,7 +1926,6 @@ class Macro(threading.Thread):
                     print(self.motor.get_encoder_counter_absolute(True))
             last_button_state = button_state
                     
-
 
             #time.sleep(0.01)
             #if last_button_state != button_state:
