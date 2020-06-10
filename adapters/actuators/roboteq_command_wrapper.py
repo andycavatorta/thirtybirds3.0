@@ -1915,7 +1915,10 @@ class Macro(threading.Thread):
         last_button_state = self.get_limit_switch()
         while True:
             if self.get_limit_switch():
+                print(self.motor.get_encoder_counter_absolute())
+                self.motor.set_encoder_counter(0)
                 self.motor.set_motor_speed(0)
+                print(self.motor.get_encoder_counter_absolute())
 
 
             #time.sleep(0.01)
