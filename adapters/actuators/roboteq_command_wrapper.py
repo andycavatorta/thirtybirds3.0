@@ -1910,7 +1910,7 @@ class Macro(threading.Thread):
         self.motor.set_motor_acceleration_rate(5000)
         self.motor.set_motor_deceleration_rate(500000)
 
-        self.motor.set_motor_speed(-50)
+        self.motor.set_motor_speed(50)
 
         last_button_state = self.get_limit_switch()
         while True:
@@ -1920,7 +1920,7 @@ class Macro(threading.Thread):
                 if last_button_state != button_state:
                     print(self.motor.get_encoder_counter_absolute())
                     self.motor.set_encoder_counter(0)
-                    self.coast(0)
+                    self.coast()
                     print(self.motor.get_encoder_counter_absolute())
                     last_button_state = button_state
                     
