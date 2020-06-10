@@ -1920,13 +1920,13 @@ class Macro(threading.Thread):
             button_state = self.get_limit_switch()
             if button_state:
                 if last_button_state != button_state:
-                    print(self.motor.get_encoder_counter_absolute())
+                    print(self.motor.get_encoder_counter_absolute(True))
                     self.coast()
                     self.motor.set_encoder_counter(0)
                     self.motor.set_encoder_counter(0)
                     self.motor.set_encoder_counter(0)
                     self.motor.set_encoder_counter(0)
-                    print(self.motor.get_encoder_counter_absolute())
+                    print(self.motor.get_encoder_counter_absolute(True))
             last_button_state = button_state
                     
 
