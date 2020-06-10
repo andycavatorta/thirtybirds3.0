@@ -587,24 +587,23 @@ class Board(threading.Thread):
 
     def run(self):
         while True:
-            try:
-                serial_command, event, callback = self.queue.get(block=True, timeout=None)
-                self.serial.write(str.encode(serial_command +'\r'))
-                resp = self._readSerial_()
-                if len(resp)==1:
-                    if resp[0]=="+":
-                        pass
-                        # todo: do we need to pass affirmation?
-                    elif resp[0]=="-":
-                        print("todo: response == '-' pass message of failure")
-                    else:# this is a command echo string.  now fetch command response
-                        resp = self._readSerial_()
-                        if len(resp)!=2:
-                            if resp == ['-']:
-                                print("todo: response == '-' pass message of failure")
-                        else:
-                            if callback is not None:
-                                callback(resp[1], event)
+            serial_command, event, callback = self.queue.get(block=True, timeout=None)
+            self.serial.write(str.encode(serial_command +'\r'))
+            resp = self._readSerial_()
+            if len(resp)==1:
+                if resp[0]=="+":
+                    pass
+                    # todo: do we need to pass affirmation?
+                elif resp[0]=="-":
+                    print("todo: response == '-' pass message of failure")
+                else:# this is a command echo string.  now fetch command response
+                    resp = self._readSerial_()
+                    if len(resp)!=2:
+                        if resp == ['-']:
+                            print("todo: response == '-' pass message of failure")
+                    else:
+                        if callback is not None:
+                            callback(resp[1], event)
 
 
 
