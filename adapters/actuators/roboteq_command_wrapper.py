@@ -1895,7 +1895,8 @@ class Macro(threading.Thread):
         self.motor.go_to_relative_position(position)
         self.block_until_position_reached(start_position + position)
 
-    def go_to_absolute_position(self, position):
+    def go_to_absolute_position(self, params):
+        position = params["position"]
         self.motor.set_operating_mode(3)
         self.motor.go_to_absolute_position(position)
         self.block_until_position_reached(position)
@@ -1921,12 +1922,12 @@ class Macro(threading.Thread):
             time.sleep(0.01)
             button_state = self.get_limit_switch()
             if button_state:
-                print("----A")
                 if last_button_state != button_state:
                     print(self.motor.get_encoder_counter_absolute(True))
                     self.coast()
                     self.motor.set_encoder_counter(0)
                     print(self.motor.get_encoder_counter_absolute(True))
+                    break
             last_button_state = button_state
         self.coast()
                     
@@ -1997,7 +1998,7 @@ class Macro(threading.Thread):
                 if command=="go_to_limit_switch":
                     self.go_to_limit_switch(params, callback)
                 if command=="go_to_absolute_position":
-                    self.go_to_limit_switch(params, callback)
+                    self.go_to_absolute_position(params, callback)
             except queue.Empty:
                 print(self.motor.get_motor_amps())
                 #print(mcu_serial_device_path, channel, method, resp_str)
