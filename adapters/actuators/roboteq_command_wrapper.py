@@ -1803,7 +1803,7 @@ class Motor(threading.Thread):
             print(self.name, self.get_motor_amps())
             time.sleep(1)
             #try:
-            #serial_command, value, callback = self.queue.get(block=True, timeout=None) #, timeout=0.5)
+            serial_command, value, callback = self.queue.get(block=True, timeout=None) #, timeout=0.5)
 
 
             #
@@ -1854,6 +1854,8 @@ class Macro(threading.Thread):
         self.motor.set_max_rpm(65535)
         self.start()
 
+    def get_limit_switch(self):
+        return True if GPIO.input(self.limit_switch_pin) == 1 else False
 
     def block_until_position_reached(self, destination_position, timeout=10.0):
         start_time = time.time()
@@ -1899,17 +1901,27 @@ class Macro(threading.Thread):
         pass
 
     def go_to_limit_switch(self, params, callback):
-        self.go_to_relative_position(800000, 1000)
-        self.coast()
-        """
-        last_button_state = GPIO.input(self.limit_switch_pin)
+        #self.go_to_relative_position(800000, 1000)
+        #self.coast()
+
+        if(self.get_limit_switch()):
+            return
+        self.motor.set_operating_mode(1)
+        self.motor.set_motor_acceleration_rate(5000)
+        self.motor.set_motor_deceleration_rate(500000)
+
+        self.motor.set_motor_speed(-50)
+        time.sleep(2)
+        self.motor.set_motor_speed(0)
+
+        last_button_state = self.get_limit_switch()
         while True:
-            button_state = GPIO.input(self.limit_switch_pin)
+            button_state = self.get_limit_switch()
             time.sleep(0.1)
             if last_button_state != button_state:
                 print(button_state)
                 last_button_state = button_state
-
+        """
         self.motor.set_motor_speed(32000)
         time.sleep(3)
         self.motor.go_to_relative_position(-1000000)
