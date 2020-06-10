@@ -587,35 +587,24 @@ class Board(threading.Thread):
 
     def run(self):
         while True:
-            serial_command, event, callback = self.queue.get(True)
-            self.serial.write(str.encode(serial_command +'\r'))
-            resp = self._readSerial_()
-            #print("run 1: ",serial_command, resp)
-            if len(resp)==1:
-                if resp[0]=="+":
-                    pass
-                    # todo: do we need to pass affirmation?
-                elif resp[0]=="-":
-                    print("todo: response == '-' pass message of failure")
-                else:# this is a command echo string.  now fetch command response
-                    resp = self._readSerial_()
-                    if len(resp)!=2:
-                        #print("run 2: ",serial_command, resp)
-                        if resp == ['-']:
-                            print("todo: response == '-' pass message of failure")
-                    else:
-                        #print("run 3: ",serial_command, resp)
-                        if callback is not None:
-                            callback(resp[1], event)
-
-
-
-
-
-
-
-
-
+            try:
+                serial_command, event, callback = self.queue.get(block=True, timeout=None)
+                self.serial.write(str.encode(serial_command +'\r'))
+                resp = self._readSerial_()
+                if len(resp)==1:
+                    if resp[0]=="+":
+                        pass
+                        # todo: do we need to pass affirmation?
+                    elif resp[0]=="-":
+                        print("todo: response == '-' pass message of failure")
+                    else:# this is a command echo string.  now fetch command response
+                        resp = self._readSerial_()
+                        if len(resp)!=2:
+                            if resp == ['-']:
+                                print("todo: response == '-' pass message of failure")
+                        else:
+                            if callback is not None:
+                                callback(resp[1], event)
 
 
 
@@ -1812,8 +1801,13 @@ class Motor(threading.Thread):
 
     def run(self):
         while True:
+            print(self.motor.get_motor_amps())
+            time.sleep(5)
             #try:
-            serial_command, value, callback = self.queue.get(block=True, timeout=None) #, timeout=0.5)
+            #serial_command, value, callback = self.queue.get(block=True, timeout=None) #, timeout=0.5)
+
+
+            #
             #except queue.Empty:
             #    self.read_encoder_counter_absolute()
 
