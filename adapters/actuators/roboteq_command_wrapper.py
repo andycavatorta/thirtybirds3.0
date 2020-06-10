@@ -1800,7 +1800,7 @@ class Motor(threading.Thread):
 
     def run(self):
         while True:
-            print(self.motor.get_motor_amps())
+            print(self.name, self.get_motor_amps())
             time.sleep(5)
             #try:
             #serial_command, value, callback = self.queue.get(block=True, timeout=None) #, timeout=0.5)
@@ -1899,11 +1899,8 @@ class Macro(threading.Thread):
         pass
 
     def go_to_limit_switch(self, params, callback):
-        print("aaaa")
-        self.go_to_relative_position(-800000, 1000)
-        print("bbbb")
+        self.go_to_relative_position(800000, 1000)
         self.coast()
-        print("cccc")
         """
         last_button_state = GPIO.input(self.limit_switch_pin)
         while True:
