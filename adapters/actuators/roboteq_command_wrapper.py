@@ -1912,7 +1912,7 @@ class Macro(threading.Thread):
         self.motor.set_motor_acceleration_rate(5000)
         self.motor.set_motor_deceleration_rate(500000)
 
-        self.motor.set_motor_speed(25*self.limit_switch_direction)
+        self.motor.set_motor_speed(-25*self.limit_switch_direction)
 
         last_button_state = self.get_limit_switch()
         while True:
