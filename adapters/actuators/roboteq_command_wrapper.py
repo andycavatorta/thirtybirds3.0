@@ -1801,7 +1801,7 @@ class Motor(threading.Thread):
     def run(self):
         while True:
             print(self.name, self.get_motor_amps())
-            time.sleep(5)
+            time.sleep(1)
             #try:
             #serial_command, value, callback = self.queue.get(block=True, timeout=None) #, timeout=0.5)
 
