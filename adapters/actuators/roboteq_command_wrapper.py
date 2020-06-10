@@ -1911,16 +1911,17 @@ class Macro(threading.Thread):
         self.motor.set_motor_deceleration_rate(500000)
 
         self.motor.set_motor_speed(-50)
-        time.sleep(2)
-        self.motor.set_motor_speed(0)
 
         last_button_state = self.get_limit_switch()
         while True:
-            button_state = self.get_limit_switch()
-            time.sleep(0.1)
-            if last_button_state != button_state:
-                print(button_state)
-                last_button_state = button_state
+            if self.get_limit_switch():
+                self.motor.set_motor_speed(0)
+
+
+            #time.sleep(0.01)
+            #if last_button_state != button_state:
+            #    print(button_state)
+            #    last_button_state = button_state
         """
         self.motor.set_motor_speed(32000)
         time.sleep(3)
