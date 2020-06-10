@@ -1883,7 +1883,8 @@ class Macro(threading.Thread):
         print("ta da!")
 
     def go_to_limit_switch(self, params, callback):
-        # self.go_to_relative_position(-10000, 1000)
+        self.go_to_relative_position(100000, 1000)
+        """
         last_button_state = GPIO.input(self.limit_switch_pin)
         while True:
             button_state = GPIO.input(self.limit_switch_pin)
@@ -1892,7 +1893,7 @@ class Macro(threading.Thread):
                 print(button_state)
                 last_button_state = button_state
 
-
+        """
 
 
 
