@@ -1883,7 +1883,7 @@ class Macro(threading.Thread):
         print("ta da!")
 
     def go_to_limit_switch(self, params, callback):
-        self.go_to_relative_position(1000000, 1000)
+        #self.go_to_relative_position(1000000, 1000)
         """
         last_button_state = GPIO.input(self.limit_switch_pin)
         while True:
@@ -1894,12 +1894,6 @@ class Macro(threading.Thread):
                 last_button_state = button_state
 
         """
-
-
-
-
-        """
-        self.motor.set_max_rpm(65535)
         self.motor.set_motor_speed(32000)
         time.sleep(3)
         self.motor.go_to_relative_position(-1000000)
@@ -1927,7 +1921,6 @@ class Macro(threading.Thread):
         time.sleep(2)
 
         print("get_operating_mode", self.motor.get_operating_mode(True))
-        """
         #if switch_closed:
             # send status message confirming process finished
         #    return
