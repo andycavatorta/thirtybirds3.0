@@ -1901,6 +1901,7 @@ class Macro(threading.Thread):
         self.coast()
         time.sleep(1)
         self.motor.set_operating_mode(3)
+        self.motor.set_motor_speed(250)
         time.sleep(1)
         self.motor.go_to_absolute_position(position)
         self.block_until_position_reached(position)
