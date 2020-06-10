@@ -1919,6 +1919,7 @@ class Macro(threading.Thread):
                 self.motor.set_encoder_counter(0)
                 self.motor.set_motor_speed(0)
                 print(self.motor.get_encoder_counter_absolute())
+                time.sleep(0.1)
 
 
             #time.sleep(0.01)
