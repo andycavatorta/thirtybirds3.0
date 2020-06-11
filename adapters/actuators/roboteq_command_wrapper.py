@@ -1887,7 +1887,7 @@ class Macro(threading.Thread):
             if start_time + duration <= time.time():
                 break
             self.motor.set_motor_speed(distance*direction)
-            sleep(frequency)
+            time.sleep(frequency)
             direction = direction *-1
 
         self.motor.set_operating_mode(3)
