@@ -1872,8 +1872,28 @@ class Macro(threading.Thread):
                     break
             last_position = current_position
 
-    def oscillate(self, range, speed):
-        pass
+    def oscillate(self, params):
+        distance = params["distance"]
+        frequency = params["frequency"]
+        duration = params["duration"]
+        start_time = time.time()
+        self.motor.set_operating_mode(1)
+        
+        self.motor.set_motor_acceleration_rate(500000)
+        self.motor.set_motor_deceleration_rate(500000)
+        center = self.motor.get_encoder_counter_absolute(True)
+        direction = 1
+        while True:
+            if start_time + duration <= time.time():
+                break
+            self.motor.set_motor_speed(distance*direction)
+            sleep(frequency)
+            direction = direction *-1
+
+        self.motor.set_operating_mode(3)
+        self.motor.go_to_absolute_position(center)
+        self.block_until_position_reached(center)
+        self.coast()
 
     def coast(self):
         self.motor.set_operating_mode(0)
@@ -1897,7 +1917,7 @@ class Macro(threading.Thread):
 
     def go_to_absolute_position(self, params, callback=None):
         print("go_to_absolute_position: start")
-        position = params["position"]
+        position = min(params["position"], self.limit_end_position)
         speed = params["speed"]
         self.coast()
         time.sleep(1)
@@ -1951,6 +1971,8 @@ class Macro(threading.Thread):
                     self.go_to_limit_switch(params, callback)
                 if command=="go_to_absolute_position":
                     self.go_to_absolute_position(params, callback)
+                if command=="oscillate":
+                    self.oscillate(params, callback)
             except queue.Empty:
                 print(self.motor.get_motor_amps())
                 #print(mcu_serial_device_path, channel, method, resp_str)
