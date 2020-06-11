@@ -1891,6 +1891,7 @@ class Macro(threading.Thread):
             direction = direction *-1
 
         self.motor.set_operating_mode(3)
+        self.motor.set_motor_speed(distance)
         self.motor.go_to_absolute_position(center)
         self.block_until_position_reached(center)
         self.coast()
