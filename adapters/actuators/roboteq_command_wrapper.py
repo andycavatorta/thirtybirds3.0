@@ -1872,7 +1872,7 @@ class Macro(threading.Thread):
                     break
             last_position = current_position
 
-    def oscillate(self, params):
+    def oscillate(self, params, callback):
         distance = params["distance"]
         frequency = params["frequency"]
         duration = params["duration"]
