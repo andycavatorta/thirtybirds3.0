@@ -1993,7 +1993,7 @@ class Queries(threading.Thread):
         ):
         threading.Thread.__init__(self)
         self.motor_name = motor_name
-        self.motor = motor_obj
+        self.motor_obj = motor_obj
         self.status_receiver = status_receiver
 
         self.queries={
