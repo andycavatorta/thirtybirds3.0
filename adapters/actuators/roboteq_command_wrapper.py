@@ -1878,7 +1878,7 @@ class Macro(threading.Thread):
         duration = params["duration"]
         start_time = time.time()
         self.motor.set_operating_mode(1)
-        
+
         self.motor.set_motor_acceleration_rate(500000)
         self.motor.set_motor_deceleration_rate(500000)
         center = self.motor.get_encoder_counter_absolute(True)
@@ -1983,7 +1983,39 @@ class Macro(threading.Thread):
 
 
 
+#@capture_exceptions.Class
+class Queries(threading.Thread):
+    def __init__(
+            self, 
+            motor_name, 
+            motor_obj, 
+            status_receiver
+        ):
+        threading.Thread.__init__(self)
+        self.motor_name = motor_name
+        self.motor = motor_obj
+        self.status_receiver = status_receiver
 
+        self.queries={
+            "get_temperature":self.motor_obj.get_temperature,
+            "get_closed_loop_error":self.motor_obj.get_closed_loop_error,
+            "get_motor_power_output_applied":self.motor_obj.get_motor_power_output_applied,
+            "get_motor_amps":self.motor_obj.get_motor_amps,
+            "get_encoder_counter_absolute":self.motor_obj.get_encoder_counter_absolute,
+            "get_encoder_motor_speed_in_rpm":self.motor_obj.get_encoder_motor_speed_in_rpm,
+            #"get_runtime_status_flags":self.motor_obj.get_runtime_status_flags,
+            #"get_runtime_fault_flags":self.motor_obj.board.get_runtime_fault_flags,
+            #"get_volts":self.motor_obj.board.get_volts,
+        }
+
+        self.queue = queue.Queue()
+        self.start()
+
+    def run(self):
+        while True:
+            for name, method in self.queries.items():
+                print("name", method())
+                time.sleep(1)
 
 
 
@@ -2059,6 +2091,12 @@ class Controllers(threading.Thread):
                             self.motors[motor_name], 
                             self.status_receiver
                         )
+
+                    self.queries[motor_name] = Queries(
+                        motor_name, 
+                        self.motors[motor_name], 
+                        self.status_receiver
+                    )
 
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
