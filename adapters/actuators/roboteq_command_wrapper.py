@@ -2014,7 +2014,7 @@ class Queries(threading.Thread):
     def run(self):
         while True:
             for name, method in self.queries.items():
-                print("name", method())
+                print("Query:", name, method())
                 time.sleep(1)
 
 
