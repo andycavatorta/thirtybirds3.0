@@ -2091,13 +2091,13 @@ class Controllers(threading.Thread):
                             self.motors[motor_name], 
                             self.status_receiver
                         )
-
+                    """
                     self.queries[motor_name] = Queries(
                         motor_name, 
                         self.motors[motor_name], 
                         self.status_receiver
                     )
-
+                    """
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
         for mcu_serial_device_path_pattern in self.mcu_serial_device_path_patterns:
