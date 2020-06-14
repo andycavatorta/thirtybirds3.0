@@ -1808,9 +1808,6 @@ class Motor(threading.Thread):
             serial_command, value, callback = self.queue.get(block=True, timeout=None) #, timeout=0.5)
 
 
-            #
-            #except queue.Empty:
-            #    self.read_encoder_counter_absolute()
 
 
 
@@ -1850,7 +1847,6 @@ class Macro(threading.Thread):
         self.queue = queue.Queue()
         if limit_switch_pin is not None and limit_switch_direction != 0:
             GPIO.setup(limit_switch_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-
         self.motor.set_encoder_high_count_limit(2147000000)  
         self.motor.set_encoder_low_count_limit(2147000000)
         self.motor.set_max_rpm(65535)
@@ -1920,17 +1916,16 @@ class Macro(threading.Thread):
         print("go_to_absolute_position: start")
         position = min(params["position"], self.limit_end_position)
         speed = params["speed"]
-        self.coast()
-        time.sleep(1)
+        #self.coast()
         self.motor.set_operating_mode(3)
         self.motor.set_motor_speed(speed)
-        time.sleep(1)
+        #time.sleep(1)
         self.motor.go_to_absolute_position(position)
         self.block_until_position_reached(position)
         self.coast()
         print("go_to_absolute_position: done")
 
-    def go_to_end_position(self):
+    def go_to_end_position(self, params={}, callback=None):
         self.motor.set_operating_mode(3)
         self.motor.go_to_absolute_position(self.limit_end_position)
         self.block_until_position_reached(self.limit_end_position)
@@ -1957,7 +1952,6 @@ class Macro(threading.Thread):
                     break
             last_button_state = button_state
         self.coast()
-        time.sleep(1)
         print("go_to_limit_switch: done")
 
 
@@ -1983,6 +1977,10 @@ class Macro(threading.Thread):
 
 
 
+
+
+
+
 #@capture_exceptions.Class
 class Queries(threading.Thread):
     def __init__(
@@ -1995,20 +1993,17 @@ class Queries(threading.Thread):
         self.motor_name = motor_name
         self.motor_obj = motor_obj
         self.status_receiver = status_receiver
-
         self.queries={
             "get_temperature":self.motor_obj.get_temperature,
-            "get_closed_loop_error":self.motor_obj.get_closed_loop_error,
-            "get_motor_power_output_applied":self.motor_obj.get_motor_power_output_applied,
-            "get_motor_amps":self.motor_obj.get_motor_amps,
-            "get_encoder_counter_absolute":self.motor_obj.get_encoder_counter_absolute,
-            "get_encoder_motor_speed_in_rpm":self.motor_obj.get_encoder_motor_speed_in_rpm,
+            #"get_closed_loop_error":self.motor_obj.get_closed_loop_error,
+            #"get_motor_power_output_applied":self.motor_obj.get_motor_power_output_applied,
+            #"get_motor_amps":self.motor_obj.get_motor_amps,
+            #"get_encoder_counter_absolute":self.motor_obj.get_encoder_counter_absolute,
+            #"get_encoder_motor_speed_in_rpm":self.motor_obj.get_encoder_motor_speed_in_rpm,
             #"get_runtime_status_flags":self.motor_obj.get_runtime_status_flags,
             #"get_runtime_fault_flags":self.motor_obj.board.get_runtime_fault_flags,
             #"get_volts":self.motor_obj.board.get_volts,
         }
-
-        self.queue = queue.Queue()
         self.start()
 
     def run(self):
@@ -2016,6 +2011,10 @@ class Queries(threading.Thread):
             for name, method in self.queries.items():
                 print("Query:", name, method())
                 time.sleep(1)
+
+
+
+
 
 
 
