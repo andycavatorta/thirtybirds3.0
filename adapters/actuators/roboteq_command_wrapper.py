@@ -1824,6 +1824,13 @@ class Macro(threading.Thread):
             limit_switch_direction = 0, 
             limit_end_position = None
         ):
+        print(
+            motor_name, 
+            motor_obj, 
+            status_receiver,
+            limit_switch_pin,
+            limit_switch_direction, 
+            limit_end_position)
         threading.Thread.__init__(self)
         self.motor_name = motor_name
         self.motor = motor_obj
