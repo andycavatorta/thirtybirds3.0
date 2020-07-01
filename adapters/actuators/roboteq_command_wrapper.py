@@ -1813,19 +1813,6 @@ class Motor(threading.Thread):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 #@capture_exceptions.Class
 class Macro(threading.Thread):
     def __init__(
@@ -1981,6 +1968,12 @@ class Macro(threading.Thread):
 
 
 
+
+
+
+
+
+
 #@capture_exceptions.Class
 class Queries(threading.Thread):
     def __init__(
@@ -2011,6 +2004,11 @@ class Queries(threading.Thread):
             for name, method in self.queries.items():
                 print("Query:", name, method())
                 time.sleep(1)
+
+
+
+
+
 
 
 
