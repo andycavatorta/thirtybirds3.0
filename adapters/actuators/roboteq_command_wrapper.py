@@ -1869,8 +1869,8 @@ class Macro(threading.Thread):
         start_time = time.time()
         self.motor.set_operating_mode(1)
 
-        self.motor.set_motor_acceleration_rate(500000)
-        self.motor.set_motor_deceleration_rate(500000)
+        self.motor.set_motor_acceleration_rate(5000)
+        self.motor.set_motor_deceleration_rate(5000)
         center = self.motor.get_encoder_counter_absolute(True)
         direction = 1
         while True:
