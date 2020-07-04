@@ -2050,7 +2050,7 @@ class Controllers(threading.Thread):
         #self.status_receiver("self.mcu_serial_device_paths",self.mcu_serial_device_paths)
         self.start()
         # create board objects and read their mcu_ids
-
+        print("self.mcu_serial_device_paths=",self.mcu_serial_device_paths)
         for mcu_serial_device_path in self.mcu_serial_device_paths:
             board = Board(
                 mcu_serial_device_path, 
@@ -2069,6 +2069,7 @@ class Controllers(threading.Thread):
         self.create_motors()
         
     def create_motors(self):
+        print("self.boards=",self.boards)
         for motor_name in self.motors_config:
             for name, val in self.boards_config.items():
                 if val["mcu_id"] == self.motors_config[motor_name]["mcu_id"]:
