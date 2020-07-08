@@ -1895,9 +1895,11 @@ class Macro(threading.Thread):
         self.motor.go_to_speed_or_relative_position(power)
         self.coast()
 
-    def set_speed(self, speed, target_position=None):
-        # end
-        pass
+    def set_speed(self, speed):
+        self.motor.set_operating_mode(1)
+        self.motor.set_motor_acceleration_rate(50000)
+        self.motor.set_motor_deceleration_rate(50000)
+        self.motor.set_motor_speed(speed)
 
     def go_to_relative_position(self, position, speed=1000):
         self.motor.set_max_rpm(60)
