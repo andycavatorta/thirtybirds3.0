@@ -177,6 +177,44 @@ class Thirtybirds():
         ## T O P   L E V E L   A C C E S S ##
         #####################################
 
+        ## N E T W O R K I N G ##
+        self.get_hostname = self.hostinfo.get_hostname            
+        self.get_local_ip = self.hostinfo.get_local_ip
+        self.get_global_ip = self.hostinfo.get_global_ip
+        self.get_online_status = self.hostinfo.get_online_status
+        self.publish = self.connection.send
+        self.subscribe_to_topic = self.connection.subscribe_to_topic
+        self.unsubscribe_from_topic = self.connection.unsubscribe_from_topic
+
+        ## S O F T W A R E ##
+        self.get_os_version = self.tb_software_management.get_os_version
+        self.app_pull_from_github = self.app_software_management.pull_from_github
+        self.app_get_git_timestamp = self.app_software_management.get_git_timestamp
+        self.app_get_scripts_version = self.app_software_management.get_scripts_version
+        self.app_run_update_scripts = self.app_software_management.run_update_scripts
+
+        self.tb_pull_from_github = self.tb_software_management.pull_from_github
+        self.tb_get_git_timestamp = self.tb_software_management.get_git_timestamp
+        self.tb_get_scripts_version = self.tb_software_management.get_scripts_version
+        self.tb_run_update_scripts = self.tb_software_management.run_update_scripts
+
+        ## H A R D W A R E ##
+        self.get_core_temp = self.hardware_management.get_core_temp
+        self.get_wifi_strength = self.hardware_management.get_wifi_strength
+        self.get_core_voltage = self.hardware_management.get_core_voltage
+        self.get_system_cpu = self.hardware_management.get_system_cpu
+        self.get_system_uptime = self.hardware_management.get_system_uptime
+        self.get_system_disk = self.hardware_management.get_system_disk
+        self.get_memory_free = self.hardware_management.get_memory_free
+        self.get_system_status = self.hardware_management.get_system_status
+        self.restart = self.hardware_management.restart
+        self.shutdown = self.hardware_management.shutdown
+
+        ## S T A T U S ##
+        self.activate_status_capture_type =  self.status_recvr.activate_capture_type
+        self.deactivate_status_capture_type =  self.status_recvr.deactivate_capture_type
+
+        """
         class API():
             ## N E T W O R K I N G ##
             get_hostname = self.hostinfo.get_hostname            
@@ -216,7 +254,7 @@ class Thirtybirds():
             deactivate_status_capture_type =  self.status_recvr.deactivate_capture_type
 
         self.api = API()
-
+        """
 
 
 
