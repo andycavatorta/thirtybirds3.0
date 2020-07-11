@@ -76,15 +76,16 @@ class Responder(threading.Thread):
 
     def run(self):
         while True:
-                msg_json = self.sock.recv(1024)
-                msg_d = yaml.safe_load(msg_json)
-                remoteIP = msg_d["ip"]
-                msg_d["status"] = "device_discovered"
-                if self.discovery_update_receiver:
-                    resp_d = self.discovery_update_receiver(msg_d)
-                resp_json = json.dumps({"ip":self.local_ip,"hostname":socket.gethostname()})
-                resp_json = str.encode(resp_json)
-                self.response(remoteIP,resp_json)
+            print("Responder")
+            msg_json = self.sock.recv(1024)
+            msg_d = yaml.safe_load(msg_json)
+            remoteIP = msg_d["ip"]
+            msg_d["status"] = "device_discovered"
+            if self.discovery_update_receiver:
+                resp_d = self.discovery_update_receiver(msg_d)
+            resp_json = json.dumps({"ip":self.local_ip,"hostname":socket.gethostname()})
+            resp_json = str.encode(resp_json)
+            self.response(remoteIP,resp_json)
 
 ##################
 ##### CALLER #####
@@ -110,6 +111,7 @@ class Caller_Send(threading.Thread):
         self.lock .release()
     def run(self):
         while True:
+            print("Caller_Send")
             self.lock .acquire()
             active = bool(self.active)
             self.lock .release()
@@ -130,6 +132,7 @@ class Caller_Recv(threading.Thread):
         self.server_ip = ""
     def run(self):
         while True:
+            print("Caller_Recv")
             msg_json = self.listen_sock.recv()
             msg_d = yaml.safe_load(msg_json)
             msg_d["status"] = "device_discovered"
