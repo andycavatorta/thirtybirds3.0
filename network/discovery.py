@@ -76,8 +76,9 @@ class Responder(threading.Thread):
 
     def run(self):
         while True:
-            print("Responder")
+            print("Responder 1")
             msg_json = self.sock.recv(1024)
+            print("Responder 2", msg_json)
             msg_d = yaml.safe_load(msg_json)
             remoteIP = msg_d["ip"]
             msg_d["status"] = "device_discovered"
@@ -111,7 +112,7 @@ class Caller_Send(threading.Thread):
         self.lock .release()
     def run(self):
         while True:
-            print("Caller_Send")
+            print("Caller_Send", self.active)
             self.lock .acquire()
             active = bool(self.active)
             self.lock .release()
@@ -132,8 +133,9 @@ class Caller_Recv(threading.Thread):
         self.server_ip = ""
     def run(self):
         while True:
-            print("Caller_Recv")
+            print("Caller_Recv 1")
             msg_json = self.listen_sock.recv()
+            print("Caller_Recv 2")
             msg_d = yaml.safe_load(msg_json)
             msg_d["status"] = "device_discovered"
             if self.discovery_update_receiver:
