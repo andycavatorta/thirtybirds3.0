@@ -1909,7 +1909,7 @@ class Macro(threading.Thread):
         self.block_until_position_reached(start_position + position)
 
     def go_to_absolute_position(self, params, callback=None):
-        print("go_to_absolute_position: start")
+        print("go_to_absolute_position: start", params, self.limit_end_position)
         position = min(params["position"], self.limit_end_position)
         speed = params["speed"]
         #self.coast()
