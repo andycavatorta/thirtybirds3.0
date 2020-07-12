@@ -1,3 +1,9 @@
+"""
+todo: don't require self.limit_end_position in settings
+
+
+"""
+
 #!/usr/bin/python
 
 import glob
