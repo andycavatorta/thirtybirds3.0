@@ -1945,6 +1945,7 @@ class Macro(threading.Thread):
         while True:
             time.sleep(0.01)
             button_state = self.get_limit_switch()
+            print("++++button_state=", button_state)
             if button_state:
                 if last_button_state != button_state:
                     print(self.motor.get_encoder_counter_absolute(True))
