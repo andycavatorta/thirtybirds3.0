@@ -1847,6 +1847,7 @@ class Macro(threading.Thread):
         self.queue = queue.Queue()
         if limit_switch_pin is not None and limit_switch_direction != 0:
             GPIO.setup(limit_switch_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        self.limit_switch_reached = False
         self.motor.set_encoder_high_count_limit(2147000000)  
         self.motor.set_encoder_low_count_limit(2147000000)
         self.motor.set_max_rpm(65535)
@@ -1935,9 +1936,17 @@ class Macro(threading.Thread):
 
     def go_to_limit_switch(self, params, callback):
         print("go_to_limit_switch: start")
-        if(self.get_limit_switch()):
+
+        if self.limit_switch_reached:
             callback(self.motor_name, "go_to_limit_switch", True)
             return
+        if(self.get_limit_switch()):
+            self.limit_switch_reached = True
+            callback(self.motor_name, "go_to_limit_switch", True)
+            return
+        original_deceleration_rate = self.motor.get_motor_deceleration_rate()
+        original_acceleration_rate = self.motor.get_motor_acceleration_rate()
+        print("!!!!!!!!!!!!self.motor.get_motor_deceleration_rate()",original_deceleration_rate)
         self.motor.set_operating_mode(1)
         self.motor.set_motor_acceleration_rate(500)
         self.motor.set_motor_deceleration_rate(500000)
@@ -1954,7 +1963,10 @@ class Macro(threading.Thread):
                     print(self.motor.get_encoder_counter_absolute(True))
                     break
             last_button_state = button_state
+        self.limit_switch_reached = True
         self.coast()
+        self.motor.set_motor_acceleration_rate(original_acceleration_rate)
+        self.motor.set_motor_deceleration_rate(original_deceleration_rate)
         callback(self.motor_name, "go_to_limit_switch", True)
         print("go_to_limit_switch: done")
 
