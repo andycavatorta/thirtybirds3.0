@@ -62,6 +62,7 @@ path_containing_tb_and_app = os.path.split(tb_path)[0]
 
 from .network import host_info
 from .network import thirtybirds_connection
+#from .network import http_interface
 from .version_control.software_management import Software_Management
 from .reporting.exceptions import capture_exceptions
 from .reporting.status.status_receiver import Status_Receiver 
@@ -133,6 +134,8 @@ class Thirtybirds():
             else:
                 self.client_names.append(host)
 
+
+
         self.connection = thirtybirds_connection.Thirtybirds_Connection(
             self.hostinfo.get_local_ip(),
             hostname = self.hostname,
@@ -145,6 +148,7 @@ class Thirtybirds():
             network_message_receiver = self.network_message_receiver,
             exception_receiver = self.exception_receiver,
             status_receiver = self.status_recvr,
+            network_status_change_receiver = self.network_status_change_callback,
             heartbeat_interval = settings.Network.heartbeat_interval,
             heartbeat_timeout_factor = settings.Network.heartbeat_timeout_factor,
             caller_interval = settings.Network.caller_interval
@@ -173,6 +177,12 @@ class Thirtybirds():
         self.hardware_management = Hardware_Management(os_version["name"])
         # todo: add a thread that sends intermittent data
 
+        #############################################
+        ## S T A R T   H T T P   I N T E R F A C E ##
+        #############################################
+        #if self.hostname == self.controller_hostname:
+        #    self.http_connector = http_interface.http_interface
+
         #####################################
         ## T O P   L E V E L   A C C E S S ##
         #####################################
@@ -185,6 +195,7 @@ class Thirtybirds():
         self.publish = self.connection.send
         self.subscribe_to_topic = self.connection.subscribe_to_topic
         self.unsubscribe_from_topic = self.connection.unsubscribe_from_topic
+        self.check_connections = self.connection.check_connections
 
         ## S O F T W A R E ##
         self.get_os_version = self.tb_software_management.get_os_version
@@ -192,7 +203,6 @@ class Thirtybirds():
         self.app_get_git_timestamp = self.app_software_management.get_git_timestamp
         self.app_get_scripts_version = self.app_software_management.get_scripts_version
         self.app_run_update_scripts = self.app_software_management.run_update_scripts
-
         self.tb_pull_from_github = self.tb_software_management.pull_from_github
         self.tb_get_git_timestamp = self.tb_software_management.get_git_timestamp
         self.tb_get_scripts_version = self.tb_software_management.get_scripts_version
@@ -213,52 +223,6 @@ class Thirtybirds():
         ## S T A T U S ##
         self.activate_status_capture_type =  self.status_recvr.activate_capture_type
         self.deactivate_status_capture_type =  self.status_recvr.deactivate_capture_type
-
-        """
-        class API():
-            ## N E T W O R K I N G ##
-            get_hostname = self.hostinfo.get_hostname            
-            get_local_ip = self.hostinfo.get_local_ip
-            get_global_ip = self.hostinfo.get_global_ip
-            get_online_status = self.hostinfo.get_online_status
-            publish = self.connection.send
-            subscribe_to_topic = self.connection.subscribe_to_topic
-            unsubscribe_from_topic = self.connection.unsubscribe_from_topic
-
-            ## S O F T W A R E ##
-            get_os_version = self.tb_software_management.get_os_version
-            app_pull_from_github = self.app_software_management.pull_from_github
-            app_get_git_timestamp = self.app_software_management.get_git_timestamp
-            app_get_scripts_version = self.app_software_management.get_scripts_version
-            app_run_update_scripts = self.app_software_management.run_update_scripts
-
-            tb_pull_from_github = self.tb_software_management.pull_from_github
-            tb_get_git_timestamp = self.tb_software_management.get_git_timestamp
-            tb_get_scripts_version = self.tb_software_management.get_scripts_version
-            tb_run_update_scripts = self.tb_software_management.run_update_scripts
-
-            ## H A R D W A R E ##
-            get_core_temp = self.hardware_management.get_core_temp
-            get_wifi_strength = self.hardware_management.get_wifi_strength
-            get_core_voltage = self.hardware_management.get_core_voltage
-            get_system_cpu = self.hardware_management.get_system_cpu
-            get_system_uptime = self.hardware_management.get_system_uptime
-            get_system_disk = self.hardware_management.get_system_disk
-            get_memory_free = self.hardware_management.get_memory_free
-            get_system_status = self.hardware_management.get_system_status
-            restart = self.hardware_management.restart
-            shutdown = self.hardware_management.shutdown
-
-            ## S T A T U S ##
-            activate_status_capture_type =  self.status_recvr.activate_capture_type
-            deactivate_status_capture_type =  self.status_recvr.deactivate_capture_type
-
-        self.api = API()
-        """
-
-
-
-
 
 
     def set_up_logging(self, app_path):
@@ -343,7 +307,7 @@ class Thirtybirds():
                 self.connection.send("__status__", status_details)
             except AttributeError:
                 pass
-
+        
     def exception_receiver(self, exception):
         # to do : add logging, if in config
         # if client, publish exceptions to controller
@@ -375,7 +339,7 @@ class Thirtybirds():
         # report change back to app.  it might be important to halt hardware
         #print("network_status_change_receiver",online_status)
         try:
-            self.network_status_change_callback(exception)
+            self.network_status_change_callback(online_status)
         except TypeError:
             pass
 
@@ -387,6 +351,7 @@ class Thirtybirds():
                 message["time_local"] = time.struct_time(message["time_local"])
                 #print("-------------",type(message["time_local"]), message["time_local"])
                 self.status_receiver(message)
+                #self.network_message_callback(topic, message)
             #log this    
         else:
             try:

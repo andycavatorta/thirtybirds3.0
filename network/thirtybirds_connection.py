@@ -33,6 +33,7 @@ class Thirtybirds_Connection():
         network_message_receiver,
         exception_receiver,
         status_receiver,
+        network_status_change_receiver,
         heartbeat_interval,
         heartbeat_timeout_factor,
         caller_interval):
@@ -50,6 +51,7 @@ class Thirtybirds_Connection():
         self.network_message_receiver = network_message_receiver
         self.exception_receiver = exception_receiver
         self.status_receiver = status_receiver
+        self.network_status_change_receiver = network_status_change_receiver
         self.heartbeat_interval = heartbeat_interval
         self.heartbeat_timeout_factor = heartbeat_timeout_factor
         self.caller_interval = caller_interval
@@ -109,6 +111,7 @@ class Thirtybirds_Connection():
     def disconnect_event_receiver(self, disconnected_hostname, disconnection_status):
         self.status_receiver.collect("disconnection",self.status_receiver.types.NETWORK_CONNECTIONS, {"disconnected_hostname":disconnected_hostname,"disconnection_status":disconnection_status})
         self.connections[disconnected_hostname] = not disconnection_status
+        self.network_status_change_receiver(not disconnection_status, disconnected_hostname)
         if self.role == Network_Defaults.DISCOVERY_ROLE_CALLER:
             if disconnection_status == True:
                 self.discovery.start_caller()

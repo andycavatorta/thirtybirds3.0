@@ -1936,9 +1936,10 @@ class Macro(threading.Thread):
     def go_to_limit_switch(self, params, callback):
         print("go_to_limit_switch: start")
         if(self.get_limit_switch()):
+            callback(self.motor_name, "go_to_limit_switch", True)
             return
         self.motor.set_operating_mode(1)
-        self.motor.set_motor_acceleration_rate(5000)
+        self.motor.set_motor_acceleration_rate(500)
         self.motor.set_motor_deceleration_rate(500000)
         self.motor.set_motor_speed(25*self.limit_switch_direction)
         last_button_state = self.get_limit_switch()
@@ -1954,6 +1955,7 @@ class Macro(threading.Thread):
                     break
             last_button_state = button_state
         self.coast()
+        callback(self.motor_name, "go_to_limit_switch", True)
         print("go_to_limit_switch: done")
 
 
