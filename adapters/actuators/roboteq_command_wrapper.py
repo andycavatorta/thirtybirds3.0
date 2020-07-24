@@ -1946,7 +1946,6 @@ class Macro(threading.Thread):
             return
         original_deceleration_rate = self.motor.get_motor_deceleration_rate()
         original_acceleration_rate = self.motor.get_motor_acceleration_rate()
-        print("!!!!!!!!!!!!self.motor.get_motor_deceleration_rate()",original_deceleration_rate)
         self.motor.set_operating_mode(1)
         self.motor.set_motor_acceleration_rate(500)
         self.motor.set_motor_deceleration_rate(500000)
@@ -1977,6 +1976,23 @@ class Macro(threading.Thread):
     def run(self):
         while True:
             try:
+                command_d = {}
+                while True: 
+                    try:
+                        command, params, callback = self.queue.get(block=False, timeout=None)
+                        command_d[command] = [params, callback]
+                    except queue.Empty:
+                        break
+                print(">>> command_d=",command_d)
+                for command in command_d:
+
+                    if command=="go_to_limit_switch":
+                        self.go_to_limit_switch(params, callback)
+                    if command=="go_to_absolute_position":
+                        self.go_to_absolute_position(params, callback)
+                    if command=="oscillate":
+                        self.oscillate(params, callback)
+                """
                 command, params, callback = self.queue.get(block=True, timeout=None)
                 if command=="go_to_limit_switch":
                     self.go_to_limit_switch(params, callback)
@@ -1984,24 +2000,13 @@ class Macro(threading.Thread):
                     self.go_to_absolute_position(params, callback)
                 if command=="oscillate":
                     self.oscillate(params, callback)
+                """
             except queue.Empty:
                 print(self.motor.get_motor_amps())
                 #print(mcu_serial_device_path, channel, method, resp_str)
                 #try:
                 #    serial_command, value, callback = self.queue.get(block=True, timeout=None) #, timeout=0.5)
                 #
-
-
-
-
-
-
-
-
-
-
-
-
 
 #@capture_exceptions.Class
 class Queries(threading.Thread):
