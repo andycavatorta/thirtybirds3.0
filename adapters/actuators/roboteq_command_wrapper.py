@@ -1977,15 +1977,15 @@ class Macro(threading.Thread):
         while True:
             try:
                 command_d = {}
-                command, params, callback = self.queue.get(block=True, timeout=None)
-                command_d[command] = [params, callback]
+                #command, params, callback = self.queue.get(block=True, timeout=None)
+                #command_d[command] = [params, callback]
                 while True: 
                     try:
                         command, params, callback = self.queue.get(block=False, timeout=None)
                         command_d[command] = [params, callback]
                     except queue.Empty:
                         break
-                print(">>> command_d=",command_d)
+                #print(">>> command_d=",command_d)
                 for command in command_d:
 
                     if command=="go_to_limit_switch":
@@ -1994,6 +1994,7 @@ class Macro(threading.Thread):
                         self.go_to_absolute_position(params, callback)
                     if command=="oscillate":
                         self.oscillate(params, callback)
+                time.sleep(0.01)
                 """
                 command, params, callback = self.queue.get(block=True, timeout=None)
                 if command=="go_to_limit_switch":
