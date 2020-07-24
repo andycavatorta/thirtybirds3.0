@@ -1977,6 +1977,8 @@ class Macro(threading.Thread):
         while True:
             try:
                 command_d = {}
+                command, params, callback = self.queue.get(block=True, timeout=None)
+                command_d[command] = [params, callback]
                 while True: 
                     try:
                         command, params, callback = self.queue.get(block=False, timeout=None)
