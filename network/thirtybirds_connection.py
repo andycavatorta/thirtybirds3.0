@@ -17,6 +17,7 @@ sys.path.append(root_path[0:root_path.find("/thirtybirds")])
 from thirtybirds3.reporting.exceptions import capture_exceptions
 from . import pub_sub
 from . import detect_disconnect
+from . import http_server #self-starting
 
 @capture_exceptions.Class
 class Thirtybirds_Connection():
@@ -56,9 +57,7 @@ class Thirtybirds_Connection():
         self.heartbeat_timeout_factor = heartbeat_timeout_factor
         self.caller_interval = caller_interval
         self.role = Network_Defaults.DISCOVERY_ROLE_RESPONDER if hostname == controller_hostname else Network_Defaults.DISCOVERY_ROLE_CALLER
-
         self.status_receiver.collect("starting",self.status_receiver.types.INITIALIZATIONS)
-
         self.connections = {}
         if self.role == Network_Defaults.DISCOVERY_ROLE_RESPONDER:
             [self.connections.setdefault(x, False) for x in self.client_names] 
@@ -116,12 +115,12 @@ class Thirtybirds_Connection():
             if disconnection_status == True:
                 self.discovery.start_caller()
 
-    def subscription_message_receiver(self, topic, message):
+    def subscription_message_receiver(self, topic, message, origin, destination):
         # topics with dunder names are for internal TB use 
         if topic == b"__heartbeat__":
             self.detect_disconnect.record_heartbeat(message)
         else:
-            self.network_message_receiver(topic, message)
+            self.network_message_receiver(topic, message, origin, destination)
 
     def discovery_update_receiver(self,message):
         # todo: cover the case of disconnections and unsubscriptions

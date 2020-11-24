@@ -2110,7 +2110,6 @@ class Controllers(threading.Thread):
                         self.motors_config[motor_name],
                         self.status_receiver
                     )
-                    #print(self.motors[motor_name])
                     try:
                         self.macros[motor_name] = Macro(
                             motor_name, 
@@ -2126,13 +2125,6 @@ class Controllers(threading.Thread):
                             self.motors[motor_name], 
                             self.status_receiver
                         )
-                    """
-                    self.queries[motor_name] = Queries(
-                        motor_name, 
-                        self.motors[motor_name], 
-                        self.status_receiver
-                    )
-                    """
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
         for mcu_serial_device_path_pattern in self.mcu_serial_device_path_patterns:
@@ -2140,7 +2132,6 @@ class Controllers(threading.Thread):
         return matching_mcu_serial_device_paths
 
     def add_to_queue(self, board_name, channel, method, resp_str):
-        #print("-add_to_queue-",mcu_serial_device_path, channel, method, resp_str)
         self.queue.put(( board_name, channel, method, resp_str))
 
     def run(self):

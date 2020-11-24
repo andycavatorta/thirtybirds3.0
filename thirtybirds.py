@@ -1,15 +1,26 @@
 #!/usr/bin/python
 
 """
+== major systems ==
+network
+    discovery
+    pubsub
+    reverse ssh
+    security
+reporting
+    exception capture
+    status and context capture
+interfaces
+    http interface
+    bash interface
+    logs
+version control
+
+synchronized time
+
 == fix before proceeding ==
 
 expand and clarify networking data format
-
-destination [ ALL | hostname | role | arbitrary pattern ]
-action
-data
-
-use arrows and cascading menus
 
 create command-line interface system
     can be extended by app
@@ -19,9 +30,6 @@ create command-line interface system
         os_and_hardware
 
 have clients send exceptions and status messages to controller
-
-daemonize all threada
-    why does that cause the script to end?  
 
 == future features ==
 
@@ -134,8 +142,6 @@ class Thirtybirds():
             else:
                 self.client_names.append(host)
 
-
-
         self.connection = thirtybirds_connection.Thirtybirds_Connection(
             self.hostinfo.get_local_ip(),
             hostname = self.hostname,
@@ -188,27 +194,32 @@ class Thirtybirds():
         #####################################
 
         ## N E T W O R K I N G ##
+        # queries
         self.get_hostname = self.hostinfo.get_hostname            
         self.get_local_ip = self.hostinfo.get_local_ip
         self.get_global_ip = self.hostinfo.get_global_ip
         self.get_online_status = self.hostinfo.get_online_status
+        self.check_connections = self.connection.check_connections
+        # commands
         self.publish = self.connection.send
         self.subscribe_to_topic = self.connection.subscribe_to_topic
         self.unsubscribe_from_topic = self.connection.unsubscribe_from_topic
-        self.check_connections = self.connection.check_connections
 
         ## S O F T W A R E ##
+        # queries
         self.get_os_version = self.tb_software_management.get_os_version
-        self.app_pull_from_github = self.app_software_management.pull_from_github
-        self.app_get_git_timestamp = self.app_software_management.get_git_timestamp
-        self.app_get_scripts_version = self.app_software_management.get_scripts_version
-        self.app_run_update_scripts = self.app_software_management.run_update_scripts
-        self.tb_pull_from_github = self.tb_software_management.pull_from_github
         self.tb_get_git_timestamp = self.tb_software_management.get_git_timestamp
         self.tb_get_scripts_version = self.tb_software_management.get_scripts_version
+        self.app_get_git_timestamp = self.app_software_management.get_git_timestamp
+        self.app_get_scripts_version = self.app_software_management.get_scripts_version
+        # commands
+        self.app_pull_from_github = self.app_software_management.pull_from_github
+        self.app_run_update_scripts = self.app_software_management.run_update_scripts
+        self.tb_pull_from_github = self.tb_software_management.pull_from_github
         self.tb_run_update_scripts = self.tb_software_management.run_update_scripts
 
         ## H A R D W A R E ##
+        # queries
         self.get_core_temp = self.hardware_management.get_core_temp
         self.get_wifi_strength = self.hardware_management.get_wifi_strength
         self.get_core_voltage = self.hardware_management.get_core_voltage
@@ -217,12 +228,242 @@ class Thirtybirds():
         self.get_system_disk = self.hardware_management.get_system_disk
         self.get_memory_free = self.hardware_management.get_memory_free
         self.get_system_status = self.hardware_management.get_system_status
+        # commands
         self.restart = self.hardware_management.restart
         self.shutdown = self.hardware_management.shutdown
 
         ## S T A T U S ##
+        # commands
         self.activate_status_capture_type =  self.status_recvr.activate_capture_type
         self.deactivate_status_capture_type =  self.status_recvr.deactivate_capture_type
+
+        ## E X C E P T I O N S ##
+        # commands
+        self.activate_exception_capture_type =  None # tbd
+        self.deactivate_exception_capture_type =  None # tbd
+
+        self.api_fields = { # for GUI
+            "get_hostname":{
+                "receives":{},
+                "returns":{
+                    "hostname":{
+                        "type":"string",
+                        "max":255,
+                    }
+                }
+            },
+            "get_local_ip":{
+                "receives":{},
+                "returns":{
+                    "local ip address":{
+                        "type":"string",
+                        "max":255,
+                    }
+                }
+            },
+            "get_global_ip":{
+                "receives":{},
+                "returns":{
+                    "global ip address":{
+                        "type":"string",
+                        "max":255,
+                    }
+                }
+            },
+            "get_online_status":{
+                "receives":{},
+                "returns":{
+                    "online":{
+                        "type":"bool",
+                    }
+                }
+            },
+            "check_connections":{
+                "receives":{},
+                "returns":{
+                    "online":{
+                        "type":"bool",
+                    }
+                }
+            },
+            "publish":{
+                "receives":{
+                    "topic":{
+                        "max":63,
+                        "required":True
+                    },
+                    "message":{
+                        "max":63,
+                        "required":True
+                    },
+                    "destination":{
+                        "max":63,
+                        "required":False
+                    },
+                },
+                "returns":{}
+            },
+            "subscribe_to_topic":{
+                "receives":{
+                    "topic":{
+                        "max":63,
+                        "required":True
+                    },
+                },
+                "returns":{}
+            },
+            "unsubscribe_from_topic":{
+                "receives":{
+                    "topic":{
+                        "max":63,
+                        "required":True
+                    },
+                },
+                "returns":{}
+            },
+            "get_os_version":{
+                "receives":{},
+                "returns":{
+                    "os version":{
+                        "type":"string",
+                        "max":255,
+                    }
+                }
+            },
+            "tb_get_git_timestamp":{
+                "receives":{},
+                "returns":{
+                    "git timestamp":{
+                        "type":"datetime",
+                    }
+                }
+            },
+            "tb_get_scripts_version":{
+                "receives":{},
+                "returns":{
+                    "scripts version":{
+                        "type":"integer",
+                    }
+                }
+            },
+            "app_get_git_timestamp":{
+                "receives":{},
+                "returns":{
+                    "git timestamp":{
+                        "type":"datetime",
+                    }
+                }
+            },
+            "app_get_scripts_version":{
+                "receives":{},
+                "returns":{
+                    "scripts version":{
+                        "type":"integer",
+                    }
+                }
+            },
+            "app_pull_from_github":{"receives":{},"returns":{}},
+            "app_run_update_scripts":{"receives":{},"returns":{}},
+            "tb_pull_from_github":{"receives":{},"returns":{}},
+            "tb_run_update_scripts":{"receives":{},"returns":{}},
+            "get_core_temp":{
+                "receives":{},
+                "returns":{
+                    "core temp":{
+                        "type":"integer",
+                    }
+                }
+            },
+            "get_wifi_strength":{
+                "receives":{},
+                "returns":{
+                    "wifi strength":{
+                        "type":"float",
+                    }
+                }
+            },
+            "get_core_voltage":{
+                "receives":{},
+                "returns":{
+                    "core voltage":{
+                        "type":"float",
+                    }
+                }
+            },
+            "get_system_cpu":{
+                "receives":{},
+                "returns":{
+                    "system cpu":{
+                        "type":"string",
+                        "max":255,
+                    }
+                }
+            },
+            "get_system_uptime":{
+                "receives":{},
+                "returns":{
+                    "system uptime":{
+                        "type":"string",
+                        "max":255,
+                    }
+                }
+            },
+            "get_system_disk":{
+                "receives":{},
+                "returns":{
+                    "system disk":{
+                        "type":"string",
+                        "max":255,
+                    }
+                }
+            },
+            "get_memory_free":{
+                "receives":{},
+                "returns":{
+                    "memory free":{
+                        "type":"integer",
+                    }
+                }
+            },
+            "restart":{"receives":{},"returns":{}},
+            "shutdown":{"receives":{},"returns":{}},
+            "activate_status_capture_type":{
+                "receives":{
+                    "status type":{ # wrong name
+                        "max":63,
+                        "required":True
+                    },
+                },
+                "returns":{}
+            },
+            "deactivate_status_capture_type":{
+                "receives":{
+                    "status type":{# wrong name
+                        "max":63,
+                        "required":True
+                    },
+                },
+                "returns":{}
+            },
+            "activate_exception_capture_type":{
+                "receives":{
+                    "exception type":{# wrong name
+                        "max":63,
+                        "required":True
+                    },
+                },
+                "returns":{}
+            },
+            "deactivate_exception_capture_type":{
+                "receives":{
+                    "exception type":{# wrong name
+                        "max":63,
+                        "required":True
+                    },
+                },
+                "returns":{}
+            },
+        }
 
 
     def set_up_logging(self, app_path):
@@ -343,7 +584,7 @@ class Thirtybirds():
         except TypeError:
             pass
 
-    def network_message_receiver(self, topic, message):
+    def network_message_receiver(self, topic, message, origin, destination):
         #print("network_message_receiver",topic, message)
         if topic == b"__status__":
             if self.hostname == self.controller_hostname:
@@ -356,7 +597,7 @@ class Thirtybirds():
         else:
             try:
                 #print("--1",topic, message)
-                self.network_message_callback(topic, message)
+                self.network_message_callback(topic, message, origin, destination)
                 #print("--2",topic, message)
             except TypeError:
                 pass

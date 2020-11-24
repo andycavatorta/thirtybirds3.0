@@ -56,8 +56,12 @@ class Receiver_Queue(threading.Thread):
 
     def run(self):
         while True:
-            topic, message = self.queue.get(True)
-            self.callback(topic, message)
+            topic, payload = self.queue.get(True)
+            destination  = payload["destination"]
+            if destination in ("", self.hostname)
+                origin = payload["origin"]
+                message = payload["message"]
+                self.callback(topic, message, origin)
 
 @capture_exceptions.Class
 class Pub_Sub(threading.Thread):
@@ -113,8 +117,13 @@ class Pub_Sub(threading.Thread):
         # NOT_THREAD_SAFE
         self.sub_socket.setsockopt(zmq.UNSUBSCRIBE, topic.decode('utf-8'))
 
-    def send(self, topic, message):
-        self.send_queue.add_to_queue(topic, message)
+    def send(self, topic, message, destination=""):
+        payload = (
+            "origin" = self.hostname,
+            "destination" = destination,
+            "message" = message
+        )
+        self.send_queue.add_to_queue(topic, payload)
 
     def run(self):
         while True:
