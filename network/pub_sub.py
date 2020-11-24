@@ -118,11 +118,11 @@ class Pub_Sub(threading.Thread):
         self.sub_socket.setsockopt(zmq.UNSUBSCRIBE, topic.decode('utf-8'))
 
     def send(self, topic, message, destination=""):
-        payload = (
+        payload = {
             "origin":self.hostname,
             "destination":destination,
             "message":message
-        )
+        }
         self.send_queue.add_to_queue(topic, payload)
 
     def run(self):
