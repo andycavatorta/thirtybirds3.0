@@ -1,0 +1,48 @@
+sudo apt-get update
+sudo apt-get upgrade
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+git clone https://github.com/andycavatorta/thirtybirds3.0.git
+alias python='/usr/bin/python3'
+. ~/.bashrc
+
+sudo apt install python3-pip
+sudo pip3 install netifaces
+sudo apt install python3-netifaces
+sudo apt install python3-yaml
+
+
+wget https://github.com/jedisct1/libsodium/releases/download/1.0.3/libsodium-1.0.3.tar.gz
+tar -zxvf libsodium-1.0.3.tar.gz
+cd libsodium-1.0.3/
+./configure
+make
+sudo make install
+cd ..
+rm libsodium-1.0.3.tar.gz
+rm -R libsodium-1.0.3
+
+apt-get install libzmq3-dev
+
+#wget http://download.zeromq.org/zeromq-4.1.3.tar.gz
+#tar -zxvf zeromq-4.1.3.tar.gz
+#cd zeromq-4.1.3/
+#./configure
+#make
+#sudo make install
+#sudo ldconfig
+#cd ..
+#rm zeromq-4.1.3.tar.gz
+#rm -R zeromq-4.1.3/
+
+sudo apt install python-dev
+sudo pip3 install pyzmq
+
+##### for adapters #####
+sudo apt install python3-rpi.gpio
+sudo pip3 install pyserial
+sudo apt-get install -y python3-rtmidi
+pip3 install mido
+
+sudo apt-get install libjack-dev
+sudo apt-get install libasound2-dev
+#pip3 install websockets

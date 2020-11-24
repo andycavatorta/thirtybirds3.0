@@ -1,0 +1,99 @@
+#!/usr/bin/env python
+
+"""
+required for basic Web connector
+
+authentication
+    against u/p in setting file?
+
+manage multi-user websockets
+    track users, etc
+
+act as gateway to pubsub system
+    subscribe_to_topic ( per websocket )
+    publish_to_topic
+    handle_message
+
+"""
+
+import asyncio
+import json
+import queue
+import threading
+import websockets
+
+class Websocket_Server_Async():
+    def __init__(self, incoming_message_queue):
+        self.incoming_message_queue = incoming_message_queue
+        self.STATE = {"message": 0}
+        self.USERS = set()
+
+    def state_event(self):
+        return json.dumps({"topic": "state", **self.STATE})
+
+    def users_event(self):
+        return json.dumps({"topic": "users", "message": len(self.USERS)})
+
+    async def notify_state(self):
+        if self.USERS:  # asyncio.wait doesn't accept an empty list
+            message = self.state_event()
+            await asyncio.wait([user.send(message) for user in self.USERS])
+
+    async def notify_users(self):
+        if self.USERS:  # asyncio.wait doesn't accept an empty list
+            message = self.users_event()
+            await asyncio.wait([user.send(message) for user in self.USERS])
+
+    async def register(self,websocket):
+        self.USERS.add(websocket)
+        await self.notify_users()
+
+    async def unregister(self,websocket):
+        self.USERS.remove(websocket)
+        await self.notify_users()
+
+    async def publish(self,topic,message):
+        if self.USERS:  # asyncio.wait doesn't accept an empty list
+            #message = self.users_event()
+            await asyncio.wait([user.send(message) for user in self.USERS])
+
+    async def counter(self,websocket, path):
+        # register(websocket) sends user_event() to websocket
+        await self.register(websocket)
+        try:
+            print(websocket, path)
+            await websocket.send(self.state_event())
+            async for message in websocket:
+                data = json.loads(message)
+                if data["action"] == "minus":
+                    self.STATE["value"] -= 1
+                    await self.notify_state()
+                elif data["action"] == "plus":
+                    self.STATE["value"] += 1
+                    await self.notify_state()
+                else:
+                    print("unsupported event: {}", data)
+        finally:
+            await self.unregister(websocket)
+
+class Websocket_Server(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.websocket_server_async = False
+        self.queue = asyncio.Queue()
+        self.start()
+
+    def add_to_queue(self, topic, message):
+        #await self.websocket_server_async.notify_users()
+        print("q", topic, message)
+        self.queue.put((topic, message))
+
+    def run(self):
+        asyncio.set_event_loop(asyncio.new_event_loop())
+        self.websocket_server_async = Websocket_Server_Async(self.queue)
+        http_interface = websockets.serve(self.websocket_server_async.counter, "localhost", 6789)
+        asyncio.get_event_loop().run_until_complete(http_interface)
+        asyncio.get_event_loop().run_forever()
+
+
+
