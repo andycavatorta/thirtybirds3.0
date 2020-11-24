@@ -58,7 +58,7 @@ class Receiver_Queue(threading.Thread):
         while True:
             topic, payload = self.queue.get(True)
             destination  = payload["destination"]
-            if destination in ("", self.hostname)
+            if destination in ("", self.hostname):
                 origin = payload["origin"]
                 message = payload["message"]
                 self.callback(topic, message, origin)
