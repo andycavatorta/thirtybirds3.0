@@ -119,9 +119,9 @@ class Pub_Sub(threading.Thread):
 
     def send(self, topic, message, destination=""):
         payload = (
-            "origin" = self.hostname,
-            "destination" = destination,
-            "message" = message
+            "origin":self.hostname,
+            "destination":destination,
+            "message":message
         )
         self.send_queue.add_to_queue(topic, payload)
 
