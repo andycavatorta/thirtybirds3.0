@@ -241,7 +241,8 @@ class Thirtybirds():
         # commands
         self.activate_exception_capture_type =  None # tbd
         self.deactivate_exception_capture_type =  None # tbd
-
+        
+        # move this to external?
         self.api_fields = { # for GUI
             "get_hostname":{
                 "receives":{},

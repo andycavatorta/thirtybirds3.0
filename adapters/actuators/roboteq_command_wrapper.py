@@ -2072,7 +2072,6 @@ class Controllers(threading.Thread):
         self.motors_config = motors_config
         self.mcu_serial_device_path_patterns = mcu_serial_device_path_patterns
         self.queue = queue.Queue()
-        self.boards_to_device_path = {} 
         self.boards = {}
         self.macros = {}
         self.motors = {}
