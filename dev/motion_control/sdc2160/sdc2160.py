@@ -623,6 +623,7 @@ class Main(threading.Thread):
             mcu_serial_device_path_patterns=['/dev/serial/by-id/usb-FTDI*','/dev/serial/by-id/usb-Roboteq*']
         ):
 
+        print(0)
         threading.Thread.__init__(self)
         self.board_config = board_config
         self.motor_config = motor_config
@@ -633,9 +634,12 @@ class Main(threading.Thread):
         self.queue = queue.Queue()
         self.start()
         self.mcu_serial_device_path_patterns = mcu_serial_device_path_patterns
+        print(1)
         self.mcu_serial_device_paths = self.get_device_id_list()
-        print(self.mcu_serial_device_paths)
+        print(2, self.mcu_serial_device_paths)
+        
         for mcu_serial_device_path in self.mcu_serial_device_paths:
+            print(3, mcu_serial_device_path)
             board = Board(
                 mcu_serial_device_path, 
                 self, 
