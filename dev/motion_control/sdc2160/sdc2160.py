@@ -170,7 +170,8 @@ class Board(threading.Thread):
         """
         if self.states["V"] is None or force_update:
             event = threading.Event()
-            serial_command = "?V"
+            serial_command = "?UID"
+            #serial_command = "?V"
             self.add_to_queue(serial_command, event, self._store_volts_)
             event.wait()
         return self.states["V"]
