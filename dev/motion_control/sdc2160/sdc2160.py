@@ -576,6 +576,7 @@ class Board(threading.Thread):
             resp_char = self.serial.read(1)
             resp_str += resp_char.decode('utf-8')
         resp_str = resp_str[:-1] # trim /r from end
+        print("resp_str",resp_str)
         resp_l = resp_str.split('=')
         return resp_l
 
