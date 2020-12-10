@@ -628,6 +628,7 @@ class Main(threading.Thread):
         self.exception_receiver = exception_receiver
         self.tb = tb
         self.queue = queue.Queue()
+        self.boards = {}
         self.start()
         self.mcu_serial_device_path_patterns = mcu_serial_device_path_patterns
         self.mcu_serial_device_paths = self.get_device_id_list()
