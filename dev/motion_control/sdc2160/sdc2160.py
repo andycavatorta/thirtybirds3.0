@@ -615,7 +615,7 @@ class Board(threading.Thread):
 class Main(threading.Thread):
     def __init__(
             self,
-            board_config,
+            boards_config,
             motor_config,
             message_receiver,
             status_receiver, 
@@ -626,7 +626,7 @@ class Main(threading.Thread):
 
         print(0)
         threading.Thread.__init__(self)
-        self.board_config = board_config
+        self.boards_config = boards_config
         self.motor_config = motor_config
         self.message_receiver = message_receiver
         self.status_receiver = status_receiver
