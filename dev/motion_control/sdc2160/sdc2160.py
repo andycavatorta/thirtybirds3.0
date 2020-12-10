@@ -61,7 +61,7 @@ class Board(threading.Thread):
             "VAR":None,
         }
 
-        time.sleep(0.5) # give serial a moment
+        time.sleep(1) # give serial a moment
         self.start()
 
     ##############################################
@@ -637,6 +637,8 @@ class Main(threading.Thread):
         self.start()
         self.mcu_serial_device_path_patterns = mcu_serial_device_path_patterns
         print(1)
+        self.mcu_serial_device_paths = self.get_device_id_list()
+        print(2, self.mcu_serial_device_paths)
         self.mcu_serial_device_paths = self.get_device_id_list()
         print(2, self.mcu_serial_device_paths)
         
