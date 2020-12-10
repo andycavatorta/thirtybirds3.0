@@ -414,7 +414,7 @@ class Board(threading.Thread):
     def get_mcu_id(self, force_update = False):
         if self.states["UID"] is None or force_update:
             event = threading.Event()
-            serial_command = "~UID"
+            serial_command = "?UID"
             self.add_to_queue(serial_command, event, self._store_mcu_id_)
             event.wait()
         return self.states["UID"]
