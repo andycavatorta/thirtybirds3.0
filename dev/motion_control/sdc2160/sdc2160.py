@@ -583,6 +583,7 @@ class Board(threading.Thread):
     def run(self):
         while True:
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
+            print('serial_command=',serial_command)
             self.serial.write(str.encode(serial_command +'\r'))
             resp = self._readSerial_()
             print(">>1",serial_command, resp)
