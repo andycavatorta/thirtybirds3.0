@@ -17,7 +17,7 @@ sys.path.append(root_path[0:root_path.find("/thirtybirds")])
 from thirtybirds3.reporting.exceptions import capture_exceptions
 from . import pub_sub
 from . import detect_disconnect
-from . import http_server #self-starting
+#from . import http_server #self-starting
 
 @capture_exceptions.Class
 class Thirtybirds_Connection():
