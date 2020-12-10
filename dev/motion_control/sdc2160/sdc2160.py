@@ -638,10 +638,15 @@ class Main(threading.Thread):
                 self, 
                 self.add_to_queue,
                 self.boards_config)
+            print("a")
             board.set_serial_echo(1)
+            print("b")
             mcu_id = board.get_mcu_id(True)
+            print("c")
             for name, val in self.boards_config.items():
+                print("d",name, val)
                 if val["mcu_id"] == mcu_id:
+                    print("e",mcu_id)
                     self.boards[name] = board
                     self.boards[name].set_name(name)
                     self.boards[name]._apply_settings_()
