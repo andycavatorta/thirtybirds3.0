@@ -639,7 +639,7 @@ class Main(threading.Thread):
                 self.add_to_queue,
                 self.boards_config)
             print("a")
-            board.set_serial_echo(1)
+            board.set_serial_echo(0)
             print("b")
             mcu_id = board.get_mcu_id(True)
             print("c")
