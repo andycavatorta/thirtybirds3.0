@@ -71,7 +71,7 @@ path_containing_tb_and_app = os.path.split(tb_path)[0]
 from .network import host_info
 from .network import thirtybirds_connection
 #from .network import http_interface
-from .version_control.software_management import Software_Management
+from .lib.version_control.software_management import Software_Management
 from .reporting.exceptions import capture_exceptions
 from .reporting.status.status_receiver import Status_Receiver 
 from .reporting.hardware_management import Hardware_Management
