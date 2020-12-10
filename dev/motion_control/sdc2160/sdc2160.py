@@ -639,8 +639,6 @@ class Main(threading.Thread):
         print(1)
         self.mcu_serial_device_paths = self.get_device_id_list()
         print(2, self.mcu_serial_device_paths)
-        self.mcu_serial_device_paths = self.get_device_id_list()
-        print(2, self.mcu_serial_device_paths)
         
         for mcu_serial_device_path in self.mcu_serial_device_paths:
             print(3, mcu_serial_device_path)
@@ -649,6 +647,7 @@ class Main(threading.Thread):
                 self, 
                 self.add_to_queue,
                 self.boards_config)
+            board.set_serial_echo(1)
             mcu_id = board.get_mcu_id()
             for name, val in self.boards_config.items():
                 if val["mcu_id"] == mcu_id:
