@@ -649,7 +649,8 @@ class Main(threading.Thread):
                 self, 
                 self.add_to_queue,
                 self.boards_config)
-            board.set_serial_echo(0)
+            board.set_serial_echo(1)
+            mcu_id = board.get_mcu_id(True)
             mcu_id = board.get_mcu_id(True)
             for name, val in self.boards_config.items():
                 if val["mcu_id"] == mcu_id:
