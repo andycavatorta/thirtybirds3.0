@@ -170,8 +170,7 @@ class Board(threading.Thread):
         """
         if self.states["V"] is None or force_update:
             event = threading.Event()
-            serial_command = "?UID"
-            #serial_command = "?V"
+            serial_command = "?V"
             self.add_to_queue(serial_command, event, self._store_volts_)
             event.wait()
         return self.states["V"]
@@ -628,7 +627,6 @@ class Main(threading.Thread):
             mcu_serial_device_path_patterns=['/dev/serial/by-id/usb-FTDI*','/dev/serial/by-id/usb-Roboteq*']
         ):
 
-        print(0)
         threading.Thread.__init__(self)
         self.boards_config = boards_config
         self.motor_config = motor_config
@@ -639,19 +637,16 @@ class Main(threading.Thread):
         self.queue = queue.Queue()
         self.start()
         self.mcu_serial_device_path_patterns = mcu_serial_device_path_patterns
-        print(1)
         self.mcu_serial_device_paths = self.get_device_id_list()
-        print(2, self.mcu_serial_device_paths)
         
         for mcu_serial_device_path in self.mcu_serial_device_paths:
-            print(3, mcu_serial_device_path)
             board = Board(
                 mcu_serial_device_path, 
                 self, 
                 self.add_to_queue,
                 self.boards_config)
             board.set_serial_echo(1)
-            mcu_id = board.get_volts(True)
+            mcu_id = board.get_mcu_id(True)
             for name, val in self.boards_config.items():
                 if val["mcu_id"] == mcu_id:
                     self.boards[name] = board
