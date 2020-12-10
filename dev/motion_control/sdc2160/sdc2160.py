@@ -24,7 +24,7 @@ class Board(threading.Thread):
             add_to_controller_queue,
             boards_config):
         threading.Thread.__init__(self)
-        self.serial_device_path = path
+        self.serial_device_path = serial_device_path
         self.controller_ref = controller_ref
         self.add_to_controller_queue = add_to_controller_queue
         self.boards_config = boards_config
