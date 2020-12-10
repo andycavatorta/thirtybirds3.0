@@ -608,13 +608,6 @@ class Board(threading.Thread):
 
 
 
-
-
-
-
-
-
-
 class Main(threading.Thread):
     def __init__(
             self,
@@ -653,19 +646,17 @@ class Main(threading.Thread):
                     self.boards[name].set_name(name)
                     self.boards[name]._apply_settings_()
                     break
+            print(self.boards)
+
 
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
         for mcu_serial_device_path_pattern in self.mcu_serial_device_path_patterns:
             matching_mcu_serial_device_paths.extend(glob.glob(mcu_serial_device_path_pattern))
         return matching_mcu_serial_device_paths
-        
-
 
     def add_to_queue(self, command, params={}):
         self.queue.put((command, params))
-
-
 
     def run(self):
         pass
