@@ -1919,9 +1919,9 @@ class Main(threading.Thread):
             try:
                 command, params = self.queue.get(block=True, timeout=1)
             except Exception:
-                print("self.motors", self.motors)
-                for motor in self.motors:
-                    print(motor) 
+                #print("self.motors", self.motors)
+                for motor_name in self.motors:
+                    print(self.motors[motor_name]) 
                     #motor.query(query_types.ENCODER_POSITION)
 
 
