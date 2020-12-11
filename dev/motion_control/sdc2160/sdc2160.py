@@ -1913,7 +1913,9 @@ class Main(threading.Thread):
         self.queue.put((command, params))
 
     def run(self):
+        print("========================1")
         while True:
+            print("========================2")
             try:
                 command, params = self.queue.get(block=True, timeout=1)
             except queue.EMPTY:
