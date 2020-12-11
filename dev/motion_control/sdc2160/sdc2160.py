@@ -1918,11 +1918,10 @@ class Main(threading.Thread):
             print("========================2")
             try:
                 command, params = self.queue.get(block=True, timeout=1)
-            except Exception:
-                #print("self.motors", self.motors)
+            except Exception as e:
+                print("exp=", e)
                 for motor_name in self.motors:
-                    print(self.motors[motor_name]) 
-                    #motor.query(query_types.ENCODER_POSITION)
+                    self.motors[motor_name].query(query_types.ENCODER_POSITION)
 
 
 
