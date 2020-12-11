@@ -13,6 +13,13 @@ class status_types():
     READY = "READY"
     STOPPED = "STOPPED"
 
+class query_types():
+    TEMP = "TEMP"
+    CLOSED_LOOP_ERROR = "CLOSED_LOOP_ERROR"
+    ENCODER_SPEED = "ENCODER_SPEED"
+    ENCODER_POSITION = "ENCODER_POSITION"
+    POWER = "POWER"
+    MODE = "MODE"
 
 
 
@@ -604,6 +611,13 @@ class Board(threading.Thread):
                             callback(resp[1], event)
 
 
+
+
+
+
+
+
+
 class Motor(threading.Thread):
     def __init__(self,name,board,channel,motors_config,status_receiver):
         threading.Thread.__init__(self)
@@ -666,6 +680,52 @@ class Motor(threading.Thread):
         self.start()
         self._apply_settings_()
         #self.status_receiver("starting motor instance", self.name)
+
+
+    ##############################################
+    #    A P I                                   #
+    ##############################################
+    def speed(self,speed):
+        pass
+
+    def speed_phase(self,speed):
+        pass
+
+    def relative_position(self,postion):
+        pass
+
+    def absolute_position(self,postion):
+        pass
+
+    def torque(self,torque):
+        pass
+
+    def coast(self):
+        pass
+
+    def home(self,offset_after_zero=0):
+        pass
+
+    def oscillate(self,range,frequency):
+        pass
+
+    def config(self,name,value):
+        pass
+
+    def query(self,name): # name in []
+        if name == query_types.TEMP:
+            self.get_temperature(True)
+        if name == query_types.CLOSED_LOOP_ERROR:
+            self.get_closed_loop_error(True)
+        if name == query_types.ENCODER_SPEED:
+            self.get_encoder_motor_speed_in_rpm(True)
+        if name == query_types.ENCODER_POSITION:
+            self.get_encoder_counter_absolute(True)
+        if name == query_types.POWER:
+            self.get_motor_power_output_applied(True)
+        if name == query_types.MODE:
+            self.get_operating_mode(True)
+
 
     ##############################################
     #    MOTOR CONFIG                            #
@@ -1319,7 +1379,6 @@ class Motor(threading.Thread):
         self.states["S"] = values_str
         event.set()
 
-
     def get_encoder_speed_relative(self, force_update = False):
         """
         Returns the measured motor speed as a ratio of the Max RPM (MXRPM) configuration
@@ -1344,8 +1403,6 @@ class Motor(threading.Thread):
     def _store_encoder_speed_relative_(self, values_str, event):
         self.states["SR"] = values_str
         event.set()
-
-
 
     ##############################################
     #    SAFETY                                  #
@@ -1825,15 +1882,10 @@ class Main(threading.Thread):
                 self, 
                 self.add_to_queue,
                 self.boards_config)
-            print("a")
             board.set_serial_echo(0)
-            print("b")
             mcu_id = board.get_mcu_id(True)
-            print("c")
             for name, val in self.boards_config.items():
-                print("d",name, val)
                 if val["mcu_id"] == mcu_id:
-                    print("e",mcu_id)
                     self.boards[name] = board
                     self.boards[name].set_name(name)
                     self.boards[name]._apply_settings_()
@@ -1850,6 +1902,7 @@ class Main(threading.Thread):
                         self.status_receiver
                     )
 
+
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
         for mcu_serial_device_path_pattern in self.mcu_serial_device_path_patterns:
@@ -1860,8 +1913,12 @@ class Main(threading.Thread):
         self.queue.put((command, params))
 
     def run(self):
-        pass
-
+        while True:
+            try:
+                command, params = self.queue.get(block=True, timeout=1)
+            except queue.EMPTY:
+                for motor in self.motors:
+                    motor.query(query_types.ENCODER_POSITION)
 
 
 
