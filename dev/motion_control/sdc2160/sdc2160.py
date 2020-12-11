@@ -612,7 +612,7 @@ class Main(threading.Thread):
     def __init__(
             self,
             boards_config,
-            motor_config,
+            motors_config,
             message_receiver,
             status_receiver, 
             exception_receiver,
@@ -622,7 +622,7 @@ class Main(threading.Thread):
 
         threading.Thread.__init__(self)
         self.boards_config = boards_config
-        self.motor_config = motor_config
+        self.motors_config = motors_config
         self.message_receiver = message_receiver
         self.status_receiver = status_receiver
         self.exception_receiver = exception_receiver
