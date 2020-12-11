@@ -629,6 +629,7 @@ class Main(threading.Thread):
         self.tb = tb
         self.queue = queue.Queue()
         self.boards = {}
+        self.motors = {}
         self.start()
         self.mcu_serial_device_path_patterns = mcu_serial_device_path_patterns
         self.mcu_serial_device_paths = self.get_device_id_list()
@@ -652,8 +653,17 @@ class Main(threading.Thread):
                     self.boards[name].set_name(name)
                     self.boards[name]._apply_settings_()
                     break
-            print(self.boards)
 
+        for motor_name in self.motors_config:
+            for name, val in self.boards_config.items():
+                if val["mcu_id"] == self.motors_config[motor_name]["mcu_id"]:
+                    self.motors[motor_name] = Motor(
+                        motor_name,
+                        self.boards[name],
+                        self.motors_config[motor_name]["channel"],
+                        self.motors_config[motor_name],
+                        self.status_receiver
+                    )
 
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
