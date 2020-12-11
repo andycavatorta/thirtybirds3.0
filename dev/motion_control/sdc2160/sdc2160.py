@@ -1921,7 +1921,8 @@ class Main(threading.Thread):
             except Exception:
                 print("self.motors", self.motors)
                 for motor in self.motors:
-                    motor.query(query_types.ENCODER_POSITION)
+                    print(motor) 
+                    #motor.query(query_types.ENCODER_POSITION)
 
 
 
