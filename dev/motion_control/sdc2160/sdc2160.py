@@ -1917,6 +1917,7 @@ class Main(threading.Thread):
             try:
                 command, params = self.queue.get(block=True, timeout=1)
             except queue.EMPTY:
+                print("self.motors", self.motors)
                 for motor in self.motors:
                     motor.query(query_types.ENCODER_POSITION)
 
