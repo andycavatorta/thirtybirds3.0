@@ -718,7 +718,7 @@ class Motor(threading.Thread):
         if name == query_types.ENCODER_SPEED:
             self.get_encoder_motor_speed_in_rpm(True)
         if name == query_types.ENCODER_POSITION:
-            self.get_encoder_counter_absolute(True)
+            return self.get_encoder_counter_absolute(True)
         if name == query_types.ENCODER_PPR:
             self.get_encoder_ppr_value()
         if name == query_types.POWER:
