@@ -600,7 +600,7 @@ class Board(threading.Thread):
                     print("todo: response == '-' pass message of failure")
                 else:# this is a command echo string.  now fetch command response
                     resp = self._readSerial_()
-                    print(serial_command, resp)
+                    #print(serial_command, resp)
                     if len(resp)!=2:
                         if resp == ['-']:
                             print("todo: response == '-' pass message of failure")
@@ -1911,6 +1911,7 @@ class Main(threading.Thread):
 
     def get_status_report(self):
         for motor_name in self.motors:
+            print(motor_name,self.motors[motor_name].query(query_types.ENCODER_PPR))
             print(motor_name,self.motors[motor_name].query(query_types.ENCODER_POSITION))
 
 
