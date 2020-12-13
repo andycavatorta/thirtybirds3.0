@@ -17,12 +17,10 @@ class query_types():
     TEMP = "TEMP"
     CLOSED_LOOP_ERROR = "CLOSED_LOOP_ERROR"
     ENCODER_SPEED = "ENCODER_SPEED"
+    ENCODER_PPR = "ENCODER_PPR"
     ENCODER_POSITION = "ENCODER_POSITION"
     POWER = "POWER"
     MODE = "MODE"
-
-
-
 
 class Board(threading.Thread):
     def __init__(
@@ -721,6 +719,8 @@ class Motor(threading.Thread):
             self.get_encoder_motor_speed_in_rpm(True)
         if name == query_types.ENCODER_POSITION:
             self.get_encoder_counter_absolute(True)
+        if name == query_types.ENCODER_PPR:
+            self.get_encoder_ppr_value()
         if name == query_types.POWER:
             self.get_motor_power_output_applied(True)
         if name == query_types.MODE:
@@ -1909,6 +1909,12 @@ class Main(threading.Thread):
             matching_mcu_serial_device_paths.extend(glob.glob(mcu_serial_device_path_pattern))
         return matching_mcu_serial_device_paths
 
+    def get_status_report(self):
+        for motor_name in self.motors:
+            print(self.motors[motor_name].query(query_types.ENCODER_POSITION))
+
+
+
     def add_to_queue(self, command, params={}):
         self.queue.put((command, params))
 
@@ -1918,10 +1924,7 @@ class Main(threading.Thread):
                 command, params = self.queue.get(block=True, timeout=1)
             except Exception as e:
                 print("exp=", e)
-                for motor_name in self.motors:
-                    self.motors[motor_name].query(query_types.ENCODER_POSITION)
-
-
+                self.get_status_report()
 
 
 
