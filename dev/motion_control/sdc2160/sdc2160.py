@@ -1912,6 +1912,7 @@ class Main(threading.Thread):
         for motor_name in self.motors:
             ppr = motor_name,self.motors[motor_name].query(query_types.ENCODER_PPR)
             abs_position = motor_name,self.motors[motor_name].query(query_types.ENCODER_POSITION)
+            print(">>>>",abs_position[1],ppr[1])
             turns = abs_position[1] // ppr[1]
             angle = abs_position[1] % ppr[1]
             print(abs_position[1], turns,angle)
