@@ -347,22 +347,6 @@ class Thirtybirds():
                     }
                 }
             },
-            "app_get_git_timestamp":{
-                "receives":{},
-                "returns":{
-                    "git timestamp":{
-                        "type":"datetime",
-                    }
-                }
-            },
-            "app_get_scripts_version":{
-                "receives":{},
-                "returns":{
-                    "scripts version":{
-                        "type":"integer",
-                    }
-                }
-            },
             "app_pull_from_github":{"receives":{},"returns":{}},
             "app_run_update_scripts":{"receives":{},"returns":{}},
             "tb_pull_from_github":{"receives":{},"returns":{}},

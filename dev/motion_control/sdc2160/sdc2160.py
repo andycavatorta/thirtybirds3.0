@@ -1306,7 +1306,7 @@ class Motor(threading.Thread):
     #    ENCODERS RUNTIME                        #
     ##############################################
 
-    def get_encoder_counter_absolute(self, force_update = False):
+    def get_encoder_counter_absolute(self, force_update = True):
         """
         Returns the encoder value as an absolute number. The counter is 32-bit with a range of
         +/- 2147483648 counts.
@@ -1913,9 +1913,7 @@ class Main(threading.Thread):
         self.queue.put((command, params))
 
     def run(self):
-        print("========================1")
         while True:
-            print("========================2")
             try:
                 command, params = self.queue.get(block=True, timeout=1)
             except Exception as e:
