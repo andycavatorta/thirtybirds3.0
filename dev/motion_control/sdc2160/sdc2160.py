@@ -1910,12 +1910,12 @@ class Main(threading.Thread):
 
     def get_status_report(self):
         for motor_name in self.motors:
-            ppr = motor_name,self.motors[motor_name].query(query_types.ENCODER_PPR)
-            abs_position = motor_name,self.motors[motor_name].query(query_types.ENCODER_POSITION)
-            print(">>>>",abs_position[1],ppr[1])
-            turns = abs(abs_position[1]) // abs(ppr[1]) * -1 if abs_position<0 else 1
-            angle = abs(abs_position[1]) % abs(ppr[1]) * -1 if abs_position<0 else 1
-            print(abs_position[1], turns,angle)
+            ppr = (motor_name,self.motors[motor_name].query(query_types.ENCODER_PPR))[1]
+            abs_position = (motor_name,self.motors[motor_name].query(query_types.ENCODER_POSITION))[1]
+            print(">>>>",abs_position,ppr)
+            turns = abs(abs_position) // abs(ppr) * -1 if abs_position<0 else 1
+            angle = abs(abs_position) % abs(ppr) * -1 if abs_position<0 else 1
+            print(abs_position, turns,angle)
 
     def add_to_queue(self, command, params={}):
         self.queue.put((command, params))
