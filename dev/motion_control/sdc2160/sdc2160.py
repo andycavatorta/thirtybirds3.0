@@ -1296,7 +1296,7 @@ class Motor(threading.Thread):
             serial_command = "~EPPR {}".format(self.channel)
             self.board.add_to_queue(serial_command, event, self._store_encoder_ppr_value_)
             event.wait()
-        return self.states["EPPR"]
+        return int(self.states["EPPR"])
 
     def _store_encoder_ppr_value_(self, values_str, event):
         self.states["EPPR"] = values_str
