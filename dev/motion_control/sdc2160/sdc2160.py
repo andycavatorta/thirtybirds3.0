@@ -1044,7 +1044,7 @@ class Motor(threading.Thread):
             serial_command = "?P {}".format(self.channel)
             self.board.add_to_queue(serial_command, event, self._store_motor_power_output_applied_)
             event.wait()
-        return self.states["P"]
+        return int(self.states["P"])
 
     def _store_motor_power_output_applied_(self, values_str, event):
         self.states["P"] = values_str
@@ -1373,7 +1373,7 @@ class Motor(threading.Thread):
             serial_command = "?S {}".format(self.channel)
             self.board.add_to_queue(serial_command, event, self._store_encoder_motor_speed_in_rpm_)
             event.wait()
-        return self.states["S"]
+        return float(self.states["S"])
 
     def _store_encoder_motor_speed_in_rpm_(self, values_str, event):
         self.states["S"] = values_str
@@ -1589,7 +1589,7 @@ class Motor(threading.Thread):
             serial_command = "~CLERD {}".format(self.channel)
             self.board.add_to_queue(serial_command, event, self._store_closed_loop_error_detection_)
             event.wait()
-        return self.states["CLERD"]
+        return float(self.states["CLERD"])
 
     def _store_closed_loop_error_detection_(self, values_str, event):
         self.states["CLERD"] = int(values_str)
@@ -1803,7 +1803,7 @@ class Motor(threading.Thread):
             serial_command = "?T {}".format(self.channel)
             self.board.add_to_queue(serial_command, event, self._store_temperature_)
             event.wait()
-        return self.states["T"]
+        return int(self.states["T"])
 
     def _store_temperature_(self, values_str, event):
         #channel_1, channel_2 = values_str.split(":")
