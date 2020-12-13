@@ -1913,8 +1913,8 @@ class Main(threading.Thread):
             ppr = (motor_name,self.motors[motor_name].query(query_types.ENCODER_PPR))[1]
             abs_position = (motor_name,self.motors[motor_name].query(query_types.ENCODER_POSITION))[1]
             print(">>>>",abs_position,ppr)
-            turns = abs(abs_position) // abs(ppr) * -1 if abs_position<0 else 1
-            angle = abs(abs_position) % abs(ppr) * -1 if abs_position<0 else 1
+            turns = abs(abs_position) // abs(ppr) * -1 if abs_position<0 else abs(abs_position) // abs(ppr)
+            angle = abs(abs_position) % abs(ppr) * -1 if abs_position<0 else abs(abs_position) % abs(ppr)
             print(abs_position, turns,angle/360)
 
     def add_to_queue(self, command, params={}):
