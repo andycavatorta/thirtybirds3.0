@@ -21,6 +21,7 @@ class query_types():
     ENCODER_POSITION = "ENCODER_POSITION"
     POWER = "POWER"
     MODE = "MODE"
+    FAULT_FLAGS = "FAULT_FLAGS"
 
 class Board(threading.Thread):
     def __init__(
@@ -725,7 +726,6 @@ class Motor(threading.Thread):
             return self.get_motor_power_output_applied(True)
         if name == query_types.MODE:
             return self.get_operating_mode(True)
-
 
     ##############################################
     #    MOTOR CONFIG                            #
@@ -1918,10 +1918,17 @@ class Main(threading.Thread):
             pid_error = (motor_name,self.motors[motor_name].query(query_types.CLOSED_LOOP_ERROR))[1]
             speed = (motor_name,self.motors[motor_name].query(query_types.ENCODER_SPEED))[1]
             motor_power = (motor_name,self.motors[motor_name].query(query_types.POWER))[1]
-            print(controller_temp, pid_error,speed,motor_power )
-
-
-
+            report={
+                "abs_position":abs_position,
+                "turns":turns,
+                "angle":angle,
+                "speed":speed,
+                "controller_temp":controller_temp,
+                "pid_error":pid_error,
+                "speed":speed,
+                "motor_power":motor_power
+            }
+            print(report)
 
     def add_to_queue(self, command, params={}):
         self.queue.put((command, params))
