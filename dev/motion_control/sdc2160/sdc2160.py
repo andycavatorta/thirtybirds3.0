@@ -1913,6 +1913,7 @@ class Main(threading.Thread):
             ppr = motor_name,self.motors[motor_name].query(query_types.ENCODER_PPR)[1]
             abs_position = motor_name,self.motors[motor_name].query(query_types.ENCODER_POSITION)
             print(">>>>",repr(abs_position))
+            print(">>>>",repr(abs_position[1]))
             #turns = abs_position // ppr
             #angle = abs_position % ppr
             #print(abs_position, turns,angle)
@@ -1925,7 +1926,7 @@ class Main(threading.Thread):
             try:
                 command, params = self.queue.get(block=True, timeout=1)
             except Exception as e:
-                print("exp=", e)
+                pass
                 self.get_status_report()
 
 
