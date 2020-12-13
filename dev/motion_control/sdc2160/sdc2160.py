@@ -1915,7 +1915,7 @@ class Main(threading.Thread):
             print(">>>>",abs_position,ppr)
             turns = abs(abs_position) // abs(ppr) * -1 if abs_position<0 else 1
             angle = abs(abs_position) % abs(ppr) * -1 if abs_position<0 else 1
-            print(abs_position, turns,angle)
+            print(abs_position, turns,angle/360)
 
     def add_to_queue(self, command, params={}):
         self.queue.put((command, params))
