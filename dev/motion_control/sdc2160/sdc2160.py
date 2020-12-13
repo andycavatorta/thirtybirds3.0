@@ -712,19 +712,19 @@ class Motor(threading.Thread):
 
     def query(self,name): # name in []
         if name == query_types.TEMP:
-            self.get_temperature(True)
+            return self.get_temperature(True)
         if name == query_types.CLOSED_LOOP_ERROR:
-            self.get_closed_loop_error(True)
+            return self.get_closed_loop_error(True)
         if name == query_types.ENCODER_SPEED:
-            self.get_encoder_motor_speed_in_rpm(True)
+            return self.get_encoder_motor_speed_in_rpm(True)
         if name == query_types.ENCODER_POSITION:
             return self.get_encoder_counter_absolute(True)
         if name == query_types.ENCODER_PPR:
-            self.get_encoder_ppr_value()
+            return self.get_encoder_ppr_value()
         if name == query_types.POWER:
-            self.get_motor_power_output_applied(True)
+            return self.get_motor_power_output_applied(True)
         if name == query_types.MODE:
-            self.get_operating_mode(True)
+            return self.get_operating_mode(True)
 
 
     ##############################################
