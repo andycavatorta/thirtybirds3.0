@@ -1902,7 +1902,6 @@ class Main(threading.Thread):
                         self.status_receiver
                     )
 
-
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
         for mcu_serial_device_path_pattern in self.mcu_serial_device_path_patterns:
@@ -1913,9 +1912,10 @@ class Main(threading.Thread):
         for motor_name in self.motors:
             ppr = motor_name,self.motors[motor_name].query(query_types.ENCODER_PPR)[1]
             abs_position = motor_name,self.motors[motor_name].query(query_types.ENCODER_POSITION)
-            turns = abs_position // ppr
-            angle = abs_position % ppr
-            print(abs_position, turns,angle)
+            print(repr(abs_position))
+            #turns = abs_position // ppr
+            #angle = abs_position % ppr
+            #print(abs_position, turns,angle)
 
     def add_to_queue(self, command, params={}):
         self.queue.put((command, params))
