@@ -1919,6 +1919,7 @@ class Main(threading.Thread):
             speed = (motor_name,self.motors[motor_name].query(query_types.ENCODER_SPEED))[1]
             motor_power = (motor_name,self.motors[motor_name].query(query_types.POWER))[1]
             report={
+                "motor_name":motor_name,
                 "abs_position":abs_position,
                 "turns":turns,
                 "angle":angle,
