@@ -1912,10 +1912,16 @@ class Main(threading.Thread):
         for motor_name in self.motors:
             ppr = (motor_name,self.motors[motor_name].query(query_types.ENCODER_PPR))[1]
             abs_position = (motor_name,self.motors[motor_name].query(query_types.ENCODER_POSITION))[1]
-            print(">>>>",abs_position,ppr)
             turns = abs(abs_position) // abs(ppr) * -1 if abs_position<0 else abs(abs_position) // abs(ppr)
             angle = abs(abs_position) % abs(ppr) * -1 if abs_position<0 else abs(abs_position) % abs(ppr)
-            print(abs_position, turns,angle/ppr*360)
+            controller_temp = (motor_name,self.motors[motor_name].query(query_types.TEMP))[1]
+            pid_error = (motor_name,self.motors[motor_name].query(query_types.CLOSED_LOOP_ERROR))[1]
+            speed = (motor_name,self.motors[motor_name].query(query_types.ENCODER_SPEED))[1]
+            motor_power = (motor_name,self.motors[motor_name].query(query_types.POWER))[1]
+            print(controller_temp, pid_error,speed,motor_power )
+
+
+
 
     def add_to_queue(self, command, params={}):
         self.queue.put((command, params))
