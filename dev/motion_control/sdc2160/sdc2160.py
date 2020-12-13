@@ -1911,7 +1911,7 @@ class Main(threading.Thread):
     def get_status_report(self):
         for motor_name in self.motors:
             ppr = motor_name,self.motors[motor_name].query(query_types.ENCODER_PPR)[1]
-            abs_position = motor_name,self.motors[motor_name].query(query_types.ENCODER_POSITION)
+            abs_position = motor_name,self.motors[motor_name].query(query_types.ENCODER_POSITION)[1]
             print(repr(abs_position))
             #turns = abs_position // ppr
             #angle = abs_position % ppr
