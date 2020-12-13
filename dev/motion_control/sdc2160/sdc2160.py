@@ -581,17 +581,17 @@ class Board(threading.Thread):
             resp_char = self.serial.read(1)
             resp_str += resp_char.decode('utf-8')
         resp_str = resp_str[:-1] # trim /r from end
-        print("resp_str",resp_str)
+        #print("resp_str",resp_str)
         resp_l = resp_str.split('=')
         return resp_l
 
     def run(self):
         while True:
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
-            print('serial_command=',serial_command)
+            #print('serial_command=',serial_command)
             self.serial.write(str.encode(serial_command +'\r'))
             resp = self._readSerial_()
-            print(">>1",serial_command, resp)
+            #print(">>1",serial_command, resp)
             if len(resp)==1:
                 if resp[0]=="+":
                     pass
@@ -600,7 +600,7 @@ class Board(threading.Thread):
                     print("todo: response == '-' pass message of failure")
                 else:# this is a command echo string.  now fetch command response
                     resp = self._readSerial_()
-                    print(">>2",serial_command, resp)
+                    print(serial_command, resp)
                     if len(resp)!=2:
                         if resp == ['-']:
                             print("todo: response == '-' pass message of failure")
@@ -1911,7 +1911,7 @@ class Main(threading.Thread):
 
     def get_status_report(self):
         for motor_name in self.motors:
-            print(self.motors[motor_name].query(query_types.ENCODER_POSITION))
+            print(motor_name,self.motors[motor_name].query(query_types.ENCODER_POSITION))
 
 
 
