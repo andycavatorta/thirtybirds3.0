@@ -1,0 +1,349 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+         "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="3000"
+     height="2000"
+      version="1.1"
+     onload="init();">
+  <defs>
+        <style>
+            @import url("https://fonts.googleapis.com/css?family=Jura:400,400i,700,700i");
+            .button {
+              fill:#888888;
+              stroke:#000000;
+              stroke-width:.25;
+              opacity: 0.25;
+              font-family: "Jura";
+              font-size: 16;
+            }
+            .button:hover {
+              fill:#cccccc;
+            }
+            .text_header_rect{
+              fill:#ffffff;
+              stroke:#000000;
+              stroke-width:0;
+              font-family: "Jura";
+              font-weight: bold;
+              font-size: 16;
+            }
+            .text_header{
+              font-family: "Jura";
+              font-weight: bold;
+              font-size: 16;
+              text-decoration: underline;
+            }
+            .form_text_input{
+              border-width: 0px;
+              border-bottom-width: 1px;
+              font-family: "Jura";
+              font-weight: bold;
+              font-size: 16;
+              width:190px;
+              height:20px;
+            }
+            .form_text_area{
+              display:block;
+              border-width: 1px;
+              font-family: "Jura";
+              font-weight: bold;
+              font-size: 16;
+              width:98%;
+              height:98%;
+            }
+            .form_text_input:focus{
+              outline-style: none;
+
+            }
+        </style>
+  </defs>
+
+<script type="text/javascript"><![CDATA[
+
+  // -------------------  globals ------------------- 
+  var SVG_NS ="http://www.w3.org/2000/svg";
+  var HTML_NS = ""
+  var panel = null;
+  
+  // ------------------- utils -------------------
+  
+  function setAttributes(obj, att_a){
+    for(var ai=0; ai<att_a.length; ai++){
+      obj.setAttribute(att_a[ai][0],att_a[ai][1]);
+    }
+  }
+  
+  // ------------------- structural elements -------------------
+  
+  function foo(e) {
+    console.log(this)
+  }
+
+  function Button(parent,label,action_ref,x,y,w) {
+    if(!w){
+      var w=190;
+    }
+    var h=30;
+    this.button = document.createElementNS( SVG_NS, "g" );
+    var rect = document.createElementNS( SVG_NS, "rect" );
+    setAttributes(rect, [
+        ["x",x],
+        ["y",y],
+        ["width",w],
+        ["height",h],
+        ["class","button"]
+      ]
+    )
+    var label_ns = document.createElementNS( SVG_NS, "text" );
+    setAttributes(label_ns, [
+        ["x",x+10],
+        ["y",y+20],
+        ["width",w],
+        ["font-family", "Jura"],
+        ["font-size", "16"],
+        ["fill","#000000"],
+        ["text-align", "center"]
+      ]
+    )
+    var label_tn = document.createTextNode(label)
+    label_ns.appendChild(label_tn);
+    this.button.appendChild(label_ns);
+    this.button.appendChild(rect);
+    rect.style.cursor = "pointer";
+    label_ns.style.cursor = "pointer";
+    this.button.addEventListener("click", action_ref, true);
+    parent.appendChild(this.button)
+  }
+
+  function Text_Header(parent,label,x,y,w) {
+    if(!w){
+      var w=190;
+    }
+    var h=30;
+    this.button = document.createElementNS( SVG_NS, "g" );
+    var rect = document.createElementNS( SVG_NS, "rect" );
+    setAttributes(rect, [
+        ["x",x],
+        ["y",y],
+        ["width",w],
+        ["height",h],
+        ["class","text_header_rect"]
+      ]
+    )
+    var label_1_ns = document.createElementNS( SVG_NS, "text" );
+    setAttributes(label_1_ns, [
+        ["x",x+10],
+        ["y",y+20],
+        ["width",w/2],
+        ["text-align", "center"],
+        ["class","text_header"]
+      ]
+
+    )
+    label_1_ns.appendChild(document.createTextNode(label));
+    this.button.appendChild(rect);
+    this.button.appendChild(label_1_ns);
+    parent.appendChild(this.button)
+  }
+
+  function Text_Indicator(parent,x,y,w) {
+    if(!w){
+      var w=190;
+    }
+    var h=30;
+    this.button = document.createElementNS( SVG_NS, "g" );
+    this.button.label_ns = document.createElementNS( SVG_NS, "text" );
+    setAttributes(this.button.label_ns, [
+        ["x",x+10],
+        ["y",y+20],
+        ["width",w/2],
+        ["font-family", "Jura"],
+        ["font-size", "16"],
+        ["fill","#000000"],
+        ["text-align", "center"]
+      ]
+    )
+    this.button.appendChild(this.button.label_ns);
+    this.button.update = function(_text){
+      while(this.label_ns.hasChildNodes()){
+        this.label_ns.removeChild(this.label_ns.firstChild)
+      }
+      this.label_ns.appendChild(document.createTextNode(_text));
+    }
+    parent.appendChild(this.button)
+  }
+
+  function Form_Text_Input(parent,action_ref,placeholder,x,y,w) {
+    if(!w){
+      var w=190;
+    }
+    var fo = document.createElementNS( SVG_NS, "foreignObject")
+    fo.style = "x:"+x+";y:"+y+";width:192;height:24;"
+    //fo.setAttribute('x',x)
+    //fo.setAttribute('y',y)
+    var d = document.createElement('div')
+    d.setAttribute('xmlns',"http://www.w3.org/1999/xhtml")
+    d.style = "display:block; x:1; y:1; width:192; height:22;";
+    d.innerHTML = '<input>asdf</input>';
+    var text_input = d.firstChild;
+    text_input.setAttribute('class','form_text_input');
+    text_input.setAttribute('placeholder',placeholder);
+    fo.appendChild(d)
+    text_input.addEventListener("change", action_ref);
+    panel.appendChild(fo)
+  }
+
+  function Button(parent,label,action_ref,x,y,w) {
+    if(!w){
+      var w=190;
+    }
+    var h=30;
+    this.button = document.createElementNS( SVG_NS, "g" );
+    var rect = document.createElementNS( SVG_NS, "rect" );
+    setAttributes(rect, [
+        ["x",x],
+        ["y",y],
+        ["width",w],
+        ["height",h],
+        ["class","button"]
+      ]
+    )
+    var label_ns = document.createElementNS( SVG_NS, "text" );
+    setAttributes(label_ns, [
+        ["x",x+10],
+        ["y",y+20],
+        ["width",w],
+        ["font-family", "Jura"],
+        ["font-size", "16"],
+        ["fill","#000000"],
+        ["text-align", "center"]
+      ]
+    )
+    var label_tn = document.createTextNode(label)
+    label_ns.appendChild(label_tn);
+    this.button.appendChild(label_ns);
+    this.button.appendChild(rect);
+    rect.style.cursor = "pointer";
+    label_ns.style.cursor = "pointer";
+    this.button.addEventListener("click", action_ref, true);
+    parent.appendChild(this.button)
+  }
+
+  function Text_Area(parent, x, y, height, width){
+    var fo = document.createElementNS( SVG_NS, "foreignObject")
+    fo.style = "x:"+x+";y:"+y+";width:"+width+";height:"+height+";";
+    var d = document.createElement('div')
+    d.setAttribute('xmlns',"http://www.w3.org/1999/xhtml")
+    d.style = "display:block; x:1; y:1; width:"+width+"px;height:"+height+"px;";
+    d.innerHTML = '<textarea></textarea>';
+    this.text_area = d.firstChild;
+    this.text_area.setAttribute('class','form_text_area');
+    this.text_area.style.height = height;
+    this.text_area.style.width = width;
+
+    fo.appendChild(d)
+    panel.appendChild(fo)
+    this.update = function(data){
+      this.text_area.value = data;
+    }
+  }
+
+  // ------------------- data -------------------
+  var data = {
+    exceptions:"",
+    status_messages:""
+  }
+
+  // ------------------- controller -------------------
+  function update_exceptions(message){
+    data.exceptions = data.exceptions + "\n" + message;
+    exception_display.update(data.exceptions) // todo: update should pull from data.
+  }
+  function update_status(message){
+    data.status_messages = data.status_messages + "\n" + message;
+    status_display.update(data.status_messages) // todo: update should pull from data.
+  }
+
+  function init() {
+    panel = document.getElementById( "top_level" ); 
+    var hGrid = [30,230,430, 630, 830, 1030, 1230, 1430, 1630, 1830, 2030, 2230, 2430, 2630, 2820];
+    var vGrid = [5, 45, 85, 125, 165, 705, 745, 785];
+    var h_pos = 0;
+    new Text_Header(panel,"host",hGrid[h_pos],vGrid[0]);
+    new Text_Header(panel,"exceptions",hGrid[++h_pos],vGrid[0]);
+    new Text_Header(panel,"git_timestamp",hGrid[++h_pos],vGrid[0]);
+    new Text_Header(panel,"scripts version",hGrid[++h_pos],vGrid[0]);
+    new Text_Header(panel,"os_version",hGrid[++h_pos],vGrid[0]);
+    new Text_Header(panel,"local ip",hGrid[++h_pos],vGrid[0]);
+    new Text_Header(panel,"global ip",hGrid[++h_pos],vGrid[0]);
+    new Text_Header(panel,"connections",hGrid[++h_pos],vGrid[0]);
+    new Text_Header(panel,"core_voltage",hGrid[++h_pos],vGrid[0]);
+    new Text_Header(panel,"system_cpu",hGrid[++h_pos],vGrid[0]);
+    new Text_Header(panel,"system_uptime",hGrid[++h_pos],vGrid[0]);
+    new Text_Header(panel,"system_disk",hGrid[++h_pos],vGrid[0]);
+    new Text_Header(panel,"memory_free",hGrid[++h_pos],vGrid[0]);
+    new Text_Header(panel,"wifi_strength",hGrid[++h_pos],vGrid[0]);
+
+    var h_pos = 0;
+    var ti_hostname = new Text_Indicator(panel,hGrid[h_pos],vGrid[1]);
+    var ti_exceptions = new Text_Indicator(panel,hGrid[++h_pos],vGrid[1]);
+    var ti_git_timestamp = new Text_Indicator(panel,hGrid[++h_pos],vGrid[1]);
+    var ti_scripts_version = new Text_Indicator(panel,hGrid[++h_pos],vGrid[1]);
+    var ti_os_version = new Text_Indicator(panel,hGrid[++h_pos],vGrid[1]);
+    var ti_local_ip = new Text_Indicator(panel,hGrid[++h_pos],vGrid[1]);
+    var ti_global_ip = new Text_Indicator(panel,hGrid[++h_pos],vGrid[1]);
+    var ti_connections = new Text_Indicator(panel,hGrid[++h_pos],vGrid[1]);
+    var ti_core_voltage = new Text_Indicator(panel,hGrid[++h_pos],vGrid[1]);
+    var ti_system_cpu = new Text_Indicator(panel,hGrid[++h_pos],vGrid[1]);
+    var ti_system_uptime = new Text_Indicator(panel,hGrid[++h_pos],vGrid[1]);
+    var ti_system_disk = new Text_Indicator(panel,hGrid[++h_pos],vGrid[1]);
+    var ti_memory_free = new Text_Indicator(panel,hGrid[++h_pos],vGrid[1]);
+    var ti_wifi_strength = new Text_Indicator(panel,hGrid[++h_pos],vGrid[1]);
+
+    new Button(panel,"reboot",foo,hGrid[0],vGrid[2]);
+    new Button(panel,"shutdown",foo,hGrid[1],vGrid[2]);
+    new Button(panel,"pull from github",foo,hGrid[2],vGrid[2]);
+    new Button(panel,"run update scripts",foo,hGrid[3],vGrid[2]);
+
+    new Button(panel,"publish",foo,hGrid[5],vGrid[2]);
+    new Form_Text_Input(parent,foo,"topic",hGrid[6],vGrid[2]);
+    new Form_Text_Input(parent,foo,"data",hGrid[7],vGrid[2]);
+
+    h_pos = 0;
+    new Text_Header(panel,"exceptions",hGrid[h_pos],vGrid[3]);
+    exception_display = new Text_Area(panel, hGrid[h_pos], vGrid[4], 500, 2800);
+    new Text_Header(panel,"status",hGrid[h_pos],vGrid[5]);
+    status_display = new Text_Area(panel, hGrid[h_pos], vGrid[6], 500, 2800);
+
+    ti_hostname.button.update("dervishes-1")
+    ti_local_ip.button.update("196.168.5.45")
+    ti_global_ip.button.update("204.97.222.2")
+    ti_connections.button.update("true")
+    ti_os_version.button.update("Ubuntu 20")
+    ti_scripts_version.button.update("8")
+    ti_git_timestamp.button.update("12 12 12 12 12 ")
+    ti_exceptions.button.update("++")
+    ti_core_voltage.button.update("3.3vdc")
+    ti_system_cpu.button.update("34%")
+    ti_system_uptime.button.update("23452345")
+    ti_system_disk.button.update("2342354MB")
+    ti_memory_free.button.update("23463MB")
+    ti_wifi_strength.button.update("65%")
+
+    update_exceptions("exception 1 fdasasdf")
+    update_exceptions("exception 2 ccccccccccccc")
+
+    update_status("status 1 fdasasdf")
+    update_status("status 2 ccccccccccccc")
+
+  }
+    
+]]></script>
+
+
+<g id="top_level"  />
+</svg>
+
+
