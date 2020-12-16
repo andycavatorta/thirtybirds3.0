@@ -1929,7 +1929,7 @@ class Main(threading.Thread):
                 "speed":speed,
                 "motor_power":motor_power
             }
-            self.status_receiver(report)
+            #self.status_receiver(report)
 
     def add_to_queue(self, command, params={}):
         self.queue.put((command, params))
