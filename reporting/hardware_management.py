@@ -85,12 +85,12 @@ class Hardware_Management():
             if line.startswith("MemFree:"):
                 line_l_free = line.split()
                 kb_free = float(line_l_free[1])
-                mb_free = kb*1000.0
+                mb_free = kb_free*1000.0
                 return mb
             if line.startswith("MemTotal:"):
                 line_l_total = line.split()
                 kb_total = float(line_l_total[1])
-                mb_total = kb*1000.0
+                mb_total = kb_total*1000.0
                 return [mb_free,mb_total]
             
         return -1
