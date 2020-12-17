@@ -84,9 +84,15 @@ class Hardware_Management():
             print(line)
             if line.startswith("MemFree:"):
                 line_l = line.split()
-                kb = float(line_l[1])
-                mb = kb*1000.0
+                kb_free = float(line_l[1])
+                mb_free = kb*1000.0
                 return mb
+            if line.startswith("MemTotal:"):
+                line_l_total = line.split()
+                kb_total = float(line_l[1])
+                mb_total = kb*1000.0
+                return [mb_free,mb_total]
+            :
         return -1
 
     def get_system_status(self):
