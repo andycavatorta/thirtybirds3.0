@@ -5,11 +5,7 @@ import pickle
 import shutil
 import subprocess
 import sys
-
-try:
-    import sensors #only needed for ubuntu
-except ImportError:
-    pass
+import sensors #only needed for ubuntu
 
 root_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(root_path[0:root_path.find("/thirtybirds")])
@@ -95,7 +91,7 @@ class Hardware_Management():
             "memory_free":self.get_memory_free(),
             "system_disk":self.get_system_disk(),
             "core_temp":self.get_core_temp(),
-            "os_version":self.get_os_version(),
+            "os_version":self.os_name,
             "wifi_strength":self.get_wifi_strength()
         }
         return report
