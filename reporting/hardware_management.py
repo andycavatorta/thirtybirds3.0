@@ -71,7 +71,7 @@ class Hardware_Management():
 
     def get_system_disk(self):
         disk_usage = shutil.disk_usage("/")
-        return disk_usage.free
+        return [disk_usage.free,disk_usage.total]
 
     def get_memory_free(self):
         """
@@ -100,7 +100,7 @@ class Hardware_Management():
             "memory_free":self.get_memory_free(),
             "system_disk":self.get_system_disk(),
             "core_temp":self.get_core_temp(),
-            "os_version":self.os_name,
+            "os_version":[self.os_name,self.os_version],
             "wifi_strength":self.get_wifi_strength()
         }
         return report
