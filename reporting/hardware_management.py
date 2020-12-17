@@ -31,7 +31,7 @@ class Hardware_Management():
             for chip in sensors.iter_detected_chips():
                 for feature in chip:
                     print('  %s: %.2f' % (feature.label, feature.get_value()))
-                    if "Core" in feature.label:
+                    if "temp" in feature.label:
                         core_temp = int(feature.get_value())
                         print(core_temp)
                         if core_temp > max_temp:
