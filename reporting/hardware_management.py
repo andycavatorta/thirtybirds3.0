@@ -91,9 +91,8 @@ class Hardware_Management():
                 line_l_total = line.split()
                 kb_total = float(line_l_total[1])
                 mb_total = kb_total*1000.0
-            return [mb_free,mb_total]
+        return [mb_free,mb_total]
             
-        return -1
 
     def get_system_status(self):
         report = {
