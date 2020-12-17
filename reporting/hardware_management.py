@@ -92,7 +92,7 @@ class Hardware_Management():
                 kb_total = float(line_l[1])
                 mb_total = kb*1000.0
                 return [mb_free,mb_total]
-            :
+            
         return -1
 
     def get_system_status(self):
