@@ -1,3 +1,6 @@
+import threading
+import time
+
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
 clients = []
@@ -20,5 +23,22 @@ class SimpleChat(WebSocket):
        for client in clients:
           client.sendMessage(self.address[0] + u' - disconnected')
 
+    def sendToClients(self, message):
+       for client in clients:
+          client.sendMessage(message)
+
+
 server = SimpleWebSocketServer('', 8000, SimpleChat)
-server.serveforever()
+x = threading.Thread(target=server.serveforever)
+x.start()
+
+
+def init():
+
+
+
+while True:
+    t = time.time()
+    server.websocketclass.sendToClients(server.websocketclass,str(t))
+    time.sleep(1)
+    print(t)

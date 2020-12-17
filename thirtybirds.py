@@ -20,8 +20,6 @@ synchronized time
 
 == fix before proceeding ==
 
-expand and clarify networking data format
-
 create command-line interface system
     can be extended by app
     systems:
