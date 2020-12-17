@@ -83,13 +83,13 @@ class Hardware_Management():
         for line in lines_from_bash_l:
             print(line)
             if line.startswith("MemFree:"):
-                line_l = line.split()
-                kb_free = float(line_l[1])
+                line_l_free = line.split()
+                kb_free = float(line_l_free[1])
                 mb_free = kb*1000.0
                 return mb
             if line.startswith("MemTotal:"):
                 line_l_total = line.split()
-                kb_total = float(line_l[1])
+                kb_total = float(line_l_total[1])
                 mb_total = kb*1000.0
                 return [mb_free,mb_total]
             
