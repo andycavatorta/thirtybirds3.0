@@ -15,17 +15,22 @@ from thirtybirds3.reporting.exceptions import capture_exceptions
 class Hardware_Management():
     def __init__(
             self,
-            os_name
+            os
         ):
-        self.os_name = os_name
+        self.os_name = os["name"]
+        self.os_version = os["version"]
         
     def get_core_temp(self):
+
         if self.os_name == "ubuntu":
             sensors.init()
             max_temp = 0
             sensors.init()
+
+
             for chip in sensors.iter_detected_chips():
                 for feature in chip:
+                    print('  %s: %.2f' % (feature.label, feature.get_value()))
                     if "Core" in feature.label:
                         core_temp = int(feature.get_value())
                         print(core_temp)

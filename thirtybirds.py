@@ -181,7 +181,7 @@ class Thirtybirds():
         ###############################################
         ## H A R D W A R E   M E A S U R E M E N T S ##
         ###############################################
-        self.hardware_management = Hardware_Management(os_version["name"])
+        self.hardware_management = Hardware_Management(os_version)
         # todo: add a thread that sends intermittent data
 
         #############################################
