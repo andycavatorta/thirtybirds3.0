@@ -32,11 +32,6 @@ server = SimpleWebSocketServer('', 8000, SimpleChat)
 x = threading.Thread(target=server.serveforever)
 x.start()
 
-
-def init():
-
-
-
 while True:
     t = time.time()
     server.websocketclass.sendToClients(server.websocketclass,str(t))

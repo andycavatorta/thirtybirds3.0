@@ -71,7 +71,7 @@ path_containing_tb_and_app = os.path.split(tb_path)[0]
 
 from .network import host_info
 from .network import thirtybirds_connection
-#from .network import http_interface
+from .network import dashboard
 from .lib.version_control.software_management import Software_Management
 from .reporting.exceptions import capture_exceptions
 from .reporting.status.status_receiver import Status_Receiver 
@@ -184,12 +184,6 @@ class Thirtybirds():
         self.hardware_management = Hardware_Management(os_version)
         # todo: add a thread that sends intermittent data
 
-        #############################################
-        ## S T A R T   H T T P   I N T E R F A C E ##
-        #############################################
-        #if self.hostname == self.controller_hostname:
-        #    self.http_connector = http_interface.http_interface
-
         #####################################
         ## T O P   L E V E L   A C C E S S ##
         #####################################
@@ -243,6 +237,11 @@ class Thirtybirds():
         self.activate_exception_capture_type =  None # tbd
         self.deactivate_exception_capture_type =  None # tbd
         
+        ###################################
+        ## S T A R T   D A S H B O A R D ##
+        ###################################
+        self.settings = settings
+        self.dashboard_server = dashboard.init(self)
 
     def set_up_logging(self, app_path):
         log_directory = "{0}/logs/".format(app_path)
@@ -320,12 +319,20 @@ class Thirtybirds():
             status_details["args"]
         )
         self.status_logger.error(status_details_str)
+        print(status_details_str)
+        try:
+            self.dashboard_server.status_receiver(status_details_str)
+        except AttributeError:
+            pass
+        """
         if self.hostname != self.controller_hostname:
             try:
                 #print(type(status_details), status_details)
-                self.connection.send("__status__", status_details)
+                #self.connection.send("__status__", status_details)
+                self.dashboard_server.receive_status
             except AttributeError:
                 pass
+        """
         
     def exception_receiver(self, exception):
         # to do : add logging, if in config

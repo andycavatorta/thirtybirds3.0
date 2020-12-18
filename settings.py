@@ -44,4 +44,8 @@ class Update_Thirtybirds():
     repo_name = "thirtybirds_3"
     branch = "master"
 
+class Dashboard():
+    http_port = 8000
+    websocket_port = 8001
+
 

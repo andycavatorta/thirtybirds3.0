@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+         "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="3000"
+     height="80"
+     version="1.1"
+     onload="init();">
+  <defs>
+    <link href="dash_proto.css" type="text/css" rel="stylesheet" xmlns="http://www.w3.org/1999/xhtml"/>
+  </defs>
+
+<script type="text/javascript"  xlink:href="dash_proto.js" />
+
+<g id="top_level"  />
+</svg>
+
+

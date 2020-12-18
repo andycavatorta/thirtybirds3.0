@@ -21,19 +21,14 @@ class Hardware_Management():
         self.os_version = os["version"]
         
     def get_core_temp(self):
-
         if self.os_name == "ubuntu":
             sensors.init()
             max_temp = 0
             sensors.init()
-
-
             for chip in sensors.iter_detected_chips():
                 for feature in chip:
-                    print('  %s: %.2f' % (feature.label, feature.get_value()))
                     if "temp" in feature.label:
                         core_temp = int(feature.get_value())
-                        print(core_temp)
                         if core_temp > max_temp:
                             max_temp = core_temp
             sensors.cleanup()
@@ -81,7 +76,6 @@ class Hardware_Management():
         lines_from_bash_str = process.stdout
         lines_from_bash_l = lines_from_bash_str.split("\n")
         for line in lines_from_bash_l:
-            print(line)
             if line.startswith("MemFree:"):
                 line_l_free = line.split()
                 kb_free = float(line_l_free[1])
