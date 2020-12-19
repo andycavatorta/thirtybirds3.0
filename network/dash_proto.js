@@ -272,7 +272,8 @@
   function websocket_connect(){
     try{
         //console.log("readyState=",websocket.readyState)
-        websocket = new WebSocket("ws://localhost:8001/");
+        url = "ws://" + location.hostname +":8001/"
+        websocket = new WebSocket(url);
         websocket.onopen = function(evt) { websocket_open(evt) };
         websocket.onclose = function() { websocket_close() };
         websocket.onmessage = function(evt) { websocket_message_handler(evt) };
