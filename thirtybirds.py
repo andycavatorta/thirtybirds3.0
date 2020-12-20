@@ -370,7 +370,7 @@ class Thirtybirds():
             pass
 
     def network_message_receiver(self, topic, message, origin, destination):
-        #print("network_message_receiver",topic, message)
+        print("network_message_receiver",topic, message, origin, destination)
         if topic == b"__status__":
             if self.hostname == self.controller_hostname:
                 # todo: this should not have to be here.  don't send time struct through JSON or switch to Python serializer
