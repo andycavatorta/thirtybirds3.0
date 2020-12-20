@@ -370,7 +370,7 @@ class Thirtybirds():
             pass
 
     def network_message_receiver(self, topic, message, origin, destination):
-        print("network_message_receiver",topic, message, origin, destination)
+        #print("network_message_receiver",topic, message, origin, destination)
         if topic == b"__status__":
             if self.hostname == self.controller_hostname:
                 # todo: this should not have to be here.  don't send time struct through JSON or switch to Python serializer
@@ -381,11 +381,13 @@ class Thirtybirds():
             #log this    
         else:
             try:
-                #print("--1",topic, message)
+                print("--1",topic, message)
                 self.network_message_callback(topic, message, origin, destination)
-                #print("--2",topic, message)
-            except TypeError:
+                print("--2",topic, message)
+            except TypeError as e:
+                print(e)
                 pass
+                #todo: report error
 
     def collate_settings(self, base_settings_module, optional_settings_module):
         base_settings_classnames = [i for i in dir(base_settings_module) if not (i[:2]=="__" and i[-2:]=="__")] 
