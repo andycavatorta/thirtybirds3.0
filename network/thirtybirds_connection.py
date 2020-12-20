@@ -117,6 +117,7 @@ class Thirtybirds_Connection():
 
     def subscription_message_receiver(self, topic, message, origin, destination):
         # topics with dunder names are for internal TB use 
+        print("subscription_message_receiver",topic, message, origin, destination)
         if topic == b"__heartbeat__":
             self.detect_disconnect.record_heartbeat(message)
         else:
