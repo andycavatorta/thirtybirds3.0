@@ -40,6 +40,7 @@ class Hardware_Management():
 
     def get_wifi_strength(self):
         process = subprocess.run('iwconfig', shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
+
         lines_from_bash_str = process.stdout
         lines_from_bash_l = lines_from_bash_str.split("\n")
         for line in lines_from_bash_l:

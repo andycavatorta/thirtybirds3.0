@@ -47,5 +47,6 @@ class Update_Thirtybirds():
 class Dashboard():
     http_port = 8000
     websocket_port = 8001
+    refresh_interval = 10
 
 
