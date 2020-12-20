@@ -66,7 +66,7 @@ class Receiver_Queue(threading.Thread):
             if destination in ("", self.hostname):
                 origin = payload["origin"]
                 message = payload["message"]
-                self.callback(topic, message, origin, destination)
+            self.callback(topic, message, origin, destination)
 
 @capture_exceptions.Class
 class Pub_Sub(threading.Thread):
