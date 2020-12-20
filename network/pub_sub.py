@@ -62,13 +62,11 @@ class Receiver_Queue(threading.Thread):
     def run(self):
         while True:
             topic, payload = self.queue.get(True)
-            
-            print("Receiver_Queue", topic, payload)
             destination  = payload["destination"]
-            if destination in ("", self.hostname):
-                origin = payload["origin"]
-                message = payload["message"]
-            self.callback(topic, message, origin, destination)
+            #if destination in ("", self.hostname):
+            #    origin = payload["origin"]
+            #    message = payload["message"]
+            self.callback(topic, payload["message"], payload["origin"], payload["destination"])
 
 @capture_exceptions.Class
 class Pub_Sub(threading.Thread):
