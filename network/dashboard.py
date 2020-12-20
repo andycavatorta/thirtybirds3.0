@@ -63,7 +63,7 @@ class Message_Receiver(threading.Thread):
     def run(self):
         while True:
             try:
-                topic, message = self.queue.get(block=True, timeout=10)
+                topic, message = self.queue.get(block=True, timeout=self.tb_ref.settings.Dashboard.refresh_interval)
                 #print("message",message)
                 message_json = json.dumps([topic, message])
                 self.websocket.sendToClients(self.websocket,message_json)
