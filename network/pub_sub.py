@@ -62,6 +62,8 @@ class Receiver_Queue(threading.Thread):
     def run(self):
         while True:
             topic, payload = self.queue.get(True)
+            
+            print("Receiver_Queue", topic, payload)
             destination  = payload["destination"]
             if destination in ("", self.hostname):
                 origin = payload["origin"]
@@ -133,7 +135,6 @@ class Pub_Sub(threading.Thread):
     def run(self):
         while True:
             incoming = self.sub_socket.recv()
-            print("pubsub", incoming)
             topic, message_json = incoming.split(b' ', 1)
             self.receiver_queue.add_to_queue(topic, json.loads(message_json))
 
