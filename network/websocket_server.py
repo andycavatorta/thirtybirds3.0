@@ -36,4 +36,3 @@ while True:
     t = time.time()
     server.websocketclass.sendToClients(server.websocketclass,str(t))
     time.sleep(1)
-    print(t)

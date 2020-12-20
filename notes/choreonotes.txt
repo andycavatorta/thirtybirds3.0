@@ -1,0 +1,96 @@
+
+
+motorname.home()
+motorname.coast()
+motorname.speed()
+motorname.power()
+motorname.position()
+motorname.config()
+
+choreo.add_motor(name, config)
+choreo.add_motor(name, config)
+choreo.add_motor(name, config)
+choreo.add_motor(name, config)
+
+choreo.go("@1.6/2.5/ramp_up /Gb3/speed 43.2rpm {maxSpeed:10degPerSec}")
+
+does choreo have a mapping for roboteq or roboteq have a mapping for choreo?
+
+message = choreo.query
+message = choreo.subscription
+message = choreo.message(
+    start_time=,
+    end_time=,
+    duration=,
+    clock_name=,
+    curve=,
+    path="",
+    action=, #speed, relative position, absolute_position, torque, coast, speed_phase
+    value=,
+    units=,
+)
+
+actions:
+    speed, 
+    speed_phase
+    relative_position, 
+    absolute_position, 
+    torque, 
+    coast,
+    home,
+    oscillate,
+    config
+
+config-safety
+    serial_timeout
+    closed_loop_error
+    short_circuit_detection_threshold
+    overvoltage_hysteresis
+    overvoltage_threshold
+    undervoltage_threshold
+    brake activation_delay
+    current_limit
+    current_limit_action
+    current_limit_min_period
+    encoder_high_count_limit
+    encoder_high_limit_action
+    encoder_low_count_limit
+    encoder_low_limit_action
+    stall_detection
+
+config-serial
+    pwm_freq
+    serial_echo
+    rs232_bit_rate
+
+config-pid
+    integral_cap
+    differential_gain
+    integral_gain
+    proportional_gain
+
+config-motor:
+    operating_mode
+    motor_acceleration_rate
+    motor_deceleration_rate
+    default_velocity_in_position_mode
+    max_power_forward
+    max_power_reverse
+    max_rpm
+    acceleration
+    deceleration
+
+config-encoder
+    encoder_ppr_value
+    encoder_counter
+
+query:
+    supply_volts
+    motor_power_output_applied
+    motor_amps
+    expected_motor_position
+    encoder_counter_absolute
+    encoder_counter_relative
+    encoder_motor_speed_in_rpm
+    closed_loop_error
+    temperature

@@ -46,9 +46,14 @@ class Send_Queue(threading.Thread):
 
 @capture_exceptions.Class
 class Receiver_Queue(threading.Thread):
-    def __init__(self, callback):
+    def __init__(
+        self, 
+        callback,
+        hostname
+        ):
         threading.Thread.__init__(self)
         self.callback = callback
+        self.hostname = hostname  
         self.queue = queue.Queue()
 
     def add_to_queue(self, topic, message):
@@ -61,7 +66,7 @@ class Receiver_Queue(threading.Thread):
             if destination in ("", self.hostname):
                 origin = payload["origin"]
                 message = payload["message"]
-                self.callback(topic, message, origin)
+                self.callback(topic, message, origin, destination)
 
 @capture_exceptions.Class
 class Pub_Sub(threading.Thread):
@@ -96,7 +101,7 @@ class Pub_Sub(threading.Thread):
         self.send_queue.daemon = True
         self.send_queue.start()
 
-        self.receiver_queue = Receiver_Queue(self.message_receiver)
+        self.receiver_queue = Receiver_Queue(self.message_receiver, hostname)
         self.receiver_queue.daemon = True
         self.receiver_queue.start()
 
