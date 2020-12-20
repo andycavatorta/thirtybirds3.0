@@ -381,11 +381,11 @@ class Thirtybirds():
             #log this    
         else:
             try:
-                print("--1",topic, message)
+                #print("--1",topic, message)
                 self.network_message_callback(topic, message, origin, destination)
-                print("--2",topic, message)
+                #print("--2",topic, message)
             except TypeError as e:
-                print(e)
+                #print(e)
                 pass
                 #todo: report error
 
