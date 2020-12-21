@@ -1008,6 +1008,7 @@ class Motor(threading.Thread):
         !S 2500 : set motor 1 position velocity to 2500 RPM
         """
         serial_command = "!S {} {}".format(self.channel, speed)
+        print("set_motor_speed", speed, serial_command)
         self.board.add_to_queue(serial_command)
 
     def set_acceleration(self, acceleration): # 0-50000. Acceleration value is in 0.1 * RPM per second.  
