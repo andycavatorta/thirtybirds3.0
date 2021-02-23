@@ -50,43 +50,43 @@ class Main(threading.Thread):
                                 continue
                             if midi_o.control == 5: 
                                 self.midi_receiver("oxygen88",["slider7", midi_o.value], self.hostname, self.hostname)
-                                pass
+                                continue
                             if midi_o.control == 84:
                                 self.midi_receiver("oxygen88",["slider8", midi_o.value], self.hostname, self.hostname)
-                                pass
+                                continue
                             if midi_o.control == 7:
                                 self.midi_receiver("oxygen88",["slider9", midi_o.value], self.hostname, self.hostname)
-                                pass
+                                continue
                             if midi_o.control == 75:
                                 self.midi_receiver("oxygen88",["knob1", midi_o.value], self.hostname, self.hostname)
-                                pass
+                                continue
                             if midi_o.control == 76:
                                 self.midi_receiver("oxygen88",["knob2", midi_o.value], self.hostname, self.hostname)
-                                pass
+                                continue
                             if midi_o.control == 92:
                                 self.midi_receiver("oxygen88",["knob3", midi_o.value], self.hostname, self.hostname)
-                                pass
+                                continue
                             if midi_o.control == 95:
                                 self.midi_receiver("oxygen88",["knob4", midi_o.value], self.hostname, self.hostname)
-                                pass
+                                continue
                             if midi_o.control == 10:
                                 self.midi_receiver("oxygen88",["knob5", midi_o.value], self.hostname, self.hostname)
-                                pass
+                                continue
                             if midi_o.control == 77:
                                 self.midi_receiver("oxygen88",["knob6", midi_o.value], self.hostname, self.hostname)
-                                pass
+                                continue
                             if midi_o.control == 78:
                                 self.midi_receiver("oxygen88",["knob7", midi_o.value], self.hostname, self.hostname)
-                                pass
+                                continue
                             if midi_o.control == 78:
                                 self.midi_receiver("oxygen88",["knob8", midi_o.value], self.hostname, self.hostname)
-                                pass
+                                continue
                             if midi_o.control == 1:
                                 self.midi_receiver("oxygen88",["modwheel", midi_o.value], self.hostname, self.hostname)
-                                pass
+                                continue
                         if midi_o.type == "pitchwheel":
                                 self.midi_receiver("oxygen88",["pitchwheel", midi_o.pitch], self.hostname, self.hostname)
-                                pass
+                                continue
             except OSError as e:
                 input_names = mido.get_input_names()
                 for input_name in input_names:

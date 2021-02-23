@@ -96,7 +96,7 @@ class Hardware_Management():
             "system_disk":self.get_system_disk(),
             "core_temp":self.get_core_temp(),
             "os_version":[self.os_name,self.os_version],
-            "wifi_strength":self.get_wifi_strength()
+            "wifi_strength":0 #self.get_wifi_strength()
         }
         return report
 

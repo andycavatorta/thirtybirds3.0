@@ -1,3 +1,8 @@
+sudo adduser thirtybirds
+sudo usermod -aG sudo thirtybirds
+
+# log in as thirtybirds
+
 sudo apt-get update
 sudo apt-get upgrade
 ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
