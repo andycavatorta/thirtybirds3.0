@@ -419,7 +419,6 @@ class Board(threading.Thread):
         self.states["RSBR"] = values_str
         event.set()
 
-
     ##############################################
     #    MEMORY                                  #
     ##############################################
