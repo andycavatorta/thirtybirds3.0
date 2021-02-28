@@ -27,15 +27,23 @@ class AMT203():
       first_result = self.spiRW([0x00],0,20)
 
   def get_position(self):
+    print(">>> 1")
     first_result = self.spiRW([0x10],0,20)
+    print(">>> 2")
     while first_result[0] != 16:
+      print(">>> 3")
       first_result = self.spiRW([0x00],0,20)
+    print(">>> 4")
     msb_result = self.spiRW([0x00],0,20)
+    print(">>> 5")
     lsb_result = self.spiRW([0x00],0,20)
+    print(">>> 6")
     # msb_bin = bin(msb_result[0]<<8)[2:]
     # lsb_bin = bin(lsb_result[0])[2:]
     final_result = (msb_result[0]<<8 | lsb_result[0])
+    print(">>> 7")
     self.clean_buffer()
+    print(">>> 8")
     return final_result
 
   def set_zero(self):
