@@ -31,7 +31,6 @@ class AMT203():
     first_result = self.spiRW([0x10],0,20)
     print(">>> 2")
     while first_result[0] != 16:
-      print(">>> 3")
       first_result = self.spiRW([0x00],0,20)
     print(">>> 4")
     msb_result = self.spiRW([0x00],0,20)
