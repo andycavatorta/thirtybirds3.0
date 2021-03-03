@@ -3,12 +3,9 @@ import time
 import RPi.GPIO as GPIO
 
 
-def gpio_reset( pin_num ):
-    GPIO.setup( pin_num, GPIO.OUT)
-    GPIO.output( pin_num, GPIO.HIGH)
 
 class AMT203():
-  def __init__(self, bus=0, deviceId=0, cs=5, speed_hz=1000000):   # cs=16
+  def __init__(self, bus=0, deviceId=0, cs=8, speed_hz=1000000):   # cs=16
     self.deviceId = deviceId
     self.bus = bus
     self.cs = cs
@@ -26,14 +23,6 @@ class AMT203():
       self.open = False
       print("Could not connect to SPI device")
 
-    # silly cleanup
-    gpio_reset(  8 )
-    gpio_reset(  7 )
-    gpio_reset( 18 )
-    gpio_reset( 17 )
-    gpio_reset( 16 )
-    gpio_reset(  5 )
-
     GPIO.setup(self.cs, GPIO.OUT)
     GPIO.output(self.cs, GPIO.HIGH)
 
@@ -41,13 +30,9 @@ class AMT203():
 
     while True:
       first_result = self.spiRW([0x00],self.speed,20)
-      #first_result = self.spiRW([0x00],0,20)
       print( first_result )
       if first_result[ 0 ] == 165:
         break;
-    #first_result = self.spiRW([0x00],0,20)
-    #while first_result[0] != 165:
-    #  first_result = self.spiRW([0x00],0,20)
 
   def get_position(self):
     #GPIO.output(self.cs, GPIO.LOW)
@@ -61,7 +46,6 @@ class AMT203():
 
     # keep sending NOP/0x00 as long as response is nop_a5
     while True:
-    #while first_result[0] != 16:
       first_result = self.spiRW([0x00],self.speed,20)
       attempts = attempts + 1
       if attempts > 100: 
@@ -85,17 +69,12 @@ class AMT203():
         #print(" yuk2 ")
         #return -1
         pass
-      #if first_result[ 0 ] == 0x10:
 
-    #msb_result = self.spiRW([0x00],self.speed,20)
     #print(">>> 5")
     lsb_result = self.spiRW([0x00],self.speed,20)
     print( hex( msb_result[ 0 ] ), ', ', end ='' )
     print( hex( lsb_result[ 0 ] ), ', ',  end = '' )
-    #print()
     #print(">>> 6")
-    # msb_bin = bin(msb_result[0]<<8)[2:]
-    # lsb_bin = bin(lsb_result[0])[2:]
     final_result = (msb_result[0]<<8 | lsb_result[0])
     #print(">>> 7")
     self.clean_buffer()
