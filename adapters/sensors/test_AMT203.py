@@ -2,6 +2,7 @@
 
 import time
 from enum import IntEnum
+import itertools
 
 import RPi.GPIO as GPIO
 import AMT203_absolute_encoder as encoder
@@ -37,14 +38,31 @@ class ChipSelects( IntEnum ):
 GPIO.setmode(GPIO.BCM)
 silly_but_vital_gpio_init()
 
-amt = encoder.AMT203( cs = ChipSelects.MOT6 )
 
-amt.clean_buffer()
+print( list( ChipSelects ) )
+
+
+# Car = Carousel
+car = {}
+for ( idx, chipsel ) in zip ( range( 0, 6 ), ChipSelects ):
+    car[ idx ] = encoder.AMT203( cs = chipsel )
+    car[ idx ].clean_buffer()
+#car[ 0 ] = encoder.AMT203( cs = ChipSelects.MOT1 )
+#car[ 1 ] = encoder.AMT203( cs = ChipSelects.MOT2 )
+
+#car[ 0 ].clean_buffer()
+#car[ 1 ].clean_buffer()
 
 
 while True:
-    pos = amt.get_position()
-    print( pos )
+
+
+    for idx in range( 0, 6):
+
+        pos = car[ idx ].get_position()
+        print( pos, ", ", end='' )
+    
+    print()
     time.sleep( .1 )
     
 

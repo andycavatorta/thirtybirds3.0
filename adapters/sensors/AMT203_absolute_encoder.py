@@ -30,7 +30,7 @@ class AMT203():
 
     while True:
       first_result = self.spiRW([0x00],self.speed,20)
-      print( first_result )
+      #print( first_result )
       if first_result[ 0 ] == 165:
         break;
 
@@ -41,7 +41,7 @@ class AMT203():
 
     # send rd_pos, expect nop_a5 return value
     first_result = self.spiRW([0x10],self.speed,20)  
-    print( 'first res: ', first_result[ 0 ], ', ', end='' )
+    #print( 'first res: ', first_result[ 0 ], ', ', end='' )
     #print(">>> 2")
 
     # keep sending NOP/0x00 as long as response is nop_a5
@@ -53,14 +53,14 @@ class AMT203():
         return -1
       
       if first_result[ 0 ] != 0x10:
-        print( 'got: ', first_result[0], ', ', end ='' )
+        #print( 'got: ', first_result[0], ', ', end ='' )
         break;
     #print(">>> 4")
 
     attempts = 0
     while True:
       tmp = self.spiRW( [0x00], self.speed, 20 )
-      print( tmp, ',, ', end='' )
+      #print( tmp, ',, ', end='' )
       if tmp[ 0 ] == 0x10:
         msb_result = self.spiRW( [0x00], self.speed, 20 )
         break;
@@ -72,8 +72,8 @@ class AMT203():
 
     #print(">>> 5")
     lsb_result = self.spiRW([0x00],self.speed,20)
-    print( hex( msb_result[ 0 ] ), ', ', end ='' )
-    print( hex( lsb_result[ 0 ] ), ', ',  end = '' )
+    #print( hex( msb_result[ 0 ] ), ', ', end ='' )
+    #print( hex( lsb_result[ 0 ] ), ', ',  end = '' )
     #print(">>> 6")
     final_result = (msb_result[0]<<8 | lsb_result[0])
     #print(">>> 7")
@@ -97,7 +97,7 @@ class AMT203():
 
   def spiRW(self, values, speed, delay):
     GPIO.output(self.cs, GPIO.LOW)
-    time.sleep(.01)
+    #time.sleep(.01)
     msg = self.spi.xfer(values, speed, delay)
     GPIO.output(self.cs, GPIO.HIGH)
     return msg
