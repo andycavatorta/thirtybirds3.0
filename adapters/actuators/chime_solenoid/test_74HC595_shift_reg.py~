@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+
+import time
+
+import HC595_shift_reg as shifter
+
+reg = shifter.HC595()
+
+val = 0
+while True:
+    reg.write( val )
+    print( val )
+    time.sleep( 1 )
+    val = val + 1
+    
+    
+
+
+
+
+
