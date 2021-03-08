@@ -1847,9 +1847,9 @@ class Macro(threading.Thread):
         if limit_switch_pin is not None and limit_switch_direction != 0:
             GPIO.setup(limit_switch_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         self.limit_switch_reached = False
-        self.motor.set_encoder_high_count_limit(2147000000)  
-        self.motor.set_encoder_low_count_limit(2147000000)
-        self.motor.set_max_rpm(65535)
+        #self.motor.set_encoder_high_count_limit(0)  
+        #self.motor.set_encoder_low_count_limit(2147000000)
+        #self.motor.set_max_rpm(65535)
         self.start()
 
     def get_limit_switch(self):
