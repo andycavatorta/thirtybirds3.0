@@ -1903,11 +1903,11 @@ class Macro(threading.Thread):
 
     def set_speed(self, speed):
         self.motor.set_operating_mode(1)
-        self.motor.set_motor_acceleration_rate(50000)
-        self.motor.set_motor_deceleration_rate(50000)
+        #self.motor.set_motor_acceleration_rate(50000)
+        #self.motor.set_motor_deceleration_rate(50000)
         self.motor.set_motor_speed(speed)
 
-    def go_to_relative_position(self, position, speed=1000):
+    def go_to_relative_position(self, position):
         self.motor.set_max_rpm(60)
         self.motor.set_operating_mode(3)
         start_position = int(self.motor.get_encoder_counter_absolute(True))
@@ -2108,6 +2108,7 @@ class Controllers(threading.Thread):
                         self.motors_config[motor_name],
                         self.status_receiver
                     )
+                    """
                     try:
                         self.macros[motor_name] = Macro(
                             motor_name, 
@@ -2123,6 +2124,7 @@ class Controllers(threading.Thread):
                             self.motors[motor_name], 
                             self.status_receiver
                         )
+                    """
     def get_device_id_list(self):
         matching_mcu_serial_device_paths = []
         for mcu_serial_device_path_pattern in self.mcu_serial_device_path_patterns:
