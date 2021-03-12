@@ -8,10 +8,11 @@ def gpio_reset( pin_num ):
     GPIO.output( pin_num, GPIO.HIGH)
 
 class HC595():
-  def __init__(self, bus=0, deviceId=0, oe_=8, speed_hz=1000000):  
+  def __init__(self, bus=0, deviceId=0, oe_=8, load_clock=25, speed_hz=1000000):  
     self.deviceId = deviceId
     self.bus = bus
     self.oe_ = oe_
+    self.load_clock = load_clock
     self.speed = speed_hz
     GPIO.setmode(GPIO.BCM)
     try:
@@ -27,14 +28,22 @@ class HC595():
       self.open = False
       print("Could not connect to SPI device")
 
-    # enable output
+    # config output and load_clock
     GPIO.setup( self.oe_, GPIO.OUT )
+    GPIO.setup( self.load_clock, GPIO.OUT )
+
+    # keep enabled while running... maybe consider turning it off when values are zero...
     GPIO.output( self.oe_, GPIO.LOW )
+
+    # initial value    
+    GPIO.output( self.load_clock, GPIO.LOW )
 
 
   def write( self, val ):
+    GPIO.output( self.load_clock, GPIO.HIGH )
     self.spiRW( val, self.speed, 20 )  
     time.sleep( 0.000001 )
+    GPIO.output( self.load_clock, GPIO.LOW )
 
   def spiRW(self, values, speed, delay):
     #print("values are: ", values )
