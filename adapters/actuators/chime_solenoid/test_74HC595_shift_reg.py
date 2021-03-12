@@ -34,35 +34,46 @@ val = [ 0 ]
 lfo = 3.141596
 
 period = 0.215
-while True:
 
-    lfo = lfo + .17
-    mag = 0.5 + 0.5 * math.cos( lfo )
-    print( mag )
-    ontime = 0.008 + 0.007 * mag
-    offtime = period - ontime
+# this is put inside a try block so it can clean up 
+# the output enable.  very important to protect relays from
+# being left on!!!!
+try:
+    while True:
+        lfo = lfo + .17
+        mag = 0.5 + 0.5 * math.cos( lfo )
+        print( mag )
+        ontime = 0.008 + 0.007 * mag
+        offtime = period - ontime
     
-    val[ 0 ] = 0;
+        val[ 0 ] = 0;
     
-    for trk in range( 0, 5 ):
+        for trk in range( 0, 5 ):
     
-        if seq[ trk ][ seq_step ] == 1:    
-            val[ 0 ] = val[ 0 ] + ( 1 << trk )
-            #val[ 0 ] = val[ 0 ] | 0xff
+            if seq[ trk ][ seq_step ] == 1:    
+                val[ 0 ] = val[ 0 ] + ( 1 << trk )
+                #val[ 0 ] = val[ 0 ] | 0xff
             
-    print( val )
-    reg.write( val )
-    time.sleep( ontime )
+        print( val )
+        reg.write( val )
+        time.sleep( ontime )
 
-    val[ 0 ] = 0x00
-    print( val )
-    reg.write( val )
-    time.sleep( offtime )
+        val[ 0 ] = 0x00
+        print( val )
+        reg.write( val )
+        time.sleep( offtime )
 
-    seq_step = seq_step + 1
-    if seq_step >= 16:
-        seq_step = 0
-        
+        seq_step = seq_step + 1
+        if seq_step >= 16:
+            seq_step = 0
+
+except KeyboardInterrupt:       
+    print( "You've exited the program." )
+
+finally:
+    print( "cleaning up GPIO now." )
+    reg.disable_Output_Enable()    
+    
     
     
     

@@ -8,10 +8,10 @@ def gpio_reset( pin_num ):
     GPIO.output( pin_num, GPIO.HIGH)
 
 class HC595():
-  def __init__(self, bus=0, deviceId=0, cs=25, speed_hz=1000000):  
+  def __init__(self, bus=0, deviceId=0, oe_=8, speed_hz=1000000):  
     self.deviceId = deviceId
     self.bus = bus
-    self.cs = cs
+    self.oe_ = oe_
     self.speed = speed_hz
     GPIO.setmode(GPIO.BCM)
     try:
@@ -27,26 +27,23 @@ class HC595():
       self.open = False
       print("Could not connect to SPI device")
 
-    # silly cleanup
-    #gpio_reset(  8 )
-    #gpio_reset(  7 )
-    #gpio_reset( 18 )
-    #gpio_reset( 17 )
-    #gpio_reset( 16 )
-    #gpio_reset(  5 )
-
-    GPIO.setup(self.cs, GPIO.OUT)
-    GPIO.output(self.cs, GPIO.LOW)
+    # enable output
+    GPIO.setup( self.oe_, GPIO.OUT )
+    GPIO.output( self.oe_, GPIO.LOW )
 
 
   def write( self, val ):
     self.spiRW( val, self.speed, 20 )  
-    GPIO.output(self.cs, GPIO.HIGH)
     time.sleep( 0.000001 )
-    GPIO.output(self.cs, GPIO.LOW)
 
   def spiRW(self, values, speed, delay):
     #print("values are: ", values )
     #msg = self.spi.xfer( values, speed, delay )
     self.spi.writebytes( values )
+    
+  def disable_Output_Enable( self ):
+    # enable output
+    GPIO.setup( self.oe_, GPIO.OUT )
+    GPIO.output( self.oe_, GPIO.HIGH )
+    
 
