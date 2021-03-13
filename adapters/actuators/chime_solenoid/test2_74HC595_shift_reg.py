@@ -67,7 +67,7 @@ try:
             time.sleep( ontime )
 
             #register_states[ 0 ] = 0x00
-            shift_register.write( [0] )
+            shift_register.write( [128] )
             time.sleep( offtime )
 
 except KeyboardInterrupt:       
