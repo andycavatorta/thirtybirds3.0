@@ -75,20 +75,21 @@ try:
         offtime = period - ontime
     
         val[ 0 ] = 0;
-    
+            
         for trk in range( 0, 5 ):
     
             if seq[ trk ][ seq_step ] == 1:    
                 val[ 0 ] = val[ 0 ] + ( 1 << trk )
                 #val[ 0 ] = val[ 0 ] | 0xff
-            
+        
+        print( ontime, offtime )    
         print( val )
-        reg.write( val )
+        #reg.write( val )
         time.sleep( ontime )
 
         val[ 0 ] = 0x00
         print( val )
-        reg.write( val )
+        #reg.write( val )
         time.sleep( offtime )
 
         seq_step = seq_step + 1
