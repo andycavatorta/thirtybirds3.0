@@ -61,7 +61,7 @@ seq_step = 0
 val = [ 0 ]
 lfo = 3.141596
 
-period = 0.215
+period = 0.8
 
 # this is put inside a try block so it can clean up 
 # the output enable.  very important to protect relays from
@@ -71,7 +71,7 @@ try:
         lfo = lfo + .17
         mag = 0.5 + 0.5 * math.cos( lfo )
         print( mag )
-        ontime = 0.008 + 0.007 * mag
+        ontime = 0.004 + 0.007 * mag
         offtime = period - ontime
     
         val[ 0 ] = 0;
