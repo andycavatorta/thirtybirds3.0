@@ -50,7 +50,7 @@ sequence = [
     [0,0,1,0,0]
 ]
 
-register_states_off = [ 0 ]
+register_state = [ 0 ]
 period = 0.8
 
 try:
@@ -67,7 +67,7 @@ try:
             time.sleep( ontime )
 
             #register_states[ 0 ] = 0x00
-            shift_register.write( register_states_off )
+            shift_register.write( [0] )
             time.sleep( offtime )
 
 except KeyboardInterrupt:       
