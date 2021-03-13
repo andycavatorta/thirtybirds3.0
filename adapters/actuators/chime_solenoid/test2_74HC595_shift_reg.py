@@ -50,7 +50,7 @@ sequence = [
     [0,0,1,0,0]
 ]
 
-register_state = [ 0 ]
+register_states = [ 0 ]
 period = 0.8
 
 try:
