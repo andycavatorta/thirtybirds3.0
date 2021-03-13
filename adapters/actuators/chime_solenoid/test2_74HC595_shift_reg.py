@@ -55,7 +55,7 @@ val = [ 0 ]
 period = 0.8
 
 try:
-    ontime = 0.100
+    ontime = 0.0100
     offtime = period - ontime
     while True:
         for beat in sequence:
