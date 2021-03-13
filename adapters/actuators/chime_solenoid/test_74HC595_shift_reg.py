@@ -85,11 +85,11 @@ try:
         print( ontime, offtime )    
         reg.write( val )
         time.sleep( ontime )
-        print( val )
+         rint( val )
 
         val[ 0 ] = 0x00
         print( val )
-        #reg.write( val )
+        reg.write( val )
         time.sleep( offtime )
 
         seq_step = seq_step + 1
