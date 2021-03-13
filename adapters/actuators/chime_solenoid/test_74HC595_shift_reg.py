@@ -72,6 +72,7 @@ try:
         mag = 0.5 + 0.5 * math.cos( lfo )
         print( mag )
         ontime = 0.004 + 0.007 * mag
+        ontime = 0.100 + 0.100 * mag
         offtime = period - ontime
     
         val[ 0 ] = 0;
@@ -84,12 +85,13 @@ try:
         
         print( ontime, offtime )    
         reg.write( val )
-        time.sleep( ontime )
         print( val )
+        time.sleep( ontime )
+        
 
         val[ 0 ] = 0x00
-        print( val )
         reg.write( val )
+        print( val )
         time.sleep( offtime )
 
         seq_step = seq_step + 1
