@@ -85,7 +85,7 @@ try:
         print( ontime, offtime )    
         reg.write( val )
         time.sleep( ontime )
-         rint( val )
+        print( val )
 
         val[ 0 ] = 0x00
         print( val )
