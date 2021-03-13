@@ -50,8 +50,7 @@ sequence = [
     [0,0,1,0,0]
 ]
 
-seq_step = 0
-val = [ 0 ]
+register_states_off = [ 0 ]
 period = 0.8
 
 try:
@@ -59,16 +58,16 @@ try:
     offtime = period - ontime
     while True:
         for beat in sequence:
-            val[ 0 ] = 0;
+            register_states[ 0 ] = 0;
             for channel_number in range( 0, 5 ):
                 if beat[channel_number] == 1:
-                    val[ 0 ] = val[ 0 ] + ( 1 << channel_number )
+                    register_states[ 0 ] = register_states[ 0 ] + ( 1 << channel_number )
             
-            shift_register.write( val )
+            shift_register.write( register_states )
             time.sleep( ontime )
-            
-            #val[ 0 ] = 0x00
-            #shift_register.write( val )
+
+            #register_states[ 0 ] = 0x00
+            shift_register.write( register_states_off )
             time.sleep( offtime )
 
 except KeyboardInterrupt:       
