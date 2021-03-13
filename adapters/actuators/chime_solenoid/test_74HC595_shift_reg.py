@@ -83,9 +83,9 @@ try:
                 #val[ 0 ] = val[ 0 ] | 0xff
         
         print( ontime, offtime )    
-        print( val )
-        #reg.write( val )
+        reg.write( val )
         time.sleep( ontime )
+        print( val )
 
         val[ 0 ] = 0x00
         print( val )
