@@ -67,8 +67,8 @@ try:
             shift_register.write( val )
             time.sleep( ontime )
             
-            val[ 0 ] = 0x00
-            shift_register.write( val )
+            #val[ 0 ] = 0x00
+            #shift_register.write( val )
             time.sleep( offtime )
 
 except KeyboardInterrupt:       
