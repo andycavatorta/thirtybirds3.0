@@ -20,7 +20,7 @@ class gpio_based():
     #print("values are: ", chime_vec )
     for idx in range( 0, 5 ):
       outval = GPIO.LOW
-      if chime_vec[ cou ] != 0:
+      if chime_vec[ idx ] != 0:
         outval = GPIO.HIGH
       gpio = self.chimeGPIOs[ idx ]
       GPIO.output( gpio, outval )
@@ -28,7 +28,7 @@ class gpio_based():
   # disable GPIOs driving
   def disable_GPIOs( self ):
     for gpio in self.chimeGPIOs:
+      GPIO.output( gpio, GPIO.LOW )
       GPIO.setup( gpio, GPIO.IN )
-      GPIO.output( gpio, GPIO.HIGH )
     
 

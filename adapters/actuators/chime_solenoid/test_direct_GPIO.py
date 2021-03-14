@@ -73,16 +73,17 @@ try:
         print( ontime, offtime )    
     
         # turn em on from seq array
+        chime_vec = []
         for trk in range( 0, 5 ):
-            chime_vec[ trk ] = seq[ trk ][ seq_step ]
+            chime_vec.append( seq[ trk ][ seq_step ] )
         print( chime_vec )
         chimes.write( chime_vec )
         time.sleep( ontime )
         
         # turn em off
-        val = [ 0, 0, 0, 0, 0 ]
-        chimes.write( val )
-        print( val )
+        chime_vec = [ 0, 0, 0, 0, 0 ]
+        print( chime_vec )
+        chimes.write( chime_vec )
         time.sleep( offtime )
 
         seq_step = seq_step + 1
