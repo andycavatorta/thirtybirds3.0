@@ -6,7 +6,7 @@ import math
 import direct_GPIO as solenoid_driver
 #import HC595_shift_reg as shifter
 
-chimes = solenoid_driver.gpio_based()
+chimes = solenoid_driver.gpio_based( chimeGPIOs = [ 8, 12, 13, 14, 15 ] )
 #reg = shifter.HC595()
 
 
@@ -94,7 +94,7 @@ except KeyboardInterrupt:
 
 finally:
     print( "cleaning up GPIO now." )
-    reg.disable_GPIOs()    
+    chimes.disable_GPIOs()    
     
     
     
