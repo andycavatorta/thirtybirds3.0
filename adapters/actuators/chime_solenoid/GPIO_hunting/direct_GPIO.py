@@ -18,7 +18,7 @@ class gpio_based():
   # send a vector of 5 ints, no bit packing etc. to GPIOs
   def write( self, chime_vec ):
     #print("values are: ", chime_vec )
-    for idx in range( 0, 5 ):
+    for idx in range( 0, len( chime_vec ) ):
       outval = GPIO.LOW
       if chime_vec[ idx ] != 0:
         outval = GPIO.HIGH
