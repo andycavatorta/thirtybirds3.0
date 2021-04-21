@@ -6,16 +6,15 @@ import math
 import direct_GPIO as solenoid_driver
 #import HC595_shift_reg as shifter
 
-chimes = solenoid_driver.gpio_based( chimeGPIOs = [ 17, 12, 13, 18, 16 ] )
-#reg = shifter.HC595()
+chimes = solenoid_driver.gpio_based( chimeGPIOs = [ 27, 23, 24, 25, 26 ] )
 
 
 # attraction mode
-seq = [ [ 1, 0, 1, 0,  1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 1, 0, 1,  0, 1, 0, 1,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0 ],
-        [ 0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 1, 0,  1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 1, 0, 1,  0, 1, 0, 1,  0, 0, 0, 0 ],
-        [ 0, 1, 0, 1,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 1, 0,  1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 1, 0, 1 ],
-        [ 0, 0, 0, 0,  0, 1, 0, 1,  0, 1, 0, 1,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 1, 0,  1, 0, 1, 0,  0, 0, 0, 0,  0, 0, 0, 0 ],
-        [ 0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 1, 0, 1,  0, 1, 0, 1,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  1, 0, 1, 0,  1, 0, 1, 0 ] ]
+seq = [ [ 1, 0, 0, 0, 0  ],
+        [ 0, 1, 0, 0, 0  ],
+        [ 0, 0, 1, 0, 0  ],
+        [ 0, 0, 0, 1, 0  ],
+        [ 0, 0, 0, 0, 1  ] ]
 """
 # score
 seq = [ [ 1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0 ],
@@ -74,12 +73,14 @@ try:
         print( mag )
 
         BPM = 80 + 86 * mag2
+        BPM = 80
         period = 60 / BPM
         
         # compute ontime
         # these are in seconds.  e.g. 0.10  = 100 millisec
         #ontime = 0.004 + 0.007 * mag   # very subtle cross over hardest part
         ontime = 0.100 + 0.100 * mag   # pretty hard 10ms is ideal
+        ontime = 0.020
         #ontime = 0.006 + 0.006 * mag   # should be pretty optimal
         #ontime = period / 2 # good for testing  to see on scope
         offtime = period - ontime     # auto-calc offtime to maintain BPM as specified above
@@ -101,7 +102,7 @@ try:
         time.sleep( offtime )
 
         seq_step = seq_step + 1
-        if seq_step >= 40:
+        if seq_step >= 5:
             seq_step = 0
 
 except KeyboardInterrupt:       
