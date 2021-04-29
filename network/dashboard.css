@@ -9,6 +9,19 @@
   font-size: 16;
 }
 
+#dataTable{
+    display: flex;
+    justify-content: space-evenly;
+    width: 100vw;
+    flex-wrap: wrap;
+}
+
+.metric{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 20vh;
+}
 
 .tableTextElement{
     display: flex;
@@ -46,7 +59,16 @@
   font-family: "Jura";
   font-weight: bold;
 }
-th{
+
+.label{
+    font-family: "Jura";
+    font-weight: 700;
+    font-size: 20px;
+    stroke:#999999;
+    border-bottom: 3px solid #999999; 
+}
+
+th {
   font-family: "Jura";
   font-weight: 700;
   font-size: 20px;

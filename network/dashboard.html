@@ -20,62 +20,54 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
     <div id="top_level">
-        <table>
-            <tr>
-                <th>Hostname</th>
-                <th>Local IP</th>
-                <th>Global IP</th>
-                <th>Connections</th>
-                <th>OS Version</th>
-                <th>Core Temp</th>
-                <th>Scripts Version</th>
-                <th>System CPU</th>
-                <th>System Disk</th>
-
-                <th>Memory Free</th>
-                <th>Wifi Strength</th>
-
-
-            </tr>
-            <tr>
-                <td>
-                    <p id="hostname" class="tableTextElement"></p>
-                </td>
-                <td>
-                    <p id="local_ip" class="tableTextElement"></p>
-                </td>
-                <td>
-                    <p id="global_ip" class="tableTextElement"></p>
-                </td>
-                <td>
-                    <p id="connections" class="tableTextElement"></p>
-                </td>
-                <td>
-                    <p id="os_version" class="tableTextElement"></p>
-                </td>
-                <td>
-                    <p id="core_temp" class="tableTextElement"></p>
-                </td>
-   
-                <td>
-                    <p id="scripts_version" class="tableTextElement"></p>
-                </td>
-                <td>
-                    <p id="system_cpu" class="tableTextElement"></p>
-                </td>
-                <td>
-                    <p id="system_disk" class="tableTextElement"></p>
-                </td>
-                <td>
-                    <p id="memory_free" class="tableTextElement"></p>
-                </td>
-                <td>
-                    <p id="wifi_strength" class="tableTextElement"></p>
-                </td>
+        <div id="dataTable">
+            <div class="metric">
+                <div class="label tableTextElement"><p>Hostname</p></div>
+                <div id="hostname" class="tableTextElement"></div>
+            </div>
+            <div class="metric">
+                <div class="label tableTextElement"><p>Local IP</p></div>
+                <div id="local_ip" class="tableTextElement"></div>
+            </div>
+            <div class="metric">
+                <div class="label tableTextElement"><p>Global IP</p></div>
+                <div id="global_ip" class="tableTextElement"></div>
+            </div>
+            <div class="metric">
+                <div class="label tableTextElement"><p>Connections</p></div>
+                <div id="connections" class="tableTextElement"></div>
+            </div>
+            <div class="metric">
+                <div class="label tableTextElement"><p>OS Version</p></div>
+                <div id="os_version" class="tableTextElement"></div>
+            </div>
+            <div class="metric">
+                <div class="label tableTextElement"><p>Core Temp</p></div>
+                <div id="core_temp" class="tableTextElement"></div>
+            </div>
+            <div class="metric">
+                <div class="label tableTextElement"><p>Scripts Version</p></div>
+                <div id="scripts_version" class="tableTextElement"></div>
+            </div>
+            <div class="metric">
+                <div class="label tableTextElement"><p>System CPU</p></div>
+                <div id="system_cpu" class="tableTextElement"></div>
+            </div>
+            <div class="metric">
+                <div class="label tableTextElement"><p>System Disk</p></div>
+                <div id="system_disk" class="tableTextElement"></div>
+            </div>
+            <div class="metric">
+                <div class="label tableTextElement"><p>Memory Free</p></div>
+                <div id="memory_free" class="tableTextElement"></div>
+            </div>
+            <div class="metric">
+                <div class="label tableTextElement"><p>Wifi Strength</p></div>
+                <div id="wifi_strength" class="tableTextElement"></div>
+            </div>
+        </div>
 
 
-            </tr>
-        </table>
     </div>
 
     <script src="dashboard.js"></script>
