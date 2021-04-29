@@ -30,15 +30,20 @@ def up_n_down( ledIdx ):
     # shown next).
 
 
+
+def back_n_forth():
+    while True:
+        up_n_down( 0 )
+        up_n_down( 24 )
+        up_n_down( 48 )
+        up_n_down( 72 )
+        up_n_down( 48 )
+        up_n_down( 24 )
+
 # initialize overhead display
 ovdisp = td.tlc_5947(  digitalio.DigitalInOut( board.D5 ), driverCount = 4 )
 
-while True:
-
-    up_n_down( 0 )
-    up_n_down( 24 )
-    up_n_down( 48 )
-    up_n_down( 72 )
+back_n_forth()
     
 
 
