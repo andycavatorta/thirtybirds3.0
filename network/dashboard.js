@@ -291,6 +291,7 @@ function websocket_connect() {
         websocket.send("Sending test message from dashboard client")
     }
     catch (e) {
+        console.log(e)
         console.log("connection failed")
     }
 }
