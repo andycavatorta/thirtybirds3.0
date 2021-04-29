@@ -12,16 +12,20 @@ body{
     font-family: Arial, Helvetica, sans-serif;
 }
 
+#top_level{
+  margin-left: 2vw;
+}
+
 .dataTable{
     display: flex;
-    justify-content: space-evenly;
-    width: 100vw;
+    justify-content: space-between;
+    width: 90vw;
     flex-wrap: wrap;
 }
 
 .buttonRow{
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   width: 50vw;
   flex-wrap: wrap;
 }
@@ -42,12 +46,20 @@ button{
     justify-content: center;
 }
 
+
 #exceptionsContainer{
+  display: none;
+  
+  
+}
+
+#exceptions{
     display: flex;
     justify-content: flex-start;
     width: 40vw;
     height: 30vh;
     border: 2px solid #999999;
+    
 }
 
 
@@ -65,21 +77,7 @@ button{
   stroke-width:1;
   font-family: "Jura";
   font-size: 16;
-}
-.button_toggle:hover {
-  fill:#cccccc;
-}
-.button_toggle:active {
-  fill:#bbbbbb;
-  stroke-width:2;
-}
-
-.text_header_rect{
-  fill:#ffffff;
-  stroke:#000000;
-  stroke-width:0;
-  font-family: "Jura";
-  font-weight: bold;
+  width: 8vw;
 }
 
 .label{
@@ -90,31 +88,4 @@ button{
     border-bottom: 3px solid #999999; 
 }
 
-th {
-  font-family: "Jura";
-  font-weight: 700;
-  font-size: 20px;
-  stroke:#999999;
-  border-bottom: 3px solid #999999;
-}
-.form_text_input{
-  border-width: 0px;
-  border-bottom-width: 1px;
-  font-family: "Jura";
-  font-weight: bold;
-  font-size: 16;
-  width:190px;
-  height:20px;
-}
-.form_text_area{
-  display:block;
-  border-width: 1px;
-  font-family: "Jura";
-  font-weight: bold;
-  font-size: 16;
-  width:98%;
-  height:98%;
-}
-.form_text_input:focus{
-  outline-style: none;
-}
+

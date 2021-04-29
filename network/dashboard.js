@@ -15,6 +15,7 @@ var panel = null;
 var hGrid = [30, 230, 430, 630, 830, 1030, 1230, 1430, 1630, 1830, 2030, 2230, 2430, 2630, 2820];
 var vGrid = [5, 45, 85, 125, 165, 505, 545, 585];
 var websocket;
+var exceptionDisplayState = false;
 
 /* ========== U T I L S ========== */
 function setAttributes(obj, att_a) {
@@ -30,6 +31,15 @@ function foo(e) {
 }
 
 
+
+
+
+/* ========== V I E W S ========== */
+
+function toggleExceptions() {
+    exceptionDisplayState = !exceptionDisplayState
+    document.getElementById("exceptionsContainer").style.display = exceptionDisplayState ? "flex" : "none"
+}
 
 /* ========== D A T A ========== */
 
