@@ -14,6 +14,7 @@ var HTML_NS = "http://www.w3.org/1999/xhtml"
 var panel = null;
 var hGrid = [30, 230, 430, 630, 830, 1030, 1230, 1430, 1630, 1830, 2030, 2230, 2430, 2630, 2820];
 var vGrid = [5, 45, 85, 125, 165, 505, 545, 585];
+var websocket;
 
 /* ========== U T I L S ========== */
 function setAttributes(obj, att_a) {
@@ -28,175 +29,6 @@ function foo(e) {
     console.log(this)
 }
 
-function Button(parent, label, action_ref, x, y, w) {
-    if (!w) {
-        var w = 190;
-    }
-    var h = 30;
-    this.button = document.createElementNS(SVG_NS, "g");
-    var rect = document.createElementNS(SVG_NS, "rect");
-    setAttributes(rect, [
-        ["x", x],
-        ["y", y],
-        ["width", w],
-        ["height", h],
-        ["class", "button"]
-    ]
-    )
-    var label_ns = document.createElementNS(SVG_NS, "text");
-    setAttributes(label_ns, [
-        ["x", x + 10],
-        ["y", y + 20],
-        ["width", w],
-        ["font-family", "Jura"],
-        ["font-size", "16"],
-        ["fill", "#000000"],
-        ["text-align", "center"]
-    ]
-    )
-    var label_tn = document.createTextNode(label)
-    label_ns.appendChild(label_tn);
-    this.button.appendChild(label_ns);
-    this.button.appendChild(rect);
-    rect.style.cursor = "pointer";
-    label_ns.style.cursor = "pointer";
-    this.button.addEventListener("click", action_ref, true);
-    parent.appendChild(this.button)
-}
-
-function Text_Header(parent, label, x, y, w) {
-    if (!w) {
-        var w = 190;
-    }
-    var h = 30;
-    this.button = document.createElementNS(SVG_NS, "g");
-    var rect = document.createElementNS(SVG_NS, "rect");
-    setAttributes(rect, [
-        ["x", x],
-        ["y", y],
-        ["width", w],
-        ["height", h],
-        ["class", "text_header_rect"]
-    ]
-    )
-    var label_1_ns = document.createElementNS(SVG_NS, "text");
-    setAttributes(label_1_ns, [
-        ["x", x + 10],
-        ["y", y + 20],
-        ["width", w / 2],
-        ["text-align", "center"],
-        ["class", "text_header"]
-    ]
-
-    )
-    label_1_ns.appendChild(document.createTextNode(label));
-    this.button.appendChild(rect);
-    this.button.appendChild(label_1_ns);
-    parent.appendChild(this.button)
-}
-
-function Text_Indicator(parent, x, y, w) {
-    if (!w) {
-        var w = 190;
-    }
-    var h = 30;
-    this.button = document.createElementNS(SVG_NS, "g");
-    this.button.label_ns = document.createElementNS(SVG_NS, "text");
-    setAttributes(this.button.label_ns, [
-        ["x", x + 10],
-        ["y", y + 20],
-        ["width", w / 2],
-        ["font-family", "Jura"],
-        ["font-size", "16"],
-        ["fill", "#000000"],
-        ["text-align", "center"]
-    ]
-    )
-    this.button.appendChild(this.button.label_ns);
-    this.button.update = function (_text) {
-
-        while (this.label_ns.hasChildNodes()) {
-            this.label_ns.removeChild(this.label_ns.firstChild)
-        }
-        this.label_ns.appendChild(document.createTextNode(_text));
-    }
-    parent.appendChild(this.button)
-}
-
-function Form_Text_Input(parent, action_ref, placeholder, x, y, w) {
-    if (!w) {
-        var w = 190;
-    }
-    var fo = document.createElementNS(SVG_NS, "foreignObject")
-    fo.style = "x:" + x + ";y:" + y + ";width:192;height:24;"
-    //fo.setAttribute('x',x)
-    //fo.setAttribute('y',y)
-    var d = document.createElement('div')
-    d.setAttribute('xmlns', HTML_NS)
-    d.style = "display:block; x:1; y:1; width:192; height:22;";
-    d.innerHTML = '<input>asdf</input>';
-    var text_input = d.firstChild;
-    text_input.setAttribute('class', 'form_text_input');
-    text_input.setAttribute('placeholder', placeholder);
-    fo.appendChild(d)
-    text_input.addEventListener("change", action_ref);
-    panel.appendChild(fo)
-}
-
-function Button(parent, label, action_ref, x, y, w) {
-    if (!w) {
-        var w = 190;
-    }
-    var h = 30;
-    this.button = document.createElementNS(SVG_NS, "g");
-    var rect = document.createElementNS(SVG_NS, "rect");
-    setAttributes(rect, [
-        ["x", x],
-        ["y", y],
-        ["width", w],
-        ["height", h],
-        ["class", "button"]
-    ]
-    )
-    var label_ns = document.createElementNS(SVG_NS, "text");
-    setAttributes(label_ns, [
-        ["x", x + 10],
-        ["y", y + 20],
-        ["width", w],
-        ["font-family", "Jura"],
-        ["font-size", "16"],
-        ["fill", "#000000"],
-        ["text-align", "center"]
-    ]
-    )
-    var label_tn = document.createTextNode(label)
-    label_ns.appendChild(label_tn);
-    this.button.appendChild(label_ns);
-    this.button.appendChild(rect);
-    rect.style.cursor = "pointer";
-    label_ns.style.cursor = "pointer";
-    this.button.addEventListener("click", action_ref, true);
-    parent.appendChild(this.button)
-}
-
-function Text_Area(parent, x, y, height, width) {
-    var fo = document.createElementNS(SVG_NS, "foreignObject")
-    fo.style = "x:" + x + ";y:" + y + ";width:" + width + ";height:" + height + ";";
-    var d = document.createElement('div')
-    d.setAttribute('xmlns', HTML_NS)
-    d.style = "display:block; x:1; y:1; width:" + width + "px;height:" + height + "px;";
-    d.innerHTML = '<textarea></textarea>';
-    this.text_area = d.firstChild;
-    this.text_area.setAttribute('class', 'form_text_area');
-    this.text_area.style.height = height;
-    this.text_area.style.width = width;
-
-    fo.appendChild(d)
-    panel.appendChild(fo)
-    this.update = function (data) {
-        this.text_area.value = data;
-    }
-}
 
 
 /* ========== D A T A ========== */
@@ -206,60 +38,7 @@ var data = {
     status_messages: ""
 }
 
-/* ========== V I E W  ========== */
 
-var view = {
-    make_labels: function () {
-        var h_pos = 0;
-        new Text_Header(panel, "host", hGrid[h_pos], vGrid[0]);
-        new Text_Header(panel, "exceptions", hGrid[++h_pos], vGrid[0]);
-        new Text_Header(panel, "git_timestamp", hGrid[++h_pos], vGrid[0]);
-        new Text_Header(panel, "scripts version", hGrid[++h_pos], vGrid[0]);
-        new Text_Header(panel, "os_version", hGrid[++h_pos], vGrid[0]);
-        new Text_Header(panel, "local ip", hGrid[++h_pos], vGrid[0]);
-        new Text_Header(panel, "global ip", hGrid[++h_pos], vGrid[0]);
-        new Text_Header(panel, "connections", hGrid[++h_pos], vGrid[0]);
-        new Text_Header(panel, "core_temp", hGrid[++h_pos], vGrid[0]);
-        new Text_Header(panel, "system_cpu", hGrid[++h_pos], vGrid[0]);
-        new Text_Header(panel, "system_uptime", hGrid[++h_pos], vGrid[0]);
-        new Text_Header(panel, "system_disk", hGrid[++h_pos], vGrid[0]);
-        new Text_Header(panel, "memory_free", hGrid[++h_pos], vGrid[0]);
-        new Text_Header(panel, "wifi_strength", hGrid[++h_pos], vGrid[0]);
-        h_pos = 0;
-        new Text_Header(panel, "exceptions", hGrid[h_pos], vGrid[3]);
-        new Text_Header(panel, "status", hGrid[h_pos], vGrid[5]);
-    },
-    make_indicators: function () {
-        view.ti_hostname = new Text_Indicator(panel, hGrid[0], vGrid[1])
-        view.ti_exceptions = new Text_Indicator(panel, hGrid[1], vGrid[1])
-        view.ti_git_timestamp = new Text_Indicator(panel, hGrid[2], vGrid[1])
-        view.ti_scripts_version = new Text_Indicator(panel, hGrid[3], vGrid[1])
-        view.ti_os_version = new Text_Indicator(panel, hGrid[4], vGrid[1])
-        view.ti_local_ip = new Text_Indicator(panel, hGrid[5], vGrid[1])
-        view.ti_global_ip = new Text_Indicator(panel, hGrid[6], vGrid[1])
-        view.ti_connections = new Text_Indicator(panel, hGrid[7], vGrid[1])
-        view.ti_core_temp = new Text_Indicator(panel, hGrid[8], vGrid[1])
-        view.ti_system_cpu = new Text_Indicator(panel, hGrid[9], vGrid[1])
-        view.ti_system_uptime = new Text_Indicator(panel, hGrid[10], vGrid[1])
-        view.ti_system_disk = new Text_Indicator(panel, hGrid[11], vGrid[1])
-        view.ti_memory_free = new Text_Indicator(panel, hGrid[12], vGrid[1])
-        view.ti_wifi_strength = new Text_Indicator(panel, hGrid[13], vGrid[1])
-    },
-    outer_container_expanded: true,
-    outer_container_expansion: function () {
-        var outer_container = document.getElementsByTagName('svg')[0];
-        outer_container.setAttribute('height', (view.outer_container_expanded) ? 1250 : 80);
-        view.outer_container_expanded = !view.outer_container_expanded;
-    },
-    make_buttons: function () {
-        view.toggle_button = new Button(panel, " ", view.outer_container_expansion, 5, vGrid[1], 20);
-        view.reboot_button = new Button(panel, "reboot", foo, hGrid[0], vGrid[2]);
-        view.shutdown_button = new Button(panel, "shutdown", foo, hGrid[1], vGrid[2]);
-        view.tb_github_button = new Button(panel, "pull from github", foo, hGrid[2], vGrid[2]);
-        view.tb_scripts_button = new Button(panel, "run update scripts", foo, hGrid[3], vGrid[2]);
-        view.publish_button = new Button(panel, "publish", foo, hGrid[5], vGrid[2]);
-    }
-}
 
 /* ========== C O N T R O L L E R ========== */
 
@@ -300,6 +79,7 @@ function websocket_send(evt) {
     console.log(evt)
 }
 function websocket_open(evt) {
+    console.log("send test websocket message")
     websocket.send("Sending test message from dashboard client")
 
     window.clearInterval(timers.retry_connection)
