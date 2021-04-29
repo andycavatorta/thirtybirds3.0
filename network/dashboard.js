@@ -288,7 +288,6 @@ function websocket_connect() {
         websocket.onclose = function () { websocket_close() };
         websocket.onmessage = function (evt) { websocket_message_handler(evt) };
         websocket.onerror = function (evt) { websocket_error_handler(evt) };
-        websocket.send("Sending test message from dashboard client")
     }
     catch (e) {
         console.log(e)
@@ -301,6 +300,8 @@ function websocket_send(evt) {
     console.log(evt)
 }
 function websocket_open(evt) {
+    websocket.send("Sending test message from dashboard client")
+
     window.clearInterval(timers.retry_connection)
     timers.retry_connection = false;
     console.log(evt)
