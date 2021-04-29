@@ -311,6 +311,8 @@ function websocket_message_handler(evt){
   var topic_data = JSON.parse(evt.data);
   var topic = topic_data[0]
   var data = topic_data[1]
+  console.log(topic)
+  console.log(data)
   switch(topic){
     case "status":
       view.ti_hostname.button.update(data.hostname)
