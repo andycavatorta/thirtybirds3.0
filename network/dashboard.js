@@ -311,9 +311,21 @@ function websocket_close() {
 function updateDashboardValues(data) {
     console.log("Updating values  ")
     document.getElementById("hostname").innerText = data.hostname
-    document.getElementById("localIP").innerText = data.local_ip
+    document.getElementById("local_ip").innerText = data.local_ip
+    document.getElementById("global_ip").innerText = data.global_ip
+    document.getElementById("connections").innerText = data.connections[0]
+    document.getElementById("os_version").innerText = `${data.os_version[0]} ${data.os_version[1]}`
+    
+    document.getElementById("scripts_version").innerText = data.tb_scripts_version
+    document.getElementById("core_temp").innerText = data.core_temp + "C"
 
-    document.getElementById("coreTemp").innerText = data.core_temp
+    document.getElementById("system_cpu").innerText = data.system_cpu + "%"
+    document.getElementById("system_disk").innerText = Math.round(data.system_disk[0]/1000000000)+"GB/"+Math.round(data.system_disk[1]/1000000000)+"GB"
+
+    document.getElementById("memory_free").innerText = Math.round(data.memory_free[0]/1000000000)+"GB/"+Math.round(data.memory_free[1]/1000000000)+"GB"
+    document.getElementById("wifi_strength").innerText = data.wifi_strength
+
+
 
 }
 
@@ -340,7 +352,6 @@ function websocket_message_handler(evt) {
             // view.ti_system_cpu.button.update(data.system_cpu + "%")
             // view.ti_system_uptime.button.update(data.system_uptime)
             // view.ti_system_disk.button.update(Math.round(data.system_disk[0] / 1000000000) + "GB/" + Math.round(data.system_disk[1] / 1000000000) + "GB")
-            // view.ti_memory_free.button.update(Math.round(data.memory_free[0] / 1000000000) + "GB/" + Math.round(data.memory_free[1] / 1000000000) + "GB")
             break;
     }
 }
@@ -378,7 +389,8 @@ function init() {
         "app_git_timestamp": "Thu Apr 22 14:17:14 2021 -0400",
         "hostname" : "dervishes-1",
         "global_ip" : "204.97.222.2",
-        "local_ip": "196.168.5.45"
+        "local_ip": "196.168.5.45",
+        "connections" : [true]
     }
     updateDashboardValues(test_data)
 
