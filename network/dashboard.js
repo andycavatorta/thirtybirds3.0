@@ -141,13 +141,6 @@ function websocket_message_handler(evt) {
             updateDashboardValues(data)
             break;
     }
-    console.log("Sending data back")
-    try {
-    websocket.send("{'a':'Sample Send'}")
-    } catch (e) {
-        console.log("got error in sendings")
-        console.log(e)
-    }
 
 }
 function websocket_error_handler(evt) {
