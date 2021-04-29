@@ -103,6 +103,13 @@ function websocket_close() {
     console.log("closed")
 }
 
+function sendTrigger(command) {
+    console.log("Sending command ", command)
+    websocket.send(command)
+}
+
+
+
 function updateDashboardValues(data) {
     console.log("Updating values  ")
     document.getElementById("hostname").innerText = data.hostname
