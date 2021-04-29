@@ -279,6 +279,7 @@ timers = {
 /* ========== N E T W O R K  ========== */
 
 function websocket_connect() {
+    console.log("connecting to wesockets")
     try {
         //console.log("readyState=",websocket.readyState)
         url = "ws://" + location.hostname + ":8001/"
@@ -287,6 +288,7 @@ function websocket_connect() {
         websocket.onclose = function () { websocket_close() };
         websocket.onmessage = function (evt) { websocket_message_handler(evt) };
         websocket.onerror = function (evt) { websocket_error_handler(evt) };
+        websocket.send("Sending test message from dashboard client")
     }
     catch (e) {
         console.log("connection failed")
@@ -326,8 +328,6 @@ function updateDashboardValues(data) {
     document.getElementById("memory_free").innerText = Math.round(data.memory_free[0]/1000000000)+"GB/"+Math.round(data.memory_free[1]/1000000000)+"GB"
     document.getElementById("wifi_strength").innerText = data.wifi_strength
 
-
-
 }
 
 function websocket_message_handler(evt) {
@@ -343,7 +343,7 @@ function websocket_message_handler(evt) {
             break;
     }
     console.log("Sending data back")
-    websocket.send("Sample Send ")
+    websocket.send("{'a':'Sample Send'}")
 
 }
 function websocket_error_handler(evt) {
