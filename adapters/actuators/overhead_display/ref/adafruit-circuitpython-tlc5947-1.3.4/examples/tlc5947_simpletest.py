@@ -10,6 +10,7 @@ import busio
 import digitalio
 
 import adafruit_tlc5947
+import time
 
 # Define pins connected to the TLC5947
 SCK = board.SCK
@@ -41,7 +42,7 @@ red = tlc5947.create_pwm_out(0)
 green = tlc5947.create_pwm_out(1)
 blue = tlc5947.create_pwm_out(2)
 
-step = 500
+step = 4000
 start_pwm = 0
 end_pwm = 32767  # 50% (32767, or half of the maximum 65535):
 
@@ -51,12 +52,14 @@ while True:
         print("Brightening LED")
         for pwm in range(start_pwm, end_pwm, step):
             print( pwm )
+            time.sleep(.2)
             pin.duty_cycle = pwm
 
         # Dim:
         print("Dimming LED")
         for pwm in range(end_pwm, start_pwm, 0 - step):
             print( pwm )
+            time.sleep(.2)
             pin.duty_cycle = pwm
 
 # Note if auto_write was disabled you need to call write on the parent to
