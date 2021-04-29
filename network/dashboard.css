@@ -8,6 +8,9 @@
   font-family: "Jura";
   font-size: 16;
 }
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
 
 #dataTable{
     display: flex;
@@ -27,6 +30,16 @@
     display: flex;
     justify-content: center;
 }
+
+#exceptionsContainer{
+    display: flex;
+    justify-content: flex-start;
+    width: 40vw;
+    height: 30vh;
+    border: 2px solid #999999;
+}
+
+
 
 .button:hover {
   fill:#cccccc;

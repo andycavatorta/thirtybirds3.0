@@ -294,6 +294,7 @@ function websocket_connect() {
 }
 
 function websocket_send(evt) {
+    websocket.send("Sample data ")
     console.log(evt)
 }
 function websocket_open(evt) {
@@ -339,21 +340,11 @@ function websocket_message_handler(evt) {
     switch (topic) {
         case "status":
             updateDashboardValues(data)
-
-            // view.ti_hostname.button.update(data.hostname)
-            // view.ti_local_ip.button.update(data.local_ip)
-            // view.ti_global_ip.button.update(data.global_ip)
-            // view.ti_connections.button.update(data.connections[0])
-            // view.ti_os_version.button.update(data.os_version[0] + " " + data.os_version[1])
-            // view.ti_scripts_version.button.update(data.tb_scripts_version)
-            // view.ti_git_timestamp.button.update(data.tb_git_timestamp)
-            // view.ti_exceptions.button.update("++")
-            // view.ti_core_temp.button.update(data.core_temp + "C")
-            // view.ti_system_cpu.button.update(data.system_cpu + "%")
-            // view.ti_system_uptime.button.update(data.system_uptime)
-            // view.ti_system_disk.button.update(Math.round(data.system_disk[0] / 1000000000) + "GB/" + Math.round(data.system_disk[1] / 1000000000) + "GB")
             break;
     }
+    console.log("Sending data back")
+    websocket.send("Sample Send ")
+
 }
 function websocket_error_handler(evt) {
     console.log("websocket_error_handler", evt)
