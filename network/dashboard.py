@@ -58,7 +58,7 @@ class Message_Receiver(threading.Thread):
         print("Initialized Dashboard.py")
         self.tb_ref = tb_ref
         self.websocket = _websocket
-        self.websocket.setTBRef(tb_ref)
+        self.websocket.setTBRef(self.websocket, tb_ref)
         threading.Thread.__init__(self)
         self.queue = queue.Queue()
         self.start()
