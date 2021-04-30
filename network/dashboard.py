@@ -73,7 +73,7 @@ class Message_Receiver(threading.Thread):
         status_report["global_ip"] = self.tb_ref.get_global_ip()
         status_report["online_status"] = self.tb_ref.get_online_status()
         status_report["connections"] = self.tb_ref.check_connections()
-        status_report["msg_timestamp"] = datetime.datetime.now()
+        status_report["msg_timestamp"] = str(datetime.datetime.utcnow())
         self.add_to_queue("status",status_report)
 
     def run(self):
