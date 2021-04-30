@@ -80,8 +80,8 @@ class Message_Receiver(threading.Thread):
                 topic, message = self.queue.get(block=True, timeout=self.tb_ref.settings.Dashboard.refresh_interval)
                 # print("message",message)
                 message_json = json.dumps([topic, message])
-                # self.websocket.sendToClients(self.websocket,message_json)
-                self.websocket.sendToClients(message_json)
+                self.websocket.sendToClients(self.websocket,message_json)
+                # self.websocket.sendToClients(message_json)
 
             except queue.Empty:
                 self.generate_system_status()
