@@ -12,8 +12,11 @@ tb_path = os.path.dirname(os.path.realpath(__file__))
 clients = []
 class SimpleChat(WebSocket):
 
-    def __init__(self,tb_ref):
-        print("im in the init of simple chat")
+    # def __init__(self,tb_ref):
+    #     print("im in the init of simple chat")
+    #     self.tb_ref = tb_ref
+
+    def setTBRef(self, tb_ref):
         self.tb_ref = tb_ref
 
     def handleMessage(self):
@@ -55,6 +58,7 @@ class Message_Receiver(threading.Thread):
         print("Initialized Dashboard.py")
         self.tb_ref = tb_ref
         self.websocket = _websocket
+        self.websocket.setTBRef(tb_ref)
         threading.Thread.__init__(self)
         self.queue = queue.Queue()
         self.start()
@@ -104,7 +108,7 @@ def init(tb_ref):
     httpd_thread = threading.Thread(target=httpd.serve_forever)
     httpd_thread.start()    
 
-    server = SimpleWebSocketServer('', tb_ref.settings.Dashboard.websocket_port, SimpleChat(tb_ref))
+    server = SimpleWebSocketServer('', tb_ref.settings.Dashboard.websocket_port, SimpleChat)
     server_thread = threading.Thread(target=server.serveforever)
     server_thread.start()
 
