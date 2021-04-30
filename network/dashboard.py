@@ -12,9 +12,9 @@ tb_path = os.path.dirname(os.path.realpath(__file__))
 clients = []
 class SimpleChat(WebSocket):
 
-    # def __init__(self,tb_ref):
-    #     print("im in the init of simple chat")
-    #     self.tb_ref = tb_ref
+    def __init__(self,tb_ref):
+        print("im in the init of simple chat")
+        self.tb_ref = tb_ref
 
     def handleMessage(self):
        print("got ws message", self.data)
