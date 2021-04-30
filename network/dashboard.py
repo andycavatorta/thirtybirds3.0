@@ -14,6 +14,12 @@ class SimpleChat(WebSocket):
 
     def handleMessage(self):
        print("got ws message", self.data)
+       try:
+         if self.data == "pull_from_github":
+           print("pulling from github")
+           self.tb_pull_from_github()
+       except Exception as e:
+           print("Got Exception", e)
        for client in clients:
           if client != self:
              client.sendMessage(self.address[0] + u' - ' + self.data)
