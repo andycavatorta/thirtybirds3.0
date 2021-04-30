@@ -90,7 +90,12 @@ function websocket_send(evt) {
 }
 function websocket_open(evt) {
     console.log("send test websocket message")
-    websocket.send("Sending test message from dashboard client")
+    try {
+        websocket.send("Sending test message from dashboard client")
+
+    } catch (e){
+        console.log(e)
+    }
 
     window.clearInterval(timers.retry_connection)
     timers.retry_connection = false;
