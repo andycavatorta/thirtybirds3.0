@@ -12,9 +12,9 @@ tb_path = os.path.dirname(os.path.realpath(__file__))
 clients = []
 class SimpleChat(WebSocket):
 
-    # def __init__(self,tb_ref):
-    #     print("im in the init of simple chat")
-    #     self.tb_ref = tb_ref
+    def __init__(self,tb_ref):
+        print("im in the init of simple chat")
+        self.tb_ref = tb_ref
 
     def handleMessage(self):
        print("got ws message", self.data)
@@ -80,7 +80,9 @@ class Message_Receiver(threading.Thread):
                 topic, message = self.queue.get(block=True, timeout=self.tb_ref.settings.Dashboard.refresh_interval)
                 # print("message",message)
                 message_json = json.dumps([topic, message])
-                self.websocket.sendToClients(self.websocket,message_json)
+                # self.websocket.sendToClients(self.websocket,message_json)
+                self.websocket.sendToClients(message_json)
+
             except queue.Empty:
                 self.generate_system_status()
 
