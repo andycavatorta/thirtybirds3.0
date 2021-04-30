@@ -23,7 +23,7 @@ class SimpleChat(WebSocket):
        print("got ws message", self.data)
        trigger_map = {
            "pull_from_github" : self.tb_ref.tb_pull_from_github,
-           "reboot" : self.tb_ref.restart()
+           "reboot" : self.tb_ref.restart
        }
 
        try:
