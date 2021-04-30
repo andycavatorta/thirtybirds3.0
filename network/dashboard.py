@@ -21,14 +21,19 @@ class SimpleChat(WebSocket):
 
     def handleMessage(self):
        print("got ws message", self.data)
-       try:
+       trigger_map = {
+           "pull_from_github" : self.tb_ref.tb_pull_from_github,
+           "reboot" : self.tb_ref.restart()
+       }
 
-         if self.data == "pull_from_github":
-           print("pulling from github")
-           print(self.tb_ref.tb_pull_from_github())
-         if self.data == "reboot":
-           print("pulling restarting")
-           print(self.tb_ref.restart())
+       try:
+         print(trigger_map[self.data]())
+        #  if self.data == "pull_from_github":
+        #    print("pulling from github")
+        #    print(self.tb_ref.tb_pull_from_github())
+        #  if self.data == "reboot":
+        #    print("pulling restarting")
+        #    print(self.tb_ref.restart())
        except Exception as e:
            print("Got Exception", e)
 
