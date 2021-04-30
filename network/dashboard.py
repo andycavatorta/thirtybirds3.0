@@ -5,16 +5,13 @@ import queue
 import time
 import threading
 import socketserver
+import datetime
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
 tb_path = os.path.dirname(os.path.realpath(__file__))
 
 clients = []
 class SimpleChat(WebSocket):
-
-    # def __init__(self,tb_ref):
-    #     print("im in the init of simple chat")
-    #     self.tb_ref = tb_ref
 
     def setTBRef(self, tb_ref):
         self.tb_ref = tb_ref
@@ -28,12 +25,6 @@ class SimpleChat(WebSocket):
 
        try:
          print(trigger_map[self.data]())
-        #  if self.data == "pull_from_github":
-        #    print("pulling from github")
-        #    print(self.tb_ref.tb_pull_from_github())
-        #  if self.data == "reboot":
-        #    print("pulling restarting")
-        #    print(self.tb_ref.restart())
        except Exception as e:
            print("Got Exception", e)
 
@@ -82,6 +73,7 @@ class Message_Receiver(threading.Thread):
         status_report["global_ip"] = self.tb_ref.get_global_ip()
         status_report["online_status"] = self.tb_ref.get_online_status()
         status_report["connections"] = self.tb_ref.check_connections()
+        status_report["msg_timestamp"] = datetime.datetime.now()
         self.add_to_queue("status",status_report)
 
     def run(self):
