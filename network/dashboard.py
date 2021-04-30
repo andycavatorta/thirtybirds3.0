@@ -103,7 +103,7 @@ def init(tb_ref):
     httpd_thread = threading.Thread(target=httpd.serve_forever)
     httpd_thread.start()    
 
-    server = SimpleWebSocketServer('', tb_ref.settings.Dashboard.websocket_port, SimpleChat(tb_ref))
+    server = SimpleWebSocketServer('', tb_ref.settings.Dashboard.websocket_port, SimpleChat)
     server_thread = threading.Thread(target=server.serveforever)
     server_thread.start()
 
