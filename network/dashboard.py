@@ -42,7 +42,7 @@ class SimpleChat(WebSocket):
           client.sendMessage(self.address[0] + u' - disconnected')
 
     def sendToClients(self, message):
-       print("Sending message to clinet : ", message)
+    #    print("Sending message to clinet : ", message)
        for client in clients:
           client.sendMessage(message)
 

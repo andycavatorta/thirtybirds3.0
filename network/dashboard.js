@@ -116,7 +116,7 @@ function sendTrigger(command) {
 
 
 function updateDashboardValues(data) {
-    console.log("Updating values  ")
+   
     document.getElementById("hostname").innerText = data.hostname
     document.getElementById("local_ip").innerText = data.local_ip
     document.getElementById("global_ip").innerText = data.global_ip
@@ -136,7 +136,8 @@ function updateDashboardValues(data) {
 
 function websocket_message_handler(evt) {
     var topic_data = JSON.parse(evt.data);
-    console.log("New websocket msg " + topic_data[1])
+    console.log("New Websocket Message")
+    console.log(topic_data[1])
 
 
     var topic = topic_data[0]
