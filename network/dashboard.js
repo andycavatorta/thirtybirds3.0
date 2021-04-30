@@ -131,6 +131,8 @@ function updateDashboardValues(data) {
 
     document.getElementById("memory_free").innerText = Math.round(data.memory_free[0]/1000000000)+"GB/"+Math.round(data.memory_free[1]/1000000000)+"GB"
     document.getElementById("wifi_strength").innerText = data.wifi_strength
+    document.getElementById("last_seen_timestamp").innerText = data.msg_timestamp
+
 
 }
 
@@ -184,40 +186,10 @@ function init() {
         "hostname" : "dervishes-1",
         "global_ip" : "204.97.222.2",
         "local_ip": "196.168.5.45",
-        "connections" : [true]
+        "connections" : [true],
+        "last_seen_timestamp" : "2021-04-30 22:29:58.782427"
     }
     updateDashboardValues(test_data)
 
 
-    //   var h_pos = 0;
-
-    //   new Form_Text_Input(parent,foo,"topic",hGrid[6],vGrid[2]);
-    //   new Form_Text_Input(parent,foo,"data",hGrid[7],vGrid[2]);
-
-    //   h_pos = 0;
-    //   exception_display = new Text_Area(panel, hGrid[h_pos], vGrid[4], 330, 2800);
-    //   status_display = new Text_Area(panel, hGrid[h_pos], vGrid[6], 330, 2800);
-
-    //   view.ti_hostname.button.update("dervishes-1")
-    //   view.ti_local_ip.button.update("196.168.5.45")
-    //   view.ti_global_ip.button.update("204.97.222.2")
-    //   view.ti_connections.button.update("true")
-    //   view.ti_os_version.button.update("Ubuntu 20")
-    //   view.ti_scripts_version.button.update("8")
-    //   view.ti_git_timestamp.button.update("12 12 12 12 12 ")
-    //   view.ti_exceptions.button.update("++")
-    //   view.ti_core_temp.button.update("3.3vdc")
-    //   view.ti_system_cpu.button.update("34%")
-    //   view.ti_system_uptime.button.update("23452345")
-    //   view.ti_system_disk.button.update("2342354MB")
-    //   view.ti_memory_free.button.update("23463MB")
-    //   view.ti_wifi_strength.button.update("65%")
-
-    //   update_exceptions("exception 1 fdasasdf")
-    //   update_exceptions("exception 2 ccccccccccccc")
-
-    //   update_status("status 1 fdasasdf")
-    //   update_status("status 2 ccccccccccccc")
-
-    //websocket_connect()
 }
