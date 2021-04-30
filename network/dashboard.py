@@ -17,7 +17,7 @@ class SimpleChat(WebSocket):
        try:
          if self.data == "pull_from_github":
            print("pulling from github")
-           self.tb_pull_from_github()
+           self.tb_ref.tb_pull_from_github()
        except Exception as e:
            print("Got Exception", e)
        for client in clients:
