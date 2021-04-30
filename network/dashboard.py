@@ -12,17 +12,22 @@ tb_path = os.path.dirname(os.path.realpath(__file__))
 clients = []
 class SimpleChat(WebSocket):
 
+    def __init__(self,tb_ref):
+        print("im in the init of simple chat")
+        self.tb_ref = tb_ref
+
     def handleMessage(self):
        print("got ws message", self.data)
        try:
+
          if self.data == "pull_from_github":
            print("pulling from github")
            self.tb_ref.tb_pull_from_github()
        except Exception as e:
            print("Got Exception", e)
-       for client in clients:
-          if client != self:
-             client.sendMessage(self.address[0] + u' - ' + self.data)
+       # for client in clients:
+       #    if client != self:
+       #       client.sendMessage(self.address[0] + u' - ' + self.data)
 
     def handleConnected(self):
        print(self.address, 'connected')
@@ -56,6 +61,7 @@ class Message_Receiver(threading.Thread):
         self.queue.put((topic, message))
 
     def generate_system_status(self):
+        self.tb_ref.tb_pull_from_github()
         status_report = self.tb_ref.hardware_management.get_system_status()
         status_report["tb_git_timestamp"] = self.tb_ref.tb_get_git_timestamp()
         status_report["tb_scripts_version"] = self.tb_ref.tb_get_scripts_version()
@@ -95,7 +101,7 @@ def init(tb_ref):
     httpd_thread = threading.Thread(target=httpd.serve_forever)
     httpd_thread.start()    
 
-    server = SimpleWebSocketServer('', tb_ref.settings.Dashboard.websocket_port, SimpleChat)
+    server = SimpleWebSocketServer('', tb_ref.settings.Dashboard.websocket_port, SimpleChat(tb_ref))
     server_thread = threading.Thread(target=server.serveforever)
     server_thread.start()
 
