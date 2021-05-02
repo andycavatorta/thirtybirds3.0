@@ -319,7 +319,7 @@ class Thirtybirds():
             status_details["args"]
         )
         self.status_logger.error(status_details_str)
-        print(status_details_str)
+        #print(status_details_str)
         try:
             self.dashboard_server.status_receiver(status_details_str)
         except AttributeError:
