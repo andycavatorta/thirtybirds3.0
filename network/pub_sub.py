@@ -62,7 +62,6 @@ class Receiver_Queue(threading.Thread):
     def run(self):
         while True:
             topic, payload = self.queue.get(True)
-            print("Receiver_Queue",topic, payload)
             #destination  = payload["destination"]
             #if destination in ("", self.hostname):
             #    origin = payload["origin"]
