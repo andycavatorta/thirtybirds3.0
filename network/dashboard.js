@@ -173,21 +173,21 @@ function init() {
     console.log("established init")
     panel = document.getElementById("top_level");
     test_data = {
-        "system_uptime": "2021-04-29 16:02:33",
+        "system_uptime": "",
         "system_cpu": 0, 
-        "memory_free": [3304296000, 3914088000],
-         "system_disk": [ 2677698560, 7583248384 ], 
-         "core_temp": 47, 
-         "os_version": ["ubuntu", "20.10"], 
+        "memory_free": [0, 0],
+         "system_disk": [ 0, 0 ], 
+         "core_temp": 0, 
+         "os_version": ["Waiting", "For Data"], 
          "wifi_strength": 0,
-        "tb_git_timestamp": "Thu Apr 29 14:06:52 2021 -0400",
+        "tb_git_timestamp": "",
         "tb_scripts_version": 0,
-        "app_git_timestamp": "Thu Apr 22 14:17:14 2021 -0400",
-        "hostname" : "dervishes-1",
-        "global_ip" : "204.97.222.2",
-        "local_ip": "196.168.5.45",
-        "connections" : [true],
-        "last_seen_timestamp" : "2021-04-30 22:29:58.782427"
+        "app_git_timestamp": "",
+        "hostname" : "Waiting For Data",
+        "global_ip" : "0.0.0.0",
+        "local_ip": "0.0.0.0",
+        "connections" : [false],
+        "last_seen_timestamp" : ""
     }
     updateDashboardValues(test_data)
 
