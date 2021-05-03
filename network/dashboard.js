@@ -24,6 +24,51 @@ function setAttributes(obj, att_a) {
     }
 }
 
+let button = document.getElementById("button");
+
+//In Progress Alert Bar 
+function alertHandler() {
+    let alerts = document.getElementById("alert-container");
+    console.log(alerts.childNodes)
+    setTimeout(function () {
+        console.log(alerts.childNodes)
+        alerts.childNodes[0].remove()
+
+    }, 2000);
+
+    if (alerts.childElementCount < 2) {
+        // Create alert box
+        let alertBox = document.createElement("div");
+        alertBox.classList.add("alert-msg", "slide-in");
+
+        // Add message to alert box
+        let alertMsg = document.createTextNode("The button has been clicked!");
+        alertBox.appendChild(alertMsg);
+
+        // Add alert box to parent
+        alerts.insertBefore(alertBox, alerts.childNodes[0]);
+
+    }
+}
+
+button.addEventListener("click", alertHandler);
+
+
+//https://stackoverflow.com/questions/21294302/converting-milliseconds-to-minutes-and-seconds-with-javascript
+function getTimeSinceLastTimestamp(last_seen_timestamp) {
+    console.log("formatting date")
+    console.log(last_seen_timestamp)
+    var lst_date = new Date(last_seen_timestamp)
+    console.log(lst_date)
+    var current_datetime = new Date()
+    console.log(current_datetime)
+    var millis = current_datetime.getTime() - lst_date.getTime()
+    console.log("millis : ",millis)
+    var minutes = Math.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000).toFixed(0);
+    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+  }
+
 /* ========== C O N S T R U C T O R S ========== */
 
 function foo(e) {
@@ -93,7 +138,7 @@ function websocket_open(evt) {
     try {
         websocket.send("Sending test message from dashboard client")
 
-    } catch (e){
+    } catch (e) {
         console.log(e)
     }
 
@@ -116,22 +161,22 @@ function sendTrigger(command) {
 
 
 function updateDashboardValues(data) {
-   
+
     document.getElementById("hostname").innerText = data.hostname
     document.getElementById("local_ip").innerText = data.local_ip
     document.getElementById("global_ip").innerText = data.global_ip
     document.getElementById("connections").innerText = data.connections[0]
     document.getElementById("os_version").innerText = `${data.os_version[0]} ${data.os_version[1]}`
-    
+
     document.getElementById("scripts_version").innerText = data.tb_scripts_version
     document.getElementById("core_temp").innerText = data.core_temp + "C"
 
     document.getElementById("system_cpu").innerText = data.system_cpu + "%"
-    document.getElementById("system_disk").innerText = Math.round(data.system_disk[0]/1000000000)+"GB/"+Math.round(data.system_disk[1]/1000000000)+"GB"
+    document.getElementById("system_disk").innerText = Math.round(data.system_disk[0] / 1000000000) + "GB/" + Math.round(data.system_disk[1] / 1000000000) + "GB"
 
-    document.getElementById("memory_free").innerText = Math.round(data.memory_free[0]/1000000000)+"GB/"+Math.round(data.memory_free[1]/1000000000)+"GB"
+    document.getElementById("memory_free").innerText = Math.round(data.memory_free[0] / 1000000000) + "GB/" + Math.round(data.memory_free[1] / 1000000000) + "GB"
     document.getElementById("wifi_strength").innerText = data.wifi_strength
-    document.getElementById("last_seen_timestamp").innerText = data.msg_timestamp
+    document.getElementById("last_seen_timestamp").innerText = getTimeSinceLastTimestamp(data.msg_timestamp)
 
 
 }
@@ -174,20 +219,20 @@ function init() {
     panel = document.getElementById("top_level");
     test_data = {
         "system_uptime": "",
-        "system_cpu": 0, 
+        "system_cpu": 0,
         "memory_free": [0, 0],
-         "system_disk": [ 0, 0 ], 
-         "core_temp": 0, 
-         "os_version": ["Waiting", "For Data"], 
-         "wifi_strength": 0,
+        "system_disk": [0, 0],
+        "core_temp": 0,
+        "os_version": ["Waiting", "For Data"],
+        "wifi_strength": 0,
         "tb_git_timestamp": "",
         "tb_scripts_version": 0,
         "app_git_timestamp": "",
-        "hostname" : "Waiting For Data",
-        "global_ip" : "0.0.0.0",
+        "hostname": "Waiting For Data",
+        "global_ip": "0.0.0.0",
         "local_ip": "0.0.0.0",
-        "connections" : [false],
-        "last_seen_timestamp" : ""
+        "connections": [false],
+        "msg_timestamp": "2021-05-03 15:56:59.974411"
     }
     updateDashboardValues(test_data)
 

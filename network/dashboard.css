@@ -130,3 +130,52 @@ button{
 }
 
 
+
+#alert-container {
+  z-index: 1;
+}
+#alert-container .alert-msg {
+  background: #fff;
+  border: 1px solid #ddd;
+  top: 15px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  left: 25px;
+  padding: 15px;
+  position: absolute;
+  z-index: -100px;
+}
+#alert-container .alert-msg:before {
+  color: #60c354;
+  content: "\f06a";
+  font-family: "Font Awesome 5 Free";
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-right: 10px;
+  vertical-align: sub;
+}
+.slide-in {
+  animation-name: slideIn;
+  animation-duration: 0.8s;
+}
+@keyframes slideIn {
+  from {
+    transform: translateX(-400px);
+ }
+  to {
+    transform: translateX(0);
+ }
+}
+.slide-out {
+  animation-name: slideOut;
+  animation-duration: 0.8s;
+}
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+ }
+  to {
+    transform: translateY(80px);
+    opacity: 0;
+ }
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body onload="init();">
+    <h1>ThirtyBirds Panopticon</h1>
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <div id="">
+        <iframe src="http://192.168.0.18:8000/dashboard.html" height="150" width="1900" title="Pinball Matrix"> </iframe>
+        <iframe src="http://192.168.0.5:8000/dashboard.html" height="150" width="1900" title="Pinball Game 1"> </iframe>
+        <iframe src="http://192.168.0.16:8000/dashboard.html" height="150" width="1900" title="Pinball Display 1"> </iframe>
+        <iframe src="http://192.168.0.7:8000/dashboard.html" height="150" width="1900" title="Pinball Display 1"> </iframe>
+        <iframe src="http://192.168.0.17:8000/dashboard.html" height="150" width="1900" title="Pinball Display 1"> </iframe>
+
+        <div id="exceptionsContainer">
+            <div id="exceptions">
+                <h4>Exceptions</h4>
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+
+</html>
