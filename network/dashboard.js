@@ -54,6 +54,11 @@ function alertHandler() {
 button.addEventListener("click", alertHandler);
 
 
+Date.prototype.addHours = function(h) {
+    this.setTime(this.getTime() + (h*60*60*1000));
+    return this;
+  }
+
 //https://stackoverflow.com/questions/21294302/converting-milliseconds-to-minutes-and-seconds-with-javascript
 function getTimeSinceLastTimestamp(last_seen_timestamp) {
     console.log("formatting date")
@@ -61,6 +66,7 @@ function getTimeSinceLastTimestamp(last_seen_timestamp) {
     var lst_date = new Date(last_seen_timestamp)
     console.log(lst_date)
     var current_datetime = new Date()
+    current_datetime.addHours(4)
     console.log(current_datetime)
     var millis = current_datetime.getTime() - lst_date.getTime()
     console.log("millis : ",millis)
@@ -150,7 +156,7 @@ function websocket_close() {
     if (timers.retry_connection == false) {
         //timers.retry_connection = window.setInterval(try_to_connect, 1000);
     }
-    console.log("closed")
+    // console.log("closed")
 }
 
 function sendTrigger(command) {
@@ -183,8 +189,8 @@ function updateDashboardValues(data) {
 
 function websocket_message_handler(evt) {
     var topic_data = JSON.parse(evt.data);
-    console.log("New Websocket Message")
-    console.log(topic_data[1])
+    // console.log("New Websocket Message")
+    // console.log(topic_data[1])
 
 
     var topic = topic_data[0]
