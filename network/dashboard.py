@@ -13,6 +13,7 @@ tb_path = os.path.dirname(os.path.realpath(__file__))
 clients = []
 class SimpleChat(WebSocket):
 
+    # There may be a more graceful way of doing this
     def setTBRef(self, tb_ref):
         self.tb_ref = tb_ref
 
@@ -20,7 +21,9 @@ class SimpleChat(WebSocket):
        print("got ws message", self.data)
        trigger_map = {
            "pull_from_github" : self.tb_ref.tb_pull_from_github,
-           "reboot" : self.tb_ref.restart
+           "reboot" : self.tb_ref.restart,
+           "shutdown" : self.tb_ref.shutdown,
+           "run_update_scripts": self.tb_ref.tb_run_update_scripts
        }
 
        try:
