@@ -72,7 +72,10 @@ function getTimeSinceLastTimestamp(last_seen_timestamp) {
     console.log("millis : ",millis)
     var minutes = Math.floor(millis / 60000);
     var seconds = ((millis % 60000) / 1000).toFixed(0);
-    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+
+    var minSeconds = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+    console.log(minSeconds)
+    return minSeconds;
   }
 
 /* ========== C O N S T R U C T O R S ========== */
@@ -238,7 +241,7 @@ function init() {
         "global_ip": "0.0.0.0",
         "local_ip": "0.0.0.0",
         "connections": [false],
-        "msg_timestamp": "2021-05-03 15:56:59.974411"
+        "msg_timestamp": "2021-05-03 17:45:29.605893"
     }
     updateDashboardValues(test_data)
 
