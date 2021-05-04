@@ -130,6 +130,15 @@ button{
 }
 
 
+.dangerValue {
+  background-color: red;
+}
+
+.healthyValue {
+  background-color: green;
+}
+
+
 
 #alert-container {
   z-index: 1;

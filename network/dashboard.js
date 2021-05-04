@@ -16,6 +16,7 @@ var hGrid = [30, 230, 430, 630, 830, 1030, 1230, 1430, 1630, 1830, 2030, 2230, 2
 var vGrid = [5, 45, 85, 125, 165, 505, 545, 585];
 var websocket;
 var exceptionDisplayState = false;
+var THIRTYSECONDS = 30000
 
 /* ========== U T I L S ========== */
 function setAttributes(obj, att_a) {
@@ -60,23 +61,35 @@ Date.prototype.addHours = function(h) {
   }
 
 //https://stackoverflow.com/questions/21294302/converting-milliseconds-to-minutes-and-seconds-with-javascript
-function getTimeSinceLastTimestamp(last_seen_timestamp) {
-    console.log("formatting date")
-    console.log(last_seen_timestamp)
-    var lst_date = new Date(last_seen_timestamp)
-    console.log(lst_date)
-    var current_datetime = new Date()
-    current_datetime.addHours(4)
-    console.log(current_datetime)
-    var millis = current_datetime.getTime() - lst_date.getTime()
-    console.log("millis : ",millis)
-    var minutes = Math.floor(millis / 60000);
-    var seconds = ((millis % 60000) / 1000).toFixed(0);
+// In Progress Clean way of Showing last timestamp
+// function getTimeSinceLastTimestamp(last_seen_timestamp) {
+//     console.log("formatting date")
+//     console.log(last_seen_timestamp)
+//     var lst_date = new Date(last_seen_timestamp)
+//     console.log(lst_date)
+//     var current_datetime = new Date()
+//     current_datetime.addHours(4)
+//     console.log(current_datetime)
+//     var millis = current_datetime.getTime() - lst_date.getTime()
 
-    var minSeconds = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-    console.log(minSeconds)
-    return minSeconds;
-  }
+
+//     if (millis > THIRTYSECONDS) {
+//         document.getElementById("last_seen_timestamp").classList.remove("healthyValue")
+//         document.getElementById("last_seen_timestamp").classList.add("dangerValue")
+//     } else {
+//         document.getElementById("last_seen_timestamp").classList.remove("dangerValue")
+//         document.getElementById("last_seen_timestamp").classList.add("healthyValue")
+
+//     }
+
+//     console.log("millis : ",millis)
+//     var minutes = Math.floor(millis / 60000);
+//     var seconds = ((millis % 60000) / 1000).toFixed(0);
+
+//     var minSeconds = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+//     console.log(minSeconds)
+//     return minSeconds;
+//   }
 
 /* ========== C O N S T R U C T O R S ========== */
 
@@ -185,7 +198,7 @@ function updateDashboardValues(data) {
 
     document.getElementById("memory_free").innerText = Math.round(data.memory_free[0] / 1000000000) + "GB/" + Math.round(data.memory_free[1] / 1000000000) + "GB"
     document.getElementById("wifi_strength").innerText = data.wifi_strength
-    document.getElementById("last_seen_timestamp").innerText = getTimeSinceLastTimestamp(data.msg_timestamp)
+    document.getElementById("last_seen_timestamp").innerText = data.msg_timestamp
 
 
 }
