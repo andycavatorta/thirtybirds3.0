@@ -196,14 +196,14 @@ function updateDashboardValues(data) {
     document.getElementById("connections").innerText = data.connections[0]
     document.getElementById("os_version").innerText = `${data.os_version[0]} ${data.os_version[1]}`
 
-    document.getElementById("scripts_version").innerText = data.tb_scripts_version
+    document.getElementById("app_git_timestamp").innerText = data.app_git_timestamp
     document.getElementById("core_temp").innerText = data.core_temp + "C"
 
     document.getElementById("system_cpu").innerText = data.system_cpu + "%"
     document.getElementById("system_disk").innerText = Math.round(data.system_disk[0] / 1000000000) + "GB/" + Math.round(data.system_disk[1] / 1000000000) + "GB"
 
     document.getElementById("memory_free").innerText = Math.round(data.memory_free[0] / 1000000000) + "GB/" + Math.round(data.memory_free[1] / 1000000000) + "GB"
-    document.getElementById("wifi_strength").innerText = data.wifi_strength
+    document.getElementById("tb_git_timestamp").innerText = data.tb_git_timestamp
     document.getElementById("last_seen_timestamp").innerText = data.msg_timestamp
 
 
@@ -253,9 +253,9 @@ function init() {
         "core_temp": 0,
         "os_version": ["Waiting", "For Data"],
         "wifi_strength": 0,
-        "tb_git_timestamp": "",
+        "tb_git_timestamp": "2021-05-03 17:45:29.605893",
         "tb_scripts_version": 0,
-        "app_git_timestamp": "",
+        "app_git_timestamp": "2021-05-03 17:45:29.605893",
         "hostname": "Waiting For Data",
         "global_ip": "0.0.0.0",
         "local_ip": "0.0.0.0",
