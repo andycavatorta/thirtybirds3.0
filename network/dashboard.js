@@ -28,7 +28,7 @@ function setAttributes(obj, att_a) {
 let button = document.getElementById("button");
 
 //In Progress Alert Bar 
-function alertHandler() {
+function alertHandler(cmd) {
     let alerts = document.getElementById("alert-container");
     console.log(alerts.childNodes)
     setTimeout(function () {
@@ -43,7 +43,7 @@ function alertHandler() {
         alertBox.classList.add("alert-msg", "slide-in");
 
         // Add message to alert box
-        let alertMsg = document.createTextNode("The button has been clicked!");
+        let alertMsg = document.createTextNode(cmd);
         alertBox.appendChild(alertMsg);
 
         // Add alert box to parent
@@ -52,7 +52,7 @@ function alertHandler() {
     }
 }
 
-button.addEventListener("click", alertHandler);
+// button.addEventListener("click", alertHandler);
 
 
 Date.prototype.addHours = function(h) {
@@ -177,7 +177,13 @@ function websocket_close() {
 
 function sendTrigger(command) {
     console.log("Sending command ", command)
-    websocket.send(command)
+    try{
+        websocket.send(command)
+        alertHandler(`Executed command ${command}`)
+
+    } catch (e) {
+        alertHandler(`Could not execute command ${command}`)
+    }
 }
 
 
