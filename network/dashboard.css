@@ -13,7 +13,6 @@ body{
 }
 
 #top_level{
-  margin-left: 2vw;
   display: flex;
   flex-direction: column;
   height: 100vh;
