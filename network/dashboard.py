@@ -20,7 +20,8 @@ class SimpleChat(WebSocket):
     def handleMessage(self):
        print("got ws message", self.data)
        trigger_map = {
-           "pull_from_github" : self.tb_ref.tb_pull_from_github,
+           "tb_pull_from_github" : self.tb_ref.tb_pull_from_github,
+           "app_pull_from_github" : self.tb_ref.app_pull_from_github,
            "reboot" : self.tb_ref.restart,
            "shutdown" : self.tb_ref.shutdown,
            "run_update_scripts": self.tb_ref.tb_run_update_scripts
