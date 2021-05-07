@@ -40,10 +40,11 @@ class HC595():
 
 
   def write( self, val ):
-    GPIO.output( self.load_clock, GPIO.HIGH )
+    print("writing ",val)
+    GPIO.output( self.load_clock, GPIO.LOW )
     self.spiRW( val, self.speed, 20 )  
     time.sleep( 0.000001 )
-    GPIO.output( self.load_clock, GPIO.LOW )
+    GPIO.output( self.load_clock, GPIO.HIGH )
 
   def spiRW(self, values, speed, delay):
     #print("values are: ", values )
