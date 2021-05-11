@@ -237,7 +237,7 @@ try:
     val = [0, 0, 0, 0, 0]
     display = Acrylic_Display()
     ontime = 1
-    counterVal = sys.argv[ 1 ]
+    counterVal = int( sys.argv[ 1 ] )
     while True:
 
         print()
@@ -258,8 +258,8 @@ try:
         display.set_number( str( counterVal ) )
         counterVal = counterVal + 1
         # print( f"{ sys.argv[1] } { sys.argv[2]} " )
-        if counterVal > sys.argv[2]:
-            counterVal = sys.argv[1]
+        if counterVal > int( sys.argv[2] ):
+            counterVal = int( sys.argv[1] )
         
         # # val[ 0 ] = val[ 0 ] + ( 1 << 0 )
         # # display.reg.write(val)
