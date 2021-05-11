@@ -15,10 +15,6 @@ import HC595_shift_reg as shifter
 reg = shifter.HC595()
 
 shift_register_state = [0, 0, 0, 0, 0]
-lfo = 3.141596
-
-period = 0.1
-period = 1.1
 
 
 def turn_on_light(trk_value):
@@ -188,15 +184,14 @@ class Acrylic_Display():
     def generate_number_bytes(self):
         # For each number of 007 look up the correct shift reg and bit to flip
         for index, number in enumerate(self.current_number):
-            print(index, number)
+            print( f'index:{index}, number:{number}' )
             shift_register_index = self.Display_LED_Mapping[
                 "display_number"][index][int(number)]["shift_register_index"]
             print("Writing value at  shift register index ", shift_register_index)
 
             bit = self.Display_LED_Mapping["display_number"][index][int(
                 number)]["bit"]
-            print("Shift Reg {} Writing {} at index {}".format(
-                self.shift_register_state, bit, shift_register_index))
+            print("Current Shift Reg: f'{self.shift_register_state}. Writing bit { bit } at index {shift_register_index}")
             self.shift_register_state[shift_register_index] = self.shift_register_state[shift_register_index] + (
                 1 << bit)
             print("Current state of shift reg: ", self.shift_register_state)
