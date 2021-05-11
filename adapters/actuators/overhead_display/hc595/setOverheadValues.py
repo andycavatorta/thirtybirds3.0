@@ -256,6 +256,7 @@ try:
         # display.set_number("123")
         #display.set_number("200")
         display.set_number( str( counterVal ) )
+        print()
         counterVal = counterVal + 1
         # print( f"{ sys.argv[1] } { sys.argv[2]} " )
         if counterVal > int( sys.argv[2] ):
