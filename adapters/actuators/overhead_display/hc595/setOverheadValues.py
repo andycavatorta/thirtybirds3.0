@@ -191,7 +191,7 @@ class Acrylic_Display():
 
             bit = self.Display_LED_Mapping["display_number"][index][int(
                 number)]["bit"]
-            print("Current Shift Reg: f'{self.shift_register_state}. Writing bit { bit } at index {shift_register_index}")
+            print(f"Current Shift Reg: '{self.shift_register_state}. Writing bit { bit } at index {shift_register_index}")
             self.shift_register_state[shift_register_index] = self.shift_register_state[shift_register_index] + (
                 1 << bit)
             print("Current state of shift reg: ", self.shift_register_state)
