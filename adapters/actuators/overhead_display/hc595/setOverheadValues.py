@@ -230,6 +230,7 @@ try:
     val = [0, 0, 0, 0, 0]
     display = Acrylic_Display()
     ontime = 3
+    counterVal = 0
     while True:
 
         print()
@@ -247,6 +248,11 @@ try:
 
         # display.set_number("123")
         display.set_number("200")
+        display.set_number( counterVal )
+        counterVal = counterVal + 1
+        if counterVal > 999:
+            counterVal = 0
+        
         # # val[ 0 ] = val[ 0 ] + ( 1 << 0 )
         # # display.reg.write(val)
         time.sleep(ontime)
