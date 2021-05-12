@@ -75,9 +75,9 @@ class Acrylic_Display():
             "display_sentence": {
                 "como":    {"bit": 2, "shift_register_index": 4},
                 "fue":     {"bit": 3, "shift_register_index": 4},
-                "trueque": {"bit": 4, "shift_register_index": 4},
-                "juega":   {"bit": 5, "shift_register_index": 4},
-                "dinero":  {"bit": 6, "shift_register_index": 4}
+                "dinero":  {"bit": 4, "shift_register_index": 4},
+                "trueque": {"bit": 5, "shift_register_index": 4},
+                "juega":   {"bit": 6, "shift_register_index": 4}
             }
         }
         self.set_number( 123 )
