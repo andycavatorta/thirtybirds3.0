@@ -23,7 +23,7 @@ def turn_on_light(trk_value):
 
     reg.write(shift_register_state)
 
-
+'''
 shift_reg_mapping = {
     "display_number": {
         0: {
@@ -71,6 +71,7 @@ shift_reg_mapping = {
         "money_mode_intro":  {"bit": 6, "shift_register_index": 4}
     }
 }
+'''
 
 word = ""
 global num
@@ -124,48 +125,48 @@ class Acrylic_Display():
         self.Display_LED_Mapping = {
             "display_number":  {
                 0: {
-                    0: {"bit": 0, "shift_register_index": 4},
-                    1: {"bit": 2, "shift_register_index": 4},
-                    2: {"bit": 1, "shift_register_index": 4},
-                    3: {"bit": 3, "shift_register_index": 4},
-                    4: {"bit": 4, "shift_register_index": 4},
-                    5: {"bit": 5, "shift_register_index": 4},
-                    6: {"bit": 6, "shift_register_index": 4},
-                    7: {"bit": 7, "shift_register_index": 4},
-                    8: {"bit": 0, "shift_register_index": 3},
-                    9: {"bit": 1, "shift_register_index": 3}
+                    0: {"bit": 0, "shift_register_index": 0},
+                    1: {"bit": 1, "shift_register_index": 0},
+                    2: {"bit": 2, "shift_register_index": 0},
+                    3: {"bit": 3, "shift_register_index": 0},
+                    4: {"bit": 4, "shift_register_index": 0},
+                    5: {"bit": 5, "shift_register_index": 0},
+                    6: {"bit": 6, "shift_register_index": 0},
+                    7: {"bit": 7, "shift_register_index": 0},
+                    8: {"bit": 0, "shift_register_index": 1},
+                    9: {"bit": 1, "shift_register_index": 1}
                 },
                 1: {
-                    0: {"bit": 2, "shift_register_index": 3},
-                    1: {"bit": 3, "shift_register_index": 3},
-                    2: {"bit": 4, "shift_register_index": 3},
-                    3: {"bit": 5, "shift_register_index": 3},
-                    4: {"bit": 6, "shift_register_index": 3},
-                    5: {"bit": 7, "shift_register_index": 3},
+                    0: {"bit": 2, "shift_register_index": 1},
+                    1: {"bit": 3, "shift_register_index": 1},
+                    2: {"bit": 4, "shift_register_index": 1},
+                    3: {"bit": 5, "shift_register_index": 1},
+                    4: {"bit": 6, "shift_register_index": 1},
+                    5: {"bit": 7, "shift_register_index": 1},
                     6: {"bit": 0, "shift_register_index": 2},
                     7: {"bit": 1, "shift_register_index": 2},
                     8: {"bit": 2, "shift_register_index": 2},
                     9: {"bit": 3, "shift_register_index": 2}
                 },
                 2: {
-                    0: {"bit": 0, "shift_register_index": 1},
-                    1: {"bit": 1, "shift_register_index": 1},
-                    2: {"bit": 2, "shift_register_index": 1},
-                    3: {"bit": 3, "shift_register_index": 1},
-                    4: {"bit": 4, "shift_register_index": 1},
-                    5: {"bit": 5, "shift_register_index": 1},
-                    6: {"bit": 6, "shift_register_index": 1},
-                    7: {"bit": 7, "shift_register_index": 1},
-                    8: {"bit": 0, "shift_register_index": 0},
-                    9: {"bit": 1, "shift_register_index": 0}
+                    0: {"bit": 0, "shift_register_index": 3},
+                    1: {"bit": 1, "shift_register_index": 3},
+                    2: {"bit": 2, "shift_register_index": 3},
+                    3: {"bit": 3, "shift_register_index": 3},
+                    4: {"bit": 4, "shift_register_index": 3},
+                    5: {"bit": 5, "shift_register_index": 3},
+                    6: {"bit": 6, "shift_register_index": 3},
+                    7: {"bit": 7, "shift_register_index": 3},
+                    8: {"bit": 0, "shift_register_index": 4},
+                    9: {"bit": 1, "shift_register_index": 4}
                 }
             },
             "display_sentence": {
-                "countdown": {"bit": 2, "shift_register_index": 4},
+                "countdown":         {"bit": 2, "shift_register_index": 4},
                 "barter_mode_intro": {"bit": 3, "shift_register_index": 4},
-                "barter_mode": {"bit": 4, "shift_register_index": 4},
-                "money_mode": {"bit": 5, "shift_register_index": 4},
-                "money_mode_intro": {"bit": 6, "shift_register_index": 4}
+                "barter_mode":       {"bit": 4, "shift_register_index": 4},
+                "money_mode":        {"bit": 5, "shift_register_index": 4},
+                "money_mode_intro":  {"bit": 6, "shift_register_index": 4}
             }
         }
 
