@@ -131,7 +131,7 @@ class Acrylic_Display():
     def _update_display_(self):
         self.turn_off_lights()
         self.generate_number_bytes()
-        # self.generate_word_bytes()
+        self.generate_word_bytes()
         self.reg.write(self.shift_register_state)
         print("updating display to Current Word {} Number {}".format(
             self.current_words, self.current_number))
