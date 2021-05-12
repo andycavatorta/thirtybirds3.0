@@ -30,7 +30,7 @@ class Acrylic_Display():
     def __init__(self):
         self.current_words = 0
         self.current_number = 0
-        self.game_mode = "countdown"
+        self.game_mode = "juega"
         self.shift_register_state = [0, 0, 0, 0, 0]
         self.reg = shifter.HC595()
         self.Display_LED_Mapping = {
