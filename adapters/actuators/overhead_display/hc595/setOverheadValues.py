@@ -209,6 +209,8 @@ try:
         counterVal = counterVal + 1
         # print( f"{ sys.argv[1] } { sys.argv[2]} " )
         if counterVal > int( sys.argv[2] ):
+            if sys.argv[2] == 0:
+                sys.exit()
             counterVal = int( sys.argv[1] )
         
         # # val[ 0 ] = val[ 0 ] + ( 1 << 0 )
