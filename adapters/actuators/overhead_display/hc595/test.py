@@ -73,13 +73,14 @@ class Acrylic_Display():
                 }
             },
             "display_sentence": {
-                "countdown":         {"bit": 2, "shift_register_index": 4},
-                "barter_mode_intro": {"bit": 3, "shift_register_index": 4},
-                "barter_mode":       {"bit": 4, "shift_register_index": 4},
-                "money_mode":        {"bit": 5, "shift_register_index": 4},
-                "money_mode_intro":  {"bit": 6, "shift_register_index": 4}
+                "como":    {"bit": 2, "shift_register_index": 4},
+                "fue":     {"bit": 3, "shift_register_index": 4},
+                "trueque": {"bit": 4, "shift_register_index": 4},
+                "juega":   {"bit": 5, "shift_register_index": 4},
+                "dinero":  {"bit": 6, "shift_register_index": 4}
             }
         }
+        self.set_number( 123 )
 
     def format_number(self, num):
         num = str(num)
