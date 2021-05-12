@@ -141,7 +141,27 @@ class Acrylic_Display():
         print("updating display to Current Word {} Number {}".format(
             self.current_words, self.current_number))
 
+    def demo(self):
+        sac = 0 # sentence advance count
+        ss  = 0 # sentence step
+        sseq = [ "como","fue","trueque","dinero","juega" ]  # sentence sequence
+        
+        for val in range( 0, 1000 ):
+            self.set_number( val )
+            time.sleep( 0.1 )
+            sac = sac + 1
+            if sac > 30:
+                sac = 0
+                ss = ss + 1
+                if ss > 5:
+                    ss = 0
+                sentence = sseq[ ss ]
+                print( sentence )
+                self.set_game_mode( sentence )
+                
+                
 
+        
 # this is put inside a try block so it can clean up
 # the output enable.  very important to protect relays from
 # being left on!!!!
