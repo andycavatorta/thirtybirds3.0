@@ -208,10 +208,11 @@ try:
         print()
         counterVal = counterVal + 1
         # print( f"{ sys.argv[1] } { sys.argv[2]} " )
-        if counterVal > int( sys.argv[2] ):
-            if len( argv[2] ) < 2:
-                sys.exit()
-            counterVal = int( sys.argv[1] )
+        if len( sys.argv ) < 2:
+            sys.exit()
+        else:
+            if counterVal > int( sys.argv[2] ):
+                counterVal = int( sys.argv[1] )
         
         # # val[ 0 ] = val[ 0 ] + ( 1 << 0 )
         # # display.reg.write(val)
