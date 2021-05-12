@@ -209,7 +209,7 @@ try:
         counterVal = counterVal + 1
         # print( f"{ sys.argv[1] } { sys.argv[2]} " )
         print( f"sys.argv len is { len(sys.argv) }" )
-        if len( sys.argv ) < 2:
+        if len( sys.argv ) < 1:
             sys.exit()
         else:
             if counterVal > int( sys.argv[2] ):
