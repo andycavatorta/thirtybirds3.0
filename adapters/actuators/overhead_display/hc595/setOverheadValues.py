@@ -261,8 +261,8 @@ try:
         # # val[ 0 ] = val[ 0 ] + ( 1 << 0 )
         # # display.reg.write(val)
         time.sleep(ontime)
-        display.turn_off_lights()
-        time.sleep(ontime)
+        #display.turn_off_lights()
+        #time.sleep(ontime)
 
         # display.set_number("200")
         # # # val[ 0 ] = val[ 0 ] + ( 1 << 0 )
