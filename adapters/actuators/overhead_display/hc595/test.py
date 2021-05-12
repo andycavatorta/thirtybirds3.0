@@ -153,7 +153,7 @@ class Acrylic_Display():
             if sac > 30:
                 sac = 0
                 ss = ss + 1
-                if ss > 5:
+                if ss > 4:
                     ss = 0
                 sentence = sseq[ ss ]
                 print( sentence )
