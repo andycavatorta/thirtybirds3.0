@@ -93,6 +93,10 @@ class Acrylic_Display():
         print("setting num to ", self.current_number)
         self._update_display_()
 
+    def set_game_mode( self, game_mode ):
+        self.game_mode = game_mode
+        self._update_display_()
+        
     def generate_number_bytes(self):
         # For each number of 007 look up the correct shift reg and bit to flip
         for index, number in enumerate(self.current_number):
