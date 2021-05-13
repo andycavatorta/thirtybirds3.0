@@ -16,9 +16,10 @@ class LJ12A3():
         GPIO.setup( self.oe, GPIO.OUT )
         GPIO.output( self.oe, GPIO.HIGH )
 
-        # configure inputs from inductive proximity sensors
-        #pullDir = GPIO.PUD_UP
-        pullDir = GPIO.PUD_DOWN
+         # configure inputs from inductive proximity sensors
+        pullDir = GPIO.PUD_UP
+        #pullDir = GPIO.PUD_DOWN
+        #pullDir = GPIO.PUD_OFF
         GPIO.setup( 27, GPIO.IN, pull_up_down = pullDir )
         GPIO.setup( 22, GPIO.IN, pull_up_down = pullDir )
         GPIO.setup( 23, GPIO.IN, pull_up_down = pullDir )
