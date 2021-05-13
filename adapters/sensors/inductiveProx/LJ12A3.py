@@ -12,16 +12,20 @@ class LJ12A3():
 
         GPIO.setmode(GPIO.BCM)
 
-        # configure GPIOs
+        # configure output enable on sensor
         GPIO.setup( self.oe, GPIO.OUT )
-        GPIO.setup( 27, GPIO.IN, pull_up_down = GPIO.PUD_UP )
-        GPIO.setup( 22, GPIO.IN, pull_up_down = GPIO.PUD_UP )
-        GPIO.setup( 23, GPIO.IN, pull_up_down = GPIO.PUD_UP )
-        GPIO.setup( 24, GPIO.IN, pull_up_down = GPIO.PUD_UP )
-        GPIO.setup( 25, GPIO.IN, pull_up_down = GPIO.PUD_UP )
+        GPIO.output( self.oe, GPIO.HIGH )
+
+        # configure inputs from inductive proximity sensors
+        #pullDir = GPIO.PUD_UP
+        pullDir = GPIO.PUD_DOWN
+        GPIO.setup( 27, GPIO.IN, pull_up_down = pullDir )
+        GPIO.setup( 22, GPIO.IN, pull_up_down = pullDir )
+        GPIO.setup( 23, GPIO.IN, pull_up_down = pullDir )
+        GPIO.setup( 24, GPIO.IN, pull_up_down = pullDir )
+        GPIO.setup( 25, GPIO.IN, pull_up_down = pullDir )
     
         # keep enabled while running... 
-        GPIO.output( self.oe, GPIO.HIGH )
 
     def read( self ):
         val = [ 0 ] * 5
