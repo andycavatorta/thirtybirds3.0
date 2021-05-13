@@ -8,10 +8,11 @@ indProx = inductiveProximitySensor.LJ12A3()
 
 while True:
 
-    val = photosensor.read_it()
+    val = indProx.read()
     print( val )
-    time.sleep( 0.0205 )
 
+    time.sleep( 0.25 )
+    
 
 
 
