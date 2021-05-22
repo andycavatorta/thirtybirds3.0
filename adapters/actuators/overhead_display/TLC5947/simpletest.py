@@ -23,15 +23,15 @@ spi = busio.SPI(clock=SCK, MOSI=MOSI)
 tlc5947 = adafruit_tlc5947.TLC5947(spi, LATCH)
 
 red = tlc5947.create_pwm_out(0)
-green = tlc5947.create_pwm_out(1)
+green = tlc5947.create_pwm_out(21)
 blue = tlc5947.create_pwm_out(2)
 
-step = 100
+step = 120
 start_pwm = 0
 end_pwm = 32767  # 50% (32767, or half of the maximum 65535):
 
 while True:
-    for pin in (red, blue):
+    for pin in (red, green, blue):
         # Brighten:
         print("Brightening LED")
         for pwm in range(start_pwm, end_pwm, step):
