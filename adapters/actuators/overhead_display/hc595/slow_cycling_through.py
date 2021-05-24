@@ -64,8 +64,8 @@ try:
     while True:
         print()        
         
-        ontime =4.000
-        offtime = 4.00
+        ontime =2.09
+        offtime = 2.0
     
         val[ 0 ] = 0;
         for trk in range( 0, 5 ):
