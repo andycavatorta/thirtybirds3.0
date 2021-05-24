@@ -8,7 +8,7 @@ def gpio_reset( pin_num ):
     GPIO.output( pin_num, GPIO.HIGH)
 
 class HC595():
-  def __init__(self, bus=0, deviceId=0, oe_=8, load_clock=25, speed_hz=1000000):  
+  def __init__(self, bus=0, deviceId=10, oe_=8, load_clock=25, speed_hz=1000000):  
     self.deviceId = deviceId
     self.bus = bus
     self.oe_ = oe_
