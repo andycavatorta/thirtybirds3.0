@@ -190,7 +190,7 @@ try:
 
         for word in display.Display_LED_Mapping["display_sentence"].keys():
             print("word : ",word)
-            display.set_word(word)
+            display.set_words(word)
             time.sleep(.5)
         for i in range(999):
             print("setting ",i)
