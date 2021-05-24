@@ -153,6 +153,10 @@ class Acrylic_Display():
     def set_words(self):
         self.current_words = self.game_mode
         self._update_display_()
+    
+    def set__display_words(self,game_mode):
+        self.current_words = self.game_mode
+        self._update_display_()
 
     def generate_word_bytes(self):
         shift_register_index = self.Display_LED_Mapping[
@@ -190,7 +194,8 @@ try:
 
         for word in display.Display_LED_Mapping["display_sentence"].keys():
             print("word : ",word)
-            display.set_words(word)
+            display.game_mode = word
+            display.set_words()
             time.sleep(.5)
         for i in range(999):
             print("setting ",i)
