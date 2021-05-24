@@ -188,10 +188,15 @@ try:
     ontime = 1
     while True:
 
+        for word in display.Display_LED_Mapping["displace_sentence"].keys():
+            print("word : ",word)
+            display.set_word(word)
+            time.sleep(.5)
         for i in range(999):
             print("setting ",i)
             display.set_number(str(i))
             time.sleep(.1)
+  
         print()
 
 
