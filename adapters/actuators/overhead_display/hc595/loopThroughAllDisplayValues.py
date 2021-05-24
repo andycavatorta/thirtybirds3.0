@@ -193,12 +193,11 @@ try:
     ontime = 1
     while True:
 
-        # for word in display.Display_LED_Mapping["display_sentence"].keys():
-        #     print("word : ",word)
-        #     display.game_mode = word
-        #     print(display.game_mode)
-        #     # display.set_words()
-        #     # time.sleep(.5)
+        for word in display.Display_LED_Mapping["display_sentence"].keys():
+            print("word : ",word)
+            display.game_mode = word
+            display.set_words()
+            time.sleep(.5)
         for i in range(99):
             print("setting ",i)
             display.set_number(str(i))
