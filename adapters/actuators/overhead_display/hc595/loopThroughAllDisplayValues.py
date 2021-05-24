@@ -188,10 +188,10 @@ try:
     ontime = 1
     while True:
 
-        for i in range(10):
+        for i in range(999):
             print("setting ",i)
             display.set_number(str(i))
-            time.sleep(1)
+            time.sleep(.1)
         print()
 
 
