@@ -74,7 +74,8 @@ class Acrylic_Display():
         self.current_number = 0
         self.game_mode = "countdown"
         self.shift_register_state = [0, 0, 0, 0, 0]
-        self.reg = shifter.HC595()
+        # Also Can use Bus 1 Device 0
+        self.reg = shifter.HC595(bus=0,deviceId=0)
         self.Display_LED_Mapping = {
             "display_number":  {
                 0: {
