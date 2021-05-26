@@ -201,7 +201,7 @@ try:
         for i in range(9):
             print("setting ",i)
             display.set_number(str(i*100))
-            time.sleep(.1)
+            time.sleep(1.1)
   
         print()
 
