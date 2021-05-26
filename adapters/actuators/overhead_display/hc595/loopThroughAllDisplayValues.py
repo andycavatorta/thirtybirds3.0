@@ -198,9 +198,9 @@ try:
             display.game_mode = word
             display.set_words()
             time.sleep(.5)
-        for i in range(999):
+        for i in range(9):
             print("setting ",i)
-            display.set_number(str(i))
+            display.set_number(str(i*100))
             time.sleep(.1)
   
         print()
