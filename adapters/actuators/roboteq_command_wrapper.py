@@ -2085,6 +2085,7 @@ class Controllers(threading.Thread):
                 self, 
                 self.add_to_queue,
                 self.boards_config)
+            print("requesting mcu_id")
             mcu_id = board.get_mcu_id()
             print("mcu_id=",mcu_id)
             for name, val in self.boards_config.items():
