@@ -2080,6 +2080,7 @@ class Controllers(threading.Thread):
         # create board objects and read their mcu_ids
         print("self.mcu_serial_device_paths=",self.mcu_serial_device_paths)
         for mcu_serial_device_path in self.mcu_serial_device_paths:
+            print("mcu_serial_device_path")
             board = Board(
                 mcu_serial_device_path, 
                 self, 
