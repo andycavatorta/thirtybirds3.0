@@ -29,8 +29,8 @@ def silly_but_vital_gpio_init():
 class ChipSelects( IntEnum ):
     #MOT1 =  8
     #MOT2 =  7
-    MOT3 = 18
-    MOT4 = 17
+    #MOT3 = 18
+    #MOT4 = 17
     MOT5 = 16
     MOT6 =  5
 
