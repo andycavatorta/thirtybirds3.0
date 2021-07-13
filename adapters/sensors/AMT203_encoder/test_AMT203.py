@@ -27,12 +27,12 @@ def silly_but_vital_gpio_init():
 
 # Chip selects used in Individual, Money and Society, 3/2021 aka 5 player pinball
 class ChipSelects( IntEnum ):
-    MOT1 =  8
     MOT2 =  7
     MOT3 = 18
     MOT4 = 17
     MOT5 = 16
     MOT6 =  5
+    MOT1 =  9
 
 # initialize all chip selects to unasserted in case program operation was interrupted
 GPIO.setmode(GPIO.BCM)
@@ -53,15 +53,10 @@ for ( idx, chipsel ) in zip ( range( 0, 6 ), ChipSelects ):
 #car[ 0 ].clean_buffer()
 #car[ 1 ].clean_buffer()
 
-
 while True:
-
-
     for idx in range( 0, 6):
-
         pos = car[ idx ].get_position()
         print( pos, ", ", end='' )
-    
     print()
     time.sleep( .1 )
     
