@@ -33,7 +33,6 @@ while True:
           attempts = attempts + 1
           if attempts > 100: 
             print(" yuk")
-            return -1
           
           if first_result[ 0 ] != 0x10:
             break;
