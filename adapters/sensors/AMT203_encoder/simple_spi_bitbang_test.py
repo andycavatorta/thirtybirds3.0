@@ -60,9 +60,9 @@ while True:
 
 def clean_buffer():
     while True:
-    first_result = spiRW([0x00],spi_speed,20)
-    if first_result[ 0 ] == 165:
-        break;
+        first_result = spiRW([0x00],spi_speed,20)
+        if first_result[ 0 ] == 165:
+            break;
 
 def spiRW(cs, values, speed, delay):
     GPIO.output(cs, GPIO.LOW)
