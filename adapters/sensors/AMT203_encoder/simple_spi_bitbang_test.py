@@ -28,7 +28,7 @@ def clean_buffer():
 
 def spiRW(cs, values, speed, delay):
     GPIO.output(cs, GPIO.LOW)
-    #time.sleep(.01)
+    time.sleep(.01)
     msg = spi.xfer(values, speed, delay)
     GPIO.output(cs, GPIO.HIGH)
     return msg
