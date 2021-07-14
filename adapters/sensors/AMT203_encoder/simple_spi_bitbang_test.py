@@ -19,6 +19,20 @@ for pin in pins:
     GPIO.setup(pin, GPIO.OUT)
     GPIO.output(pin, GPIO.HIGH)  
 
+
+def clean_buffer():
+    while True:
+        first_result = spiRW([0x00],spi_speed,20)
+        if first_result[ 0 ] == 165:
+            break;
+
+def spiRW(cs, values, speed, delay):
+    GPIO.output(cs, GPIO.LOW)
+    #time.sleep(.01)
+    msg = spi.xfer(values, speed, delay)
+    GPIO.output(cs, GPIO.HIGH)
+    return msg
+
 while True:
     for pin in pins:
         #GPIO.output(pin, GPIO.LOW)
@@ -56,16 +70,3 @@ while True:
                 break;
 
         print("final_result",final_result)
-
-def clean_buffer():
-    while True:
-        first_result = spiRW([0x00],spi_speed,20)
-        if first_result[ 0 ] == 165:
-            break;
-
-def spiRW(cs, values, speed, delay):
-    GPIO.output(cs, GPIO.LOW)
-    #time.sleep(.01)
-    msg = spi.xfer(values, speed, delay)
-    GPIO.output(cs, GPIO.HIGH)
-    return msg
