@@ -60,7 +60,7 @@ while True:
           attempts = attempts + 1
           if attempts > 100: 
             print(" yuk2 ", pin)
-            pass
+            break
 
         lsb_result = spiRW(pin,[0x00],spi_speed,20)
         final_result = (msb_result[0]<<8 | lsb_result[0])
