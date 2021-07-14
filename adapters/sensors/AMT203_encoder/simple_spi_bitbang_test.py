@@ -21,9 +21,9 @@ for pin in pins:
 
 while True:
     for pin in pins:
-        GPIO.output(pin, GPIO.LOW)
-        msg = spi.xfer(values, speed, delay)
-        GPIO.output(pin, GPIO.HIGH)
+        #GPIO.output(pin, GPIO.LOW)
+        #msg = spi.xfer(values, speed, delay)
+        #GPIO.output(pin, GPIO.HIGH)
 
         attempts = 0
         first_result = spiRW([0x10],spi_speed,20)  
