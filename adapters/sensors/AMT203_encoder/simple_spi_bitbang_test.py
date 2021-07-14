@@ -22,7 +22,7 @@ for pin in pins:
 
 def clean_buffer():
     while True:
-        first_result = spiRW([0x00],spi_speed,20)
+        first_result = spiRW(pin,[0x00],spi_speed,20)
         if first_result[ 0 ] == 165:
             break;
 
@@ -40,10 +40,10 @@ while True:
         #GPIO.output(pin, GPIO.HIGH)
 
         attempts = 0
-        first_result = spiRW([0x10],spi_speed,20)  
+        first_result = spiRW(pin,[0x10],spi_speed,20)  
 
         while True:
-          first_result = spiRW([0x00],spi_speed,20)
+          first_result = spiRW(pin,[0x00],spi_speed,20)
           attempts = attempts + 1
           if attempts > 100: 
             print(" yuk")
@@ -62,10 +62,10 @@ while True:
             print(" yuk2 ")
             pass
 
-        lsb_result = spiRW([0x00],spi_speed,20)
+        lsb_result = spiRW(pin,[0x00],spi_speed,20)
         final_result = (msb_result[0]<<8 | lsb_result[0])
         while True:
-            first_result = spiRW([0x00],spi_speed,20)
+            first_result = spiRW(pin,[0x00],spi_speed,20)
             if first_result[ 0 ] == 165:
                 break;
 
