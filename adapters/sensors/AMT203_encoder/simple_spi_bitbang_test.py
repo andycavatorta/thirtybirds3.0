@@ -53,9 +53,9 @@ while True:
 
         attempts = 0
         while True:
-          tmp = spi( [0x00], spi_speed, 20 )
+          tmp = spiRW(pin, [0x00], spi_speed, 20 )
           if tmp[ 0 ] == 0x10:
-            msb_result = spi( [0x00], spi_speed, 20 )
+            msb_result = spiRW(pin, [0x00], spi_speed, 20 )
             break;
           attempts = attempts + 1
           if attempts > 100: 
