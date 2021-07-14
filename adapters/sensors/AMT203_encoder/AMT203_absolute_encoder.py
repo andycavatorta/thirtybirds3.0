@@ -12,7 +12,7 @@ class AMT203():
     self.speed = speed_hz
     GPIO.setmode(GPIO.BCM)
     try:
-      print("bus: %s | pin: %s" % (self.bus, self.deviceId))
+      print("bus: %s | deviceId: %s | cs: %s" % (self.bus, self.deviceId, self.cs ))
       self.spi = spidev.SpiDev()
       self.spi.open(self.bus, self.deviceId)
       self.open = True
@@ -97,7 +97,7 @@ class AMT203():
 
   def spiRW(self, values, speed, delay):
     GPIO.output(self.cs, GPIO.LOW)
-    #time.sleep(.01)
+    time.sleep(.01)
     msg = self.spi.xfer(values, speed, delay)
     GPIO.output(self.cs, GPIO.HIGH)
     return msg
