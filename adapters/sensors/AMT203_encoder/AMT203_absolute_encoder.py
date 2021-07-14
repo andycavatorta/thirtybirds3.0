@@ -2,8 +2,6 @@ import spidev
 import time
 import RPi.GPIO as GPIO
 
-
-
 class AMT203():
   def __init__(self, bus=0, deviceId=0, cs=8, speed_hz=1000000):   # cs=16
     self.deviceId = deviceId
