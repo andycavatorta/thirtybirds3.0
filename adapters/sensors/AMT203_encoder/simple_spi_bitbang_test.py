@@ -59,7 +59,7 @@ while True:
             break;
           attempts = attempts + 1
           if attempts > 100: 
-            print(" yuk2 ")
+            print(" yuk2 ", pin)
             pass
 
         lsb_result = spiRW(pin,[0x00],spi_speed,20)
