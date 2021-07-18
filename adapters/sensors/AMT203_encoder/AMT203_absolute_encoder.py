@@ -65,7 +65,7 @@ class AMT203():
       attempts = attempts + 1
       if attempts > 100: 
         print(" yuk2 ")
-        #return -1
+        return -1
         pass
 
     print(">>> 5")
