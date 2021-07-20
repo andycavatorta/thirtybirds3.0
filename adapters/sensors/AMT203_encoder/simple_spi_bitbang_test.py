@@ -2,7 +2,7 @@ import spidev
 import time
 import RPi.GPIO as GPIO
 
-pins = [8,7,18,17,16,5]
+pins = [13,12,18,17,16,5]
 
 GPIO.setmode(GPIO.BCM)
 spi = spidev.SpiDev()
@@ -11,14 +11,13 @@ device = 0
 spi.open(bus, device)
 
 # Settings (for example)
-spi_speed = 1000000
+spi_speed = 5000
 spi.mode = 0b00
 spi.no_cs = True
 
 for pin in pins:
     GPIO.setup(pin, GPIO.OUT)
     GPIO.output(pin, GPIO.HIGH)  
-
 
 def clean_buffer():
     while True:
