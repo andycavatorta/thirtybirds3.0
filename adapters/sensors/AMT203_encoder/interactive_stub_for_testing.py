@@ -33,13 +33,8 @@ def spiRW(cs, values, speed, delay):
     return msg
 
 spiRW(5, [0x10], 5000, 20)
-
 spiRW(5, [0x00], 5000, 20)
-
 spiRW(5, [0x00], 5000, 20)
-
 spiRW(5, [0x00], 5000, 20)
-
 spiRW(5, [0x00], 5000, 20)
-
 spiRW(5, [0x00], 5000, 20)
