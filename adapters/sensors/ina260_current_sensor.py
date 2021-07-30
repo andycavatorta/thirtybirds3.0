@@ -3,7 +3,7 @@ import board
 import adafruit_ina260
 
 class INA260():
-    __init__(self):
+    def __init__(self):
         i2c = board.I2C()
         self.ina260 = adafruit_ina260.INA260(i2c)
 
