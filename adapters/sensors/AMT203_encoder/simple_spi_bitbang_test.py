@@ -22,12 +22,14 @@ for pin in pins:
 def clean_buffer():
     while True:
         first_result = spiRW(pin,[0x00],spi_speed,20)
+        time.sleep(.01)
         if first_result[ 0 ] == 165:
             break;
 
 def spiRW(cs, values, speed, delay):
+    time.sleep(.05)
     GPIO.output(cs, GPIO.LOW)
-    time.sleep(.01)
+    time.sleep(.05)
     msg = spi.xfer(values, speed, delay)
     GPIO.output(cs, GPIO.HIGH)
     return msg

@@ -10,7 +10,7 @@ class INA260():
     def get_current(self):
         return self.ina260.current
 
-    def get_min_max_sample(self, ms):
+    def get_min_max_sample(self, ms=1000):
         end_time = time.time() + (ms/1000.0)
         minimum_current = 0
         maximum_current = 0
