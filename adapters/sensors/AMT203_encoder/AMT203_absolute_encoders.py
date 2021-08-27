@@ -3,7 +3,7 @@ import time
 import RPi.GPIO as GPIO
 
 class AMT203():
-  def __init__(self, bus_number=0, device_number=0, gpios_for_chip_select=[8], speed_hz=1000000):   # cs=16
+  def __init__(self, bus_number=0, device_number=0, gpios_for_chip_select=[8], speed_hz=5000):   # cs=16
     self.speed_hz = speed_hz
     self.gpios_for_chip_select = gpios_for_chip_select
 
@@ -26,11 +26,11 @@ class AMT203():
     return received_byte
 
   def get_position(self, chip_select_pin):
-    request = spiRW(cs, [0x10], 5000, 20)
-    blank_byte_165 = spiRW(cs, [0x00], 5000, 20)
-    blank_byte_16 = spiRW(cs, [0x00], 5000, 20)
-    most_significant_byte = spiRW(cs, [0x00], 5000, 20)
-    least_significant_byte = spiRW(cs, [0x00], 5000, 20)
+    request = spi_write_read(cs, [0x10], 5000, 20)
+    blank_byte_165 = spi_write_read(cs, [0x00], 5000, 20)
+    blank_byte_16 = spi_write_read(cs, [0x00], 5000, 20)
+    most_significant_byte = spi_write_read(cs, [0x00], 5000, 20)
+    least_significant_byte = spi_write_read(cs, [0x00], 5000, 20)
     return (most_significant_byte[0]<<8 | least_significant_byte[0])
 
   def get_positions(self):
