@@ -41,7 +41,7 @@ class AMT203():
     least_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
     if blank_byte_165 == 165 and blank_byte_16 == 16:
       return True
-    else
+    else:
       return False
 
   def get_positions(self):
