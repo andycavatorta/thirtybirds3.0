@@ -26,11 +26,11 @@ class AMT203():
     return received_byte
 
   def get_position(self, chip_select_pin):
-    request = spi_write_read(cs, [0x10], 5000, 20)
-    blank_byte_165 = spi_write_read(cs, [0x00], 5000, 20)
-    blank_byte_16 = spi_write_read(cs, [0x00], 5000, 20)
-    most_significant_byte = spi_write_read(cs, [0x00], 5000, 20)
-    least_significant_byte = spi_write_read(cs, [0x00], 5000, 20)
+    request = self.spi_write_read(cs, [0x10], 5000, 20)
+    blank_byte_165 = self.spi_write_read(cs, [0x00], 5000, 20)
+    blank_byte_16 = self.spi_write_read(cs, [0x00], 5000, 20)
+    most_significant_byte = self.spi_write_read(cs, [0x00], 5000, 20)
+    least_significant_byte = self.spi_write_read(cs, [0x00], 5000, 20)
     return (most_significant_byte[0]<<8 | least_significant_byte[0])
 
   def get_positions(self):
@@ -38,3 +38,5 @@ class AMT203():
     for gpio_for_chip_select in  self.gpios_for_chip_select:
       positions.append(self.get_position(gpio_for_chip_select))
     return positions
+
+
