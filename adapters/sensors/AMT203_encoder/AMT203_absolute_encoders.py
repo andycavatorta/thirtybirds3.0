@@ -40,7 +40,7 @@ class AMT203():
     most_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
     least_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
     print(">>",blank_byte_165,blank_byte_16)
-    if blank_byte_165 == 165 and blank_byte_16 == 16:
+    if blank_byte_165 == [165] and blank_byte_16 == [16]:
       return True
     else:
       return False
