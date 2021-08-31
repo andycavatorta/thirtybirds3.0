@@ -241,7 +241,7 @@ class Thirtybirds():
         ## S T A R T   D A S H B O A R D ##
         ###################################
         self.settings = settings
-        self.dashboard_server = dashboard.init(self)
+        #self.dashboard_server = dashboard.init(self)
 
     def set_up_logging(self, app_path):
         log_directory = "{0}/logs/".format(app_path)
