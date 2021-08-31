@@ -306,7 +306,7 @@ class Thirtybirds():
                 sys.exit(0)
 
     def status_receiver(self, status_details):
-        
+        return
         status_details_str = "{},{},{},{}{},{}.{},{},{}".format(
             time.strftime("%Y-%m-%d %H:%M:%S", status_details["time_local"]), 
             status_details["time_epoch"],
@@ -319,20 +319,10 @@ class Thirtybirds():
             status_details["args"]
         )
         self.status_logger.error(status_details_str)
-        #print(status_details_str)
         try:
             self.dashboard_server.status_receiver(status_details_str)
         except AttributeError:
             pass
-        """
-        if self.hostname != self.controller_hostname:
-            try:
-                #print(type(status_details), status_details)
-                #self.connection.send("__status__", status_details)
-                self.dashboard_server.receive_status
-            except AttributeError:
-                pass
-        """
         
     def exception_receiver(self, exception):
         # to do : add logging, if in config
@@ -376,7 +366,7 @@ class Thirtybirds():
                 # todo: this should not have to be here.  don't send time struct through JSON or switch to Python serializer
                 message["time_local"] = time.struct_time(message["time_local"])
                 #print("-------------",type(message["time_local"]), message["time_local"])
-                self.status_receiver(message)
+                #self.status_receiver(message)
                 #self.network_message_callback(topic, message)
             #log this    
         else:
