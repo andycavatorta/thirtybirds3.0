@@ -4,9 +4,12 @@ import adafruit_ina260
 
 class INA260():
     def __init__(self):
-        i2c = board.I2C()
-        self.ina260 = adafruit_ina260.INA260(i2c)
-
+        try:
+            i2c = board.I2C()
+            self.ina260 = adafruit_ina260.INA260(i2c)
+        except ValueError:
+            print("not device found")
+            #add feedback through tb?
     def get_current(self):
         return self.ina260.current
 
