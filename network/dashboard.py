@@ -82,7 +82,7 @@ class Message_Receiver(threading.Thread):
 
     def run(self):
         while True:
-            try:
+            #try:
                 #topic, message = self.queue.get(block=True, timeout=self.tb_ref.settings.Dashboard.refresh_interval)
                 topic, message = self.queue.get(block=True)
                 # print("message",message)
@@ -90,8 +90,8 @@ class Message_Receiver(threading.Thread):
                 self.websocket.sendToClients(self.websocket,message_json)
                 # self.websocket.sendToClients(message_json)
 
-            except queue.Empty:
-                self.generate_system_status()
+            #except queue.Empty:
+                #self.generate_system_status()
 
 def status_receiver(message):
     message_receiver.add_to_queue("status_event",message)
