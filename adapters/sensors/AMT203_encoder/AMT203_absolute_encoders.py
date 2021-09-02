@@ -39,7 +39,6 @@ class AMT203():
     blank_byte_16 = self.spi_write_read(chip_select_pin, [0x00])
     most_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
     least_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
-    print(">>",blank_byte_165,blank_byte_16)
     if blank_byte_165 == [165] and blank_byte_16 == [16]:
       return True
     else:
@@ -56,4 +55,5 @@ class AMT203():
     for gpio_for_chip_select in  self.gpios_for_chip_select:
       presences.append(self.get_presence(gpio_for_chip_select))
     return presences
+
 
