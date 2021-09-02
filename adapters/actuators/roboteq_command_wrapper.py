@@ -595,7 +595,7 @@ class Board(threading.Thread):
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
             self.serial.write(str.encode(serial_command +'\r'))
             resp = self._readSerial_()
-            print(">>1",serial_command, resp)
+            #print(">>1",serial_command, resp)
             if len(resp)==1:
                 if resp[0]=="+":
                     pass
@@ -604,7 +604,7 @@ class Board(threading.Thread):
                     print("todo: response == '-' pass message of failure")
                 else:# this is a command echo string.  now fetch command response
                     resp = self._readSerial_()
-                    print(">>2",serial_command, resp)
+                    #print(">>2",serial_command, resp)
                     if len(resp)!=2:
                         if resp == ['-']:
                             print("todo: response == '-' pass message of failure")
