@@ -16,7 +16,7 @@ class AMT203():
 
     for pin in gpios_for_chip_select:
         GPIO.setup(pin, GPIO.OUT)
-        GPIO.output(pin, GPIO.HIGH)  
+        GPIO.output(pin, GPIO.HIGH)
 
   def spi_write_read(self, chip_select_pin, output_byte):
     GPIO.output(chip_select_pin, GPIO.LOW)
@@ -31,6 +31,11 @@ class AMT203():
     blank_byte_16 = self.spi_write_read(chip_select_pin, [0x00])
     most_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
     least_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
+
+    first_result = self.spi_write_read(chip_select_pin, [0x00])
+    while first_result[0] != 165:
+      first_result = self.spi_write_read(chip_select_pin, [0x00])
+
     return (most_significant_byte[0]<<8 | least_significant_byte[0])
 
   def get_presence(self, chip_select_pin):
