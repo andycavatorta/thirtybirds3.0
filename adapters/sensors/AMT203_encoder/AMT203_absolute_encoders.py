@@ -10,9 +10,9 @@ class AMT203():
     GPIO.setmode(GPIO.BCM)
     self.spi = spidev.SpiDev()
     self.spi.open(bus_number, device_number)
-    self.spi_speed = 5000
+    self.spi_speed = speed_hz
     self.spi.mode = 0b00
-    self.spi.no_cs = True
+    self.spi.no_cs = True 
 
     for pin in gpios_for_chip_select:
         GPIO.setup(pin, GPIO.OUT)
