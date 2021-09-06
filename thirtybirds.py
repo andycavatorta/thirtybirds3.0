@@ -71,7 +71,7 @@ path_containing_tb_and_app = os.path.split(tb_path)[0]
 
 from .network import host_info
 from .network import thirtybirds_connection
-from .network import dashboard
+#from .network import dashboard
 from .lib.version_control.software_management import Software_Management
 from .reporting.exceptions import capture_exceptions
 from .reporting.status.status_receiver import Status_Receiver 
@@ -319,10 +319,10 @@ class Thirtybirds():
             status_details["args"]
         )
         self.status_logger.error(status_details_str)
-        try:
-            self.dashboard_server.status_receiver(status_details_str)
-        except AttributeError:
-            pass
+        #try:
+        #    self.dashboard_server.status_receiver(status_details_str)
+        #except AttributeError:
+        #    pass
         
     def exception_receiver(self, exception):
         # to do : add logging, if in config
