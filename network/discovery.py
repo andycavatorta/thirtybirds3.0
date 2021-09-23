@@ -79,6 +79,7 @@ class Responder(threading.Thread):
                 msg_json = self.sock.recv(1024)
                 msg_d = yaml.safe_load(msg_json)
                 remoteIP = msg_d["ip"]
+                print("remote ip discovered by thirtybirds:",remoteIP)
                 msg_d["status"] = "device_discovered"
                 if self.discovery_update_receiver:
                     resp_d = self.discovery_update_receiver(msg_d)
