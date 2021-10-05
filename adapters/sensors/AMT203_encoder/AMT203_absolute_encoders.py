@@ -18,6 +18,9 @@ class AMT203():
         GPIO.setup(pin, GPIO.OUT)
         GPIO.output(pin, GPIO.HIGH)
 
+  def close(self):
+    self.spi.close()
+
   def spi_write_read(self, chip_select_pin, output_byte):
     GPIO.output(chip_select_pin, GPIO.LOW)
     time.sleep(.01)
@@ -60,5 +63,6 @@ class AMT203():
     for gpio_for_chip_select in  self.gpios_for_chip_select:
       presences.append(self.get_presence(gpio_for_chip_select))
     return presences
+
 
 
