@@ -3,7 +3,7 @@ import time
 import RPi.GPIO as GPIO
 
 class AMT203():
-  def __init__(self, bus_number=0, device_number=0, gpios_for_chip_select=[8], speed_hz=5000):   # cs=16
+  def __init__(self, bus_number=0, device_number=0, gpios_for_chip_select=[8], speed_hz=1953125):   # cs=16
     self.speed_hz = speed_hz
     self.gpios_for_chip_select = gpios_for_chip_select
 
@@ -28,18 +28,36 @@ class AMT203():
     GPIO.output(chip_select_pin, GPIO.HIGH)
     return received_byte
 
+  def spi_clean_buffer(self,chip_select_pin):
+    first_result = self.spi_write_read(chip_select_pin, [0x00])
+    while first_result[0] != 165:
+      first_result = self.spi_write_read(chip_select_pin, [0x00])
+
+  def get_position(self, chip_select_pin):
+    request = self.spi_write_read(chip_select_pin, [0x10])
+    while request[0] != 16:
+      request = self.spi_write_read(chip_select_pin, [0x10])
+    most_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
+    least_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
+    self.spi_clean_buffer(chip_select_pin)
+    #first_result = self.spi_write_read(chip_select_pin, [0x00])
+    #while first_result[0] != 165:
+    #  first_result = self.spi_write_read(chip_select_pin, [0x00])
+    return (most_significant_byte[0]<<8 | least_significant_byte[0])
+
+  """
   def get_position(self, chip_select_pin):
     request = self.spi_write_read(chip_select_pin, [0x10])
     blank_byte_165 = self.spi_write_read(chip_select_pin, [0x00])
     blank_byte_16 = self.spi_write_read(chip_select_pin, [0x00])
     most_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
     least_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
-
+    self.spi_clean_buffer(chip_select_pin)
     first_result = self.spi_write_read(chip_select_pin, [0x00])
     while first_result[0] != 165:
       first_result = self.spi_write_read(chip_select_pin, [0x00])
-
     return (most_significant_byte[0]<<8 | least_significant_byte[0])
+  """
 
   def get_presence(self, chip_select_pin):
     request = self.spi_write_read(chip_select_pin, [0x10])
