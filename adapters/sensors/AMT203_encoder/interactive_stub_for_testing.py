@@ -57,7 +57,7 @@ def get_position(cs):
 spiRW(cs, [0x70], 5000, 20)
 """
 
-  def set_zero(self):
+def set_zero(self):
     self.clean_buffer()
     first_result = self.spiRW([0x70],self.speed,20)
     while first_result[0] != 128:
