@@ -33,15 +33,15 @@ def spiRW(cs, values, speed, delay):
     return msg
 
 def get_position(cs):
-    first_result = self.spiRW([0x10],0,20)
+    first_result = spiRW([0x10],0,20)
     while first_result[0] != 16:
-      first_result = self.spiRW([0x00],0,20)
+      first_result = spiRW([0x00],0,20)
     request = spiRW(cs, [0x10], 5000, 20)
     blank_byte_165 = spiRW(cs, [0x00], 5000, 20)
     blank_byte_16 = spiRW(cs, [0x00], 5000, 20)
     most_significant_byte = spiRW(cs, [0x00], 5000, 20)
     least_significant_byte = spiRW(cs, [0x00], 5000, 20)
-    self.clean_buffer()
+    clean_buffer()
     return (most_significant_byte[0]<<8 | least_significant_byte[0])
 
 
