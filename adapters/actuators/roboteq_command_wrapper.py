@@ -1856,7 +1856,7 @@ class Macro(threading.Thread):
     def get_limit_switch(self):
         return True if GPIO.input(self.limit_switch_pin) == 1 else False
 
-    def block_until_position_reached(self, destination_position, precision=200 timeout=10.0):
+    def block_until_position_reached(self, destination_position, precision=200, timeout=10.0):
         start_time = time.time()
         start_position = int(self.motor.get_encoder_counter_absolute(True))
         last_position = start_position
