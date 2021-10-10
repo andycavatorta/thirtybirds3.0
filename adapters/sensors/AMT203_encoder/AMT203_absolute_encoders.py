@@ -64,10 +64,12 @@ class AMT203():
 
   def get_presence(self, chip_select_pin):
     request = self.spi_write_read(chip_select_pin, [0x10])
-    blank_byte_165 = self.spi_write_read(chip_select_pin, [0x00])
-    blank_byte_16 = self.spi_write_read(chip_select_pin, [0x00])
-    most_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
-    least_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
+    while request[0] != 16:
+      request = self.spi_write_read(chip_select_pin, [0x00])
+    blank_byte_165 = self.spi_write_read(chip_select_pin, [0x10])
+    blank_byte_16 = self.spi_write_read(chip_select_pin, [0x10])
+    most_significant_byte = self.spi_write_read(chip_select_pin, [0x10])
+    least_significant_byte = self.spi_write_read(chip_select_pin, [0x10])
     print("get_presence",request,blank_byte_165,blank_byte_16,most_significant_byte,least_significant_byte)
     if blank_byte_165 == [165] and blank_byte_16 == [16]:
       return True
