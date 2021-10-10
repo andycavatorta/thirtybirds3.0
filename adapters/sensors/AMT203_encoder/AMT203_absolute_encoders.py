@@ -37,12 +37,12 @@ class AMT203():
     print("AMT203 get_position chip_select_pin=",chip_select_pin)
     request = self.spi_write_read(chip_select_pin, [0x10])
     while request[0] != 16:
-      request = self.spi_write_read(chip_select_pin, [0x10])
-    most_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
-    least_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
+      request = self.spi_write_read(chip_select_pin, [0x00])
+    most_significant_byte = self.spi_write_read(chip_select_pin, [0x10])
+    least_significant_byte = self.spi_write_read(chip_select_pin, [0x10])
     two_bytes = most_significant_byte[0]<<8 | least_significant_byte[0]
     print("AMT203 get_position most_significant_byte:",most_significant_byte, "least_significant_byte:",least_significant_byte,"two_bytes:",two_bytes)
-    self.spi_clean_buffer(chip_select_pin)
+    #self.spi_clean_buffer(chip_select_pin)
     #first_result = self.spi_write_read(chip_select_pin, [0x00])
     #while first_result[0] != 165:
     #  first_result = self.spi_write_read(chip_select_pin, [0x00])
