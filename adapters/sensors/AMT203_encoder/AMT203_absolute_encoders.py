@@ -68,6 +68,7 @@ class AMT203():
     blank_byte_16 = self.spi_write_read(chip_select_pin, [0x00])
     most_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
     least_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
+    print("get_presence",request,blank_byte_165,blank_byte_16,most_significant_byte,least_significant_byte)
     if blank_byte_165 == [165] and blank_byte_16 == [16]:
       return True
     else:
