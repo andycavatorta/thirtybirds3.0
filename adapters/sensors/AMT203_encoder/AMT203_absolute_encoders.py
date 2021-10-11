@@ -64,8 +64,10 @@ class AMT203():
 
   def get_presence(self, chip_select_pin):
     request = self.spi_write_read(chip_select_pin, [0x10])
-    while request[0] != 16:
+    counter = 0
+    while request[0] != 16 and counter < 100:
       request = self.spi_write_read(chip_select_pin, [0x00])
+      counter += 1
     blank_byte_165 = self.spi_write_read(chip_select_pin, [0x10])
     blank_byte_16 = self.spi_write_read(chip_select_pin, [0x10])
     most_significant_byte = self.spi_write_read(chip_select_pin, [0x10])
