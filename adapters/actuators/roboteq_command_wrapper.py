@@ -1288,6 +1288,7 @@ class Motor(threading.Thread):
         return int(self.states["C"])
 
     def _store_encoder_counter_absolute_(self, values_str, event):
+        print("_store_encoder_counter_absolute_",values_str,event)
         self.states["C"] = values_str
         event.set()
 
@@ -1321,7 +1322,7 @@ class Motor(threading.Thread):
             serial_command = "?CR {}".format(self.channel)
             self.board.add_to_queue(serial_command, event, self._store_encoder_counter_relative_)
             event.wait()
-        return self.states["CR"]
+        return int(self.states["CR"])
 
     def _store_encoder_counter_relative_(self, values_str, event):
         self.states["CR"] = values_str
@@ -1855,17 +1856,18 @@ class Macro(threading.Thread):
     def get_limit_switch(self):
         return True if GPIO.input(self.limit_switch_pin) == 1 else False
 
-    def block_until_position_reached(self, destination_position, timeout=10.0):
+    def block_until_position_reached(self, destination_position, precision=200, timeout=10.0):
         start_time = time.time()
         start_position = int(self.motor.get_encoder_counter_absolute(True))
         last_position = start_position
         while True:
             current_position = int(self.motor.get_encoder_counter_absolute(True))
-            #if start_time + timeout <= time.time():
-            #    break
-            if abs(current_position - destination_position) < 200:
-                if last_position == current_position:
-                    break
+            if start_time + timeout <= time.time():
+                return False
+            if abs(current_position - destination_position) < precision:
+                return True
+                #if last_position == current_position:
+                #    break
             last_position = current_position
 
     def oscillate(self, params, callback):

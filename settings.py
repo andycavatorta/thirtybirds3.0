@@ -28,7 +28,7 @@ class Reporting():
     print_to_stdout = True
     publish_as_topic = "thirtybirds_exception"
 
-    publish_to_dash = True
+    publish_to_dash = False
 
     class Status_Types:
         EXCEPTIONS = True

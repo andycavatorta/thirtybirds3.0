@@ -3,7 +3,7 @@ import time
 import RPi.GPIO as GPIO
 
 class AMT203():
-  def __init__(self, bus_number=0, device_number=0, gpios_for_chip_select=[8], speed_hz=5000):   # cs=16
+  def __init__(self, bus_number=0, device_number=0, gpios_for_chip_select=[8], speed_hz=1953125):   # cs=16
     self.speed_hz = speed_hz
     self.gpios_for_chip_select = gpios_for_chip_select
 
@@ -18,6 +18,9 @@ class AMT203():
         GPIO.setup(pin, GPIO.OUT)
         GPIO.output(pin, GPIO.HIGH)
 
+  def close(self):
+    self.spi.close()
+
   def spi_write_read(self, chip_select_pin, output_byte):
     GPIO.output(chip_select_pin, GPIO.LOW)
     time.sleep(.01)
@@ -25,26 +28,52 @@ class AMT203():
     GPIO.output(chip_select_pin, GPIO.HIGH)
     return received_byte
 
+  def spi_clean_buffer(self,chip_select_pin):
+    first_result = self.spi_write_read(chip_select_pin, [0x00])
+    while first_result[0] != 165:
+      first_result = self.spi_write_read(chip_select_pin, [0x00])
+
+  def get_position(self, chip_select_pin):
+    #print("AMT203 get_position chip_select_pin=",chip_select_pin)
+    request = self.spi_write_read(chip_select_pin, [0x10])
+    while request[0] != 16:
+      request = self.spi_write_read(chip_select_pin, [0x00])
+    most_significant_byte = self.spi_write_read(chip_select_pin, [0x10])
+    least_significant_byte = self.spi_write_read(chip_select_pin, [0x10])
+    two_bytes = most_significant_byte[0]<<8 | least_significant_byte[0]
+    #print("AMT203 get_position most_significant_byte:",most_significant_byte, "least_significant_byte:",least_significant_byte,"two_bytes:",two_bytes)
+    #self.spi_clean_buffer(chip_select_pin)
+    #first_result = self.spi_write_read(chip_select_pin, [0x00])
+    #while first_result[0] != 165:
+    #  first_result = self.spi_write_read(chip_select_pin, [0x00])
+    return (two_bytes)
+
+  """
   def get_position(self, chip_select_pin):
     request = self.spi_write_read(chip_select_pin, [0x10])
     blank_byte_165 = self.spi_write_read(chip_select_pin, [0x00])
     blank_byte_16 = self.spi_write_read(chip_select_pin, [0x00])
     most_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
     least_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
-
+    self.spi_clean_buffer(chip_select_pin)
     first_result = self.spi_write_read(chip_select_pin, [0x00])
     while first_result[0] != 165:
       first_result = self.spi_write_read(chip_select_pin, [0x00])
-
     return (most_significant_byte[0]<<8 | least_significant_byte[0])
+  """
 
   def get_presence(self, chip_select_pin):
     request = self.spi_write_read(chip_select_pin, [0x10])
-    blank_byte_165 = self.spi_write_read(chip_select_pin, [0x00])
-    blank_byte_16 = self.spi_write_read(chip_select_pin, [0x00])
-    most_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
-    least_significant_byte = self.spi_write_read(chip_select_pin, [0x00])
-    if blank_byte_165 == [165] and blank_byte_16 == [16]:
+    counter = 0
+    while request[0] != 16 and counter < 100:
+      request = self.spi_write_read(chip_select_pin, [0x00])
+      counter += 1
+    blank_byte_165 = self.spi_write_read(chip_select_pin, [0x10])
+    blank_byte_16 = self.spi_write_read(chip_select_pin, [0x10])
+    most_significant_byte = self.spi_write_read(chip_select_pin, [0x10])
+    least_significant_byte = self.spi_write_read(chip_select_pin, [0x10])
+    print("get_presence",request,blank_byte_165,blank_byte_16,most_significant_byte,least_significant_byte)
+    if request == [16]:
       return True
     else:
       return False
@@ -60,5 +89,6 @@ class AMT203():
     for gpio_for_chip_select in  self.gpios_for_chip_select:
       presences.append(self.get_presence(gpio_for_chip_select))
     return presences
+
 
 
