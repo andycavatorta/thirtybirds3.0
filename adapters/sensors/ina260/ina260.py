@@ -1,12 +1,19 @@
+#import time
+#import board
+#import adafruit_ina260
 import time
 import board
+import busio
 import adafruit_ina260
 
 class INA260():
     def __init__(self):
         try:
-            i2c = board.I2C()
-            self.ina260 = adafruit_ina260.INA260(i2c)
+           # i2c = board.I2C()
+           # self.ina260 = adafruit_ina260.INA260(i2c)
+           i2c = busio.I2C(board.SCL, board.SDA)
+           ina260 = adafruit_ina260.INA260(i2c)
+
         except ValueError:
             print("INA260 not found")
             #add feedback through tb?
