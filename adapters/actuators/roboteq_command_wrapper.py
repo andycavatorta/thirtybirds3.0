@@ -1288,7 +1288,7 @@ class Motor(threading.Thread):
         return int(self.states["C"])
 
     def _store_encoder_counter_absolute_(self, values_str, event):
-        print("_store_encoder_counter_absolute_",values_str,event)
+        #print("_store_encoder_counter_absolute_",values_str,event)
         self.states["C"] = values_str
         event.set()
 
