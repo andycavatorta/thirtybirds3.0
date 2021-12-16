@@ -972,11 +972,14 @@ class Motor(threading.Thread):
         Example:
         !S 2500 : set motor 1 position velocity to 2500 RPM
         """
-        # HACK: set_aperating_mode shouldn't go here
-        self.set_operating_mode(self.channel, 1)
-        serial_command = "!S {} {}".format(self.channel, speed)
-        self.board.add_to_queue(serial_command)
-        self.set_operating_mode(self.channel, 0)
+        # HACK: shouldn't have to set operating mode here
+        cmds = [
+            f"^MMOD {self.channel}, 1",     # Operating mode = 1
+            f"!S {self.channel} {speed}",   # Set speed
+            f"^MMOD {self.channel}, 0",     # Operating mode = 0
+        ]
+        for cmd in cmds:
+            self.board.add_to_queue(serial_command)
 
     def set_acceleration(self, acceleration): # 0-50000. Acceleration value is in 0.1 * RPM per second.  
         if acceleration > 500000:
@@ -1998,7 +2001,7 @@ class Macro(threading.Thread):
                         self.go_to_absolute_position(params, callback)
                     if command=="oscillate":
                         self.oscillate(params, callback)
-                time.sleep(0.01)
+                time.sleep(0.02)
                 """
                 command, params, callback = self.queue.get(block=True, timeout=None)
                 if command=="go_to_limit_switch":
