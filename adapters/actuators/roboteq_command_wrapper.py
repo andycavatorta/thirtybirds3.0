@@ -973,10 +973,10 @@ class Motor(threading.Thread):
         !S 2500 : set motor 1 position velocity to 2500 RPM
         """
         # HACK: set_aperating_mode shouldn't go here
-        self.motor.set_operating_mode(1)
+        self.set_operating_mode(1)
         serial_command = "!S {} {}".format(self.channel, speed)
         self.board.add_to_queue(serial_command)
-        self.motor.set_operating_mode(0)
+        self.set_operating_mode(0)
 
     def set_acceleration(self, acceleration): # 0-50000. Acceleration value is in 0.1 * RPM per second.  
         if acceleration > 500000:
