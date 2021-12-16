@@ -979,7 +979,7 @@ class Motor(threading.Thread):
             f"^MMOD {self.channel}, 0",     # Operating mode = 0
         ]
         for cmd in cmds:
-            self.board.add_to_queue(serial_command)
+            self.board.add_to_queue(cmd)
 
     def set_acceleration(self, acceleration): # 0-50000. Acceleration value is in 0.1 * RPM per second.  
         if acceleration > 500000:
