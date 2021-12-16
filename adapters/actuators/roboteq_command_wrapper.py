@@ -976,7 +976,6 @@ class Motor(threading.Thread):
         cmds = [
             f"^MMOD {self.channel}, 1",     # Operating mode = 1
             f"!S {self.channel} {speed}",   # Set speed
-            f"^MMOD {self.channel}, 0",     # Operating mode = 0
         ]
         for cmd in cmds:
             self.board.add_to_queue(cmd)
