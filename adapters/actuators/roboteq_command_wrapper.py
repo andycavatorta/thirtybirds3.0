@@ -192,10 +192,10 @@ class Board(threading.Thread):
         self.states["V"] = values_str
         event.set()
 
-
     def emergency_stop(self):
         serial_command = "!EX"
         self.add_to_queue(serial_command)
+        print(f"Emergency stop on board name {self.name}, id {self.mcu_id}!")
 
     def emergency_stop_release(self):
         serial_command = "!MG"
