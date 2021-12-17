@@ -981,18 +981,12 @@ class Motor(threading.Thread):
             self.board.add_to_queue(cmd)
 
     def set_acceleration(self, acceleration): # 0-50000. Acceleration value is in 0.1 * RPM per second.  
-        if acceleration > 500000:
-            acceleration = 500000
-        if acceleration < 0:
-            acceleration = 0
+        acceleration = min(max(acceleration, 0), 500000)
         serial_command = "!AC {} {}".format(self.channel, acceleration)
         self.board.add_to_queue(serial_command)
 
     def set_deceleration(self, deceleration): # 0-50000. Acceleration value is in 0.1 * RPM per second.  
-        if deceleration > 500000:
-            deceleration = 500000
-        if deceleration < 0:
-            deceleration = 0
+        acceleration = min(max(acceleration, 0), 500000)
         serial_command = "!DC {} {}".format(self.channel, deceleration)
         self.board.add_to_queue(serial_command)
 
