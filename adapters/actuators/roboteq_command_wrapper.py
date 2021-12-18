@@ -1903,7 +1903,7 @@ class Macro(threading.Thread):
         self.coast()
 
     def set_speed(self, speed):
-        self.motor.set_operating_mode(1)
+        # self.motor.set_operating_mode(1)
         #self.motor.set_motor_acceleration_rate(50000)
         #self.motor.set_motor_deceleration_rate(50000)
         self.motor.set_motor_speed(speed)
