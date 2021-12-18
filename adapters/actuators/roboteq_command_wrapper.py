@@ -972,9 +972,8 @@ class Motor(threading.Thread):
         Example:
         !S 2500 : set motor 1 position velocity to 2500 RPM
         """
-        # HACK: shouldn't have to set operating mode here
         cmds = [
-            f"^MMOD {self.channel}, 1",     # Operating mode = 1
+            # f"^MMOD {self.channel}, 1",     # Operating mode = 1
             f"!S {self.channel} {speed}",   # Set speed
         ]
         for cmd in cmds:
