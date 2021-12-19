@@ -59,7 +59,7 @@ class AMT203():
     while request[0] != self.READ_POS:
       request = self.spi_write_read(chip_select_pin, [self.NO_OP])
       counter += 1
-      if counter = 100:
+      if counter == 100:
           return -1
     position_bytes = self.spi_write_read(chip_select_pin, [self.NO_OP])
     position_bytes += self.spi_write_read(chip_select_pin, [self.NO_OP])
@@ -113,7 +113,7 @@ class AMT203():
       while request[0] != self.ACK_ZERO:
         request = self.spi_write_read(chip_select_pin, [self.NO_OP])
         counter += 1
-        if counter = 100:
+        if counter == 100:
             return False
   return True
 
