@@ -20,8 +20,8 @@ class AMT203():
                delay=20):   # cs=16
     self.speed_hz = speed_hz
     self.gpios_for_chip_select = gpios_for_chip_select
-    self.delay_usec = delay_usec     # microseconds
-    self.delay_sec = delay_usec / 1E3
+    self.delay_usec = delay     # microseconds
+    self.delay_sec = delay / 1E3
 
     GPIO.setmode(GPIO.BCM)
     self.spi = spidev.SpiDev()
