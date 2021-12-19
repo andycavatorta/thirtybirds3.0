@@ -972,12 +972,7 @@ class Motor(threading.Thread):
         Example:
         !S 2500 : set motor 1 position velocity to 2500 RPM
         """
-        cmds = [
-            # f"^MMOD {self.channel}, 1",     # Operating mode = 1
-            f"!S {self.channel} {speed}",   # Set speed
-        ]
-        for cmd in cmds:
-            self.board.add_to_queue(cmd)
+        self.board.add_to_queue(f"!S {self.channel} {speed}")
 
     def set_acceleration(self, acceleration): # 0-50000. Acceleration value is in 0.1 * RPM per second.  
         acceleration = min(max(acceleration, 0), 500000)
