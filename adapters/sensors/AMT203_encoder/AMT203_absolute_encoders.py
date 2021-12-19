@@ -17,7 +17,7 @@ class AMT203():
                device_number=0, 
                gpios_for_chip_select=[8], 
                speed_hz=1953125,
-               delay=20):       # cs=16
+               delay=40):       # cs=16
     self.speed_hz = speed_hz
     self.gpios_for_chip_select = gpios_for_chip_select
     self.delay_usec = delay     # microseconds
