@@ -31,8 +31,8 @@ class AMT203():
     self.spi.no_cs = True 
 
     for pin in gpios_for_chip_select:
-        GPIO.setup(pin, GPIO.OUT)
-        GPIO.output(pin, GPIO.HIGH)
+      GPIO.setup(pin, GPIO.OUT)
+      GPIO.output(pin, GPIO.HIGH)
 
   def close(self):
     self.spi.close()
@@ -104,18 +104,18 @@ class AMT203():
   #     return False
   
   def get_presence(self, chip_select_pin) -> bool:
-      return self.get_position(chip_select_pin) > -1
+    return self.get_position(chip_select_pin) > -1
 
   def set_zero(self, chip_select_pin) -> bool:
-      """ Must power-cycle to start using new zero point """
-      request = self.spi_write_read(chip_select_pin, [self.SET_ZERO])
-      counter = 0
-      while request[0] != self.ACK_ZERO:
-        request = self.spi_write_read(chip_select_pin, [self.NO_OP])
-        counter += 1
-        if counter == 100:
-            return False
-  return True
+    """ Must power-cycle to start using new zero point """
+    request = self.spi_write_read(chip_select_pin, [self.SET_ZERO])
+    counter = 0
+    while request[0] != self.ACK_ZERO:
+      request = self.spi_write_read(chip_select_pin, [self.NO_OP])
+      counter += 1
+      if counter == 100:
+        return False
+    return True
 
   def get_positions(self) -> list:
     positions = []
