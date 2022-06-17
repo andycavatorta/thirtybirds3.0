@@ -2223,8 +2223,12 @@ class SDC(threading.Thread):
                             callback(command_response_l[1], event)
 
 
-
-
+def data_receiver_stub(msg):
+    print("data_receiver_stub",msg)
+def status_receiver_stub(msg):
+    print("status_receiver_stub",msg)
+def exception_receiver_stub(msg):
+    print("exception_receiver_stub",msg)
 
 
 test_controller = SDC(
