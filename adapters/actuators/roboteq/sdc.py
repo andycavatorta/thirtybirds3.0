@@ -162,7 +162,7 @@ class Status_Poller(threading.Thread):
                 self.states["motor_1_amps_limit_activated"] = runtime_status_flags["amps_limit_activated"]
             if runtime_status_flags["motor_stalled"] != self.states["motor_1_motor_stalled"]:
                 self.status_receiver("motor_1_motor_stalled",runtime_status_flags["motor_stalled"])
-                self.states["motor_1_motor_stalled"] = 
+                self.states["motor_1_motor_stalled"] = runtime_status_flags["motor_stalled"]
             if runtime_status_flags["loop_error_detected"] != self.states["motor_1_loop_error_detected"]:
                 self.status_receiver("motor_1_loop_error_detected",runtime_status_flags["loop_error_detected"])
                 self.states["motor_1_loop_error_detected"] = runtime_status_flags["loop_error_detected"]
