@@ -2214,15 +2214,15 @@ class SDC(threading.Thread):
                     pass
                     # todo: do we need to pass affirmation?
                 elif command_response_l[0]=="-":
-                    self.status_receiver("aborting: no matching serial adapter found",serial_command)
+                    self.status_receiver("SDC command error",serial_command)
                 else:# this is a command echo string. now fetch command response
                     command_response_l = self.get_serial_response()
                     print("command_response_l",command_response_l)
                     if len(command_response_l)!=2:
                         if command_response_l == ['-']:
-                            self.status_receiver("aborting: no matching serial adapter found",serial_command)
-                            if callback is not None:
-                                callback("error", event)
+                            self.status_receiver("SDC command error",serial_command)
+                            #if callback is not None:
+                            #    callback("error", event)
                     else:
                         if callback is not None:
                             callback(command_response_l[1], event)
