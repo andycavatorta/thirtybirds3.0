@@ -2227,8 +2227,8 @@ class SDC(threading.Thread):
 def data_receiver_stub(msg):
     print("data_receiver_stub",msg)
 def status_receiver_stub(msg):
-    print("status_receiver_stub",msg)
-def exception_receiver_stub(msg):
+    print("status_receiver_stub",msg, msg2="")
+def exception_receiver_stub(msg,msg2):
     print("exception_receiver_stub",msg)
 
 
