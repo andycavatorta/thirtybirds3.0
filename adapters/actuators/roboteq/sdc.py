@@ -86,6 +86,7 @@ class Status_Poller(threading.Thread):
             "overheat":0,
             "overvoltage":0,
             "undervoltage":0,
+            "short_circuit":0,
             "emergency_stop":0,
             "brushless_sensor_fault":0,
             "MOSFET_failure":0,
