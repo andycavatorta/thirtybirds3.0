@@ -145,7 +145,7 @@ class Status_Poller(threading.Thread):
                 self.status_receiver("motor_2_closed_loop_error",motor_2_closed_loop_error)
                 self.states["motor_2_closed_loop_error"] = motor_2_closed_loop_error
             time.sleep(self.period_s)
-            
+            """
             motor_1_temperature = self.sdc.motor_1.get_temperature()
             if motor_1_temperature != self.states["motor_1_temperature"]:
                 self.status_receiver("motor_1_temperature",motor_1_temperature)
@@ -155,7 +155,7 @@ class Status_Poller(threading.Thread):
                 self.status_receiver("motor_2_temperature",motor_2_temperature)
                 self.states["motor_2_temperature"] = motor_2_temperature
             time.sleep(self.period_s)
-
+            """
             runtime_status_flags = self.sdc.motor_1.get_runtime_status_flags()
             if runtime_status_flags["amps_limit_activated"] != self.states["motor_1_amps_limit_activated"]:
                 self.status_receiver("motor_1_amps_limit_activated",runtime_status_flags["amps_limit_activated"])
