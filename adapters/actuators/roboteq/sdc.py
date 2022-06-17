@@ -2036,7 +2036,7 @@ class SDC(threading.Thread):
         for config_entry in config:
             if config_entry=="brake_activation_delay":
                 self.set_brake_activation_delay(config[config_entry])
-            if config_entry==""command_priorities:
+            if config_entry=="command_priorities":
                 self.set_command_priorities(config[config_entry])
             if config_entry=="lock_status":
                 self.set_lock_status(config[config_entry])
@@ -2056,7 +2056,7 @@ class SDC(threading.Thread):
                 self.set_short_circuit_detection_threshold(config[config_entry])
             if config_entry=="undervoltage_limit":
                 self.set_undervoltage_limit(config[config_entry])
-            if config_entry==""user_boolean_value:
+            if config_entry=="user_boolean_value":
                 self.set_user_boolean_value(config[config_entry])
             if config_entry=="user_variable":
                 self.set_user_variable(config[config_entry])
