@@ -1472,6 +1472,7 @@ class SDC(threading.Thread):
         )
         self.status_poller.start()
 
+
     ##############################################
     #    MOTORS CONFIG                           #
     ##############################################
@@ -2226,13 +2227,13 @@ class SDC(threading.Thread):
 
 def data_receiver_stub(msg):
     print("data_receiver_stub",msg)
-def status_receiver_stub(msg):
-    print("status_receiver_stub",msg, msg2="")
-def exception_receiver_stub(msg,msg2):
+def status_receiver_stub(msg,msg2=""):
+    print("status_receiver_stub",msg,msg2 )
+def exception_receiver_stub(msg):
     print("exception_receiver_stub",msg)
 
 
-test_controller = SDC(
+sdc = SDC(
         data_receiver_stub, 
         status_receiver_stub, 
         exception_receiver_stub,
