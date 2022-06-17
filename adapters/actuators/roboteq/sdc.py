@@ -1434,7 +1434,7 @@ class SDC(threading.Thread):
             self.status_receiver("aborting:  This library supports only one controller at a time. Found", self.serial_device_paths)
             return
         self.serial = serial.Serial(
-            port=self.serial_device_path,
+            port=self.serial_device_paths[0],
             baudrate=115200,
             bytesize=serial.EIGHTBITS,
             stopbits=serial.STOPBITS_ONE,
