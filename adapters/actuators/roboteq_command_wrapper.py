@@ -192,10 +192,10 @@ class Board(threading.Thread):
         self.states["V"] = values_str
         event.set()
 
-
     def emergency_stop(self):
         serial_command = "!EX"
         self.add_to_queue(serial_command)
+        print(f"Emergency stop on board name {self.name}, id {self.mcu_id}!")
 
     def emergency_stop_release(self):
         serial_command = "!MG"
@@ -972,22 +972,15 @@ class Motor(threading.Thread):
         Example:
         !S 2500 : set motor 1 position velocity to 2500 RPM
         """
-        serial_command = "!S {} {}".format(self.channel, speed)
-        self.board.add_to_queue(serial_command)
+        self.board.add_to_queue(f"!S {self.channel} {speed}")
 
     def set_acceleration(self, acceleration): # 0-50000. Acceleration value is in 0.1 * RPM per second.  
-        if acceleration > 500000:
-            acceleration = 500000
-        if acceleration < 0:
-            acceleration = 0
+        acceleration = min(max(acceleration, 0), 500000)
         serial_command = "!AC {} {}".format(self.channel, acceleration)
         self.board.add_to_queue(serial_command)
 
     def set_deceleration(self, deceleration): # 0-50000. Acceleration value is in 0.1 * RPM per second.  
-        if deceleration > 500000:
-            deceleration = 500000
-        if deceleration < 0:
-            deceleration = 0
+        acceleration = min(max(acceleration, 0), 500000)
         serial_command = "!DC {} {}".format(self.channel, deceleration)
         self.board.add_to_queue(serial_command)
 
@@ -1904,7 +1897,7 @@ class Macro(threading.Thread):
         self.coast()
 
     def set_speed(self, speed):
-        self.motor.set_operating_mode(1)
+        # self.motor.set_operating_mode(1)
         #self.motor.set_motor_acceleration_rate(50000)
         #self.motor.set_motor_deceleration_rate(50000)
         self.motor.set_motor_speed(speed)
@@ -1995,7 +1988,7 @@ class Macro(threading.Thread):
                         self.go_to_absolute_position(params, callback)
                     if command=="oscillate":
                         self.oscillate(params, callback)
-                time.sleep(0.01)
+                time.sleep(0.02)
                 """
                 command, params, callback = self.queue.get(block=True, timeout=None)
                 if command=="go_to_limit_switch":
