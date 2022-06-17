@@ -47,7 +47,7 @@ class Status_Poller(threading.Thread):
             status_receiver, 
             exception_receiver,
             period_s=0.1, 
-            report_position=False
+            report_position=False,
         )
         threading.Thread.__init__(self)
         self.sdc = sdc
