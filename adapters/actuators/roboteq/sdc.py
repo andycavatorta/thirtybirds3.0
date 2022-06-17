@@ -1415,13 +1415,13 @@ class SDC(threading.Thread):
 
         self.motor_1 = Motor(
             self.add_to_queue,
-            0,
+            1,
             self.config,
             self.status_receiver
         )
         self.motor_2 = Motor(
             self.add_to_queue,
-            1,
+            2,
             self.config,
             self.status_receiver
         )
