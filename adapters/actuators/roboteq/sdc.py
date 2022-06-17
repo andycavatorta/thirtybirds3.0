@@ -1958,23 +1958,23 @@ class SDC(threading.Thread):
 
     def read_config_from_sdc(self):
         return {
-            "brake_activation_delay":self.board.get_brake_activation_delay(True),
-            "command_priorities":self.board.get_command_priorities(True),
-            "lock_status":self.board.get_lock_status(True),
-            "mixed_mode":self.board.get_mixed_mode(True),
-            "overvoltage_cutoff_threhold":self.board.get_overvoltage_cutoff_threhold(True),
-            #"overvoltage_hysteresis":self.board.get_overvoltage_hysteresis(True),
-            "pwm_frequency":self.board.get_pwm_frequency(True),
-            #"rs232_bit_rate":self.board.get_rs232_bit_rate(True),
-            #"runtime_fault_flags":self.board.get_runtime_fault_flags(True),
-            "script_auto_start":self.board.get_script_auto_start(True),
-            "serial_data_watchdog":self.board.get_serial_data_watchdog(True),
-            "serial_echo":self.board.get_serial_echo(True),
-            "short_circuit_detection_threshold":self.board.get_short_circuit_detection_threshold(True),
-            "undervoltage_limit":self.board.get_undervoltage_limit(True),
-            "user_boolean_value":self.board.get_user_boolean_value(True),
-            "user_variable":self.board.get_user_variable(True),
-            #"volts":self.board.get_volts(True),
+            "brake_activation_delay":self.get_brake_activation_delay(True),
+            "command_priorities":self.get_command_priorities(True),
+            "lock_status":self.get_lock_status(True),
+            "mixed_mode":self.get_mixed_mode(True),
+            "overvoltage_cutoff_threhold":self.get_overvoltage_cutoff_threhold(True),
+            #"overvoltage_hysteresis":self.get_overvoltage_hysteresis(True),
+            "pwm_frequency":self.get_pwm_frequency(True),
+            #"rs232_bit_rate":self.get_rs232_bit_rate(True),
+            #"runtime_fault_flags":self.get_runtime_fault_flags(True),
+            "script_auto_start":self.get_script_auto_start(True),
+            "serial_data_watchdog":self.get_serial_data_watchdog(True),
+            "serial_echo":self.get_serial_echo(True),
+            "short_circuit_detection_threshold":self.get_short_circuit_detection_threshold(True),
+            "undervoltage_limit":self.get_undervoltage_limit(True),
+            "user_boolean_value":self.get_user_boolean_value(True),
+            "user_variable":self.get_user_variable(True),
+            #"volts":self.get_volts(True),
             "motor_1":{
                 "closed_loop_error_detection":self.motor_1.get_closed_loop_error_detection(True),
                 "current_limit":self.motor_1.get_current_limit(True),
@@ -2227,237 +2227,9 @@ class SDC(threading.Thread):
 
 
 
-#############################################################################
-#############################################################################
-#############################################################################
-#############################################################################
-#############################################################################
-
-
-
-###############################33
-
-class Board(threading.Thread):
-    def __init__(
-            self, 
-            path, 
-            controller_ref, 
-            add_to_controller_queue,
-            boards_config):
-        threading.Thread.__init__(self)
-        self.serial_device_path = path
-        self.controller_ref = controller_ref
-        self.add_to_controller_queue = add_to_controller_queue
-        self.boards_config = boards_config
-        self.mcu_id = ""
-        self.settings_to_methods = {
-            "serial_data_watchdog":self.set_serial_data_watchdog,
-            "serial_echo":self.set_serial_echo
-        }
-
-        time.sleep(0.5) # give serial a moment
-        self.start()
-
-    ##############################################
-    #    CLASS INTERNALS                         #
-    ##############################################
-
-
-class Controller(threading.Thread):
-    def __init__(
-            self, 
-            data_receiver, 
-            status_receiver, 
-            exception_receiver,
-            boards_config, 
-            motor_1_config, 
-            motor_2_config, 
-            serial_device_path_patterns=['/dev/serial/by-id/usb-FTDI*','/dev/serial/by-id/usb-Roboteq*']):
-        threading.Thread.__init__(self)
-        #capture_exceptions.init(exception_receiver)
-        self.data_receiver = data_receiver
-        self.status_receiver = status_receiver
-        self.boards_config = boards_config
-        self.serial_device_path_patterns = serial_device_path_patterns
-        self.queue = queue.Queue()
-        self.mcu_serial_device_paths = self.get_device_id_list()
-        #self.status_receiver("self.mcu_serial_device_paths",self.mcu_serial_device_paths)
-        # create board objects and read their mcu_ids
-        print("self.mcu_serial_device_paths=",self.mcu_serial_device_paths)
-        if len(self.mcu_serial_device_paths) == 0:
-            print("Serial adapter not found")
-            return
-        if len(self.mcu_serial_device_paths) > 1:
-            print("This library supports only one controller at a time.")
-            return
-        self.board = Board(
-            self.mcu_serial_device_paths[0], 
-            self, 
-            self.add_to_queue,
-            self.boards_config)
-        # todo: apply settings
-        self.motors = [
-            Motor(
-                self.board,
-                1,
-                motor_1_config,
-                self.status_receiver
-            ),
-            Motor(
-                self.board,
-                2,
-                motor_2_config,
-                self.status_receiver
-            ),
-        ]
-        self.start()
-    def get_whole_config(self):
-        config_d = {
-            "board":{
-                "brake_activation_delay":self.board.get_brake_activation_delay(True),
-                "command_priorities":self.board.get_command_priorities(True),
-                "lock_status":self.board.get_lock_status(True),
-                "mixed_mode":self.board.get_mixed_mode(True),
-                "overvoltage_cutoff_threhold":self.board.get_overvoltage_cutoff_threhold(True),
-                #"overvoltage_hysteresis":self.board.get_overvoltage_hysteresis(True),
-                "pwm_frequency":self.board.get_pwm_frequency(True),
-                #"rs232_bit_rate":self.board.get_rs232_bit_rate(True),
-                "runtime_fault_flags":self.board.get_runtime_fault_flags(True),
-                "script_auto_start":self.board.get_script_auto_start(True),
-                "serial_data_watchdog":self.board.get_serial_data_watchdog(True),
-                "serial_echo":self.board.get_serial_echo(True),
-                "short_circuit_detection_threshold":self.board.get_short_circuit_detection_threshold(True),
-                "undervoltage_limit":self.board.get_undervoltage_limit(True),
-                "user_boolean_value":self.board.get_user_boolean_value(True),
-                "user_variable":self.board.get_user_variable(True),
-                "volts":self.board.get_volts(True),
-            },
-            "motor_1":{
-                "closed_loop_error":self.motor_1.get_closed_loop_error(True),
-                "closed_loop_error_detection":self.motor_1.get_closed_loop_error_detection(True),
-                "current_limit":self.motor_1.get_current_limit(True),
-                "current_limit_action":self.motor_1.get_current_limit_action(True),
-                "current_limit_amps":self.motor_1.get_current_limit_amps(True),
-                "current_limit_min_period":self.motor_1.get_current_limit_min_period(True),
-                "default_velocity_in_position_mode":self.motor_1.get_default_velocity_in_position_mode(True),
-                "encoder_high_count_limit":self.motor_1.get_encoder_high_count_limit(True),
-                "encoder_high_limit_action":self.motor_1.get_encoder_high_limit_action(True),
-                "encoder_low_count_limit":self.motor_1.get_encoder_low_count_limit(True),
-                "encoder_low_limit_action":self.motor_1.get_encoder_low_limit_action(True),
-                "encoder_ppr_value":self.motor_1.get_encoder_ppr_value(True),
-                "encoder_usage":self.motor_1.get_encoder_usage(True),
-                "max_power_forward":self.motor_1.get_max_power_forward(True),
-                "max_power_reverse":self.motor_1.get_max_power_reverse(True),
-                "max_rpm":self.motor_1.get_max_rpm(True),
-                "motor_acceleration_rate":self.motor_1.get_motor_acceleration_rate(True),
-                "motor_deceleration_rate":self.motor_1.get_motor_deceleration_rate(True),
-                "operating_mode":self.motor_1.get_operating_mode(True),
-                "pid_differential_gain":self.motor_1.get_pid_differential_gain(True),
-                "pid_integral_cap":self.motor_1.get_pid_integral_cap(True),
-                "pid_integral_gain":self.motor_1.get_pid_integral_gain(True),
-                "pid_proportional_gain":self.motor_1.get_pid_proportional_gain(True),
-                #"runtime_status_flags":self.motor_1.get_runtime_status_flags(True),
-                "sensor_type_select":self.motor_1.get_sensor_type_select(True),
-                "stall_detection":self.motor_1.get_stall_detection(True),
-            },
-            "motor_2":{
-                "closed_loop_error":self.motor_2.get_closed_loop_error(True),
-                "closed_loop_error_detection":self.motor_2.get_closed_loop_error_detection(True),
-                "current_limit":self.motor_2.get_current_limit(True),
-                "current_limit_action":self.motor_2.get_current_limit_action(True),
-                "current_limit_amps":self.motor_2.get_current_limit_amps(True),
-                "current_limit_min_period":self.motor_2.get_current_limit_min_period(True),
-                "default_velocity_in_position_mode":self.motor_2.get_default_velocity_in_position_mode(True),
-                "encoder_high_count_limit":self.motor_2.get_encoder_high_count_limit(True),
-                "encoder_high_limit_action":self.motor_2.get_encoder_high_limit_action(True),
-                "encoder_low_count_limit":self.motor_2.get_encoder_low_count_limit(True),
-                "encoder_low_limit_action":self.motor_2.get_encoder_low_limit_action(True),
-                "encoder_ppr_value":self.motor_2.get_encoder_ppr_value(True),
-                "encoder_usage":self.motor_2.get_encoder_usage(True),
-                "max_power_forward":self.motor_2.get_max_power_forward(True),
-                "max_power_reverse":self.motor_2.get_max_power_reverse(True),
-                "max_rpm":self.motor_2.get_max_rpm(True),
-                "motor_acceleration_rate":self.motor_2.get_motor_acceleration_rate(True),
-                "motor_deceleration_rate":self.motor_2.get_motor_deceleration_rate(True),
-                "operating_mode":self.motor_2.get_operating_mode(True),
-                "pid_differential_gain":self.motor_2.get_pid_differential_gain(True),
-                "pid_integral_cap":self.motor_2.get_pid_integral_cap(True),
-                "pid_integral_gain":self.motor_2.get_pid_integral_gain(True),
-                "pid_proportional_gain":self.motor_2.get_pid_proportional_gain(True),
-                #"runtime_status_flags":self.motor_2.get_runtime_status_flags(True),
-                "sensor_type_select":self.motor_2.get_sensor_type_select(True),
-                "stall_detection":self.motor_2.get_stall_detection(True),
-            }
-        }
-        return config_d
-
-    def get_runtime_errors(self, verbose=False):
-        runtime_errors = {}
-        runtime_fault_flags = self.board.get_runtime_fault_flags(True)
-        if runtime_fault_flags["overheat"] != 0:
-            runtime_errors["overheat"] = runtime_fault_flags["overheat"]
-        if runtime_fault_flags["overvoltage"] != 0:
-            runtime_errors["overvoltage"] = runtime_fault_flags["overvoltage"]
-        if runtime_fault_flags["undervoltage"] != 0:
-            runtime_errors["undervoltage"] = runtime_fault_flags["undervoltage"]
-        if runtime_fault_flags["short_circuit"] != 0:
-            runtime_errors["short_circuit"] = runtime_fault_flags["short_circuit"]
-        if runtime_fault_flags["emergency_stop"] != 0:
-            runtime_errors["emergency_stop"] = runtime_fault_flags["emergency_stop"]
-        if runtime_fault_flags["brushless_sensor_fault"] != 0:
-            runtime_errors["brushless_sensor_fault"] = runtime_fault_flags["brushless_sensor_fault"]
-        if runtime_fault_flags["MOSFET_failure"] != 0:
-            runtime_errors["MOSFET_failure"] = runtime_fault_flags["MOSFET_failure"]
-        if runtime_fault_flags["default_configuration_loaded_at_startup"] != 0:
-            runtime_errors["default_configuration_loaded_at_startup"] = runtime_fault_flags["default_configuration_loaded_at_startup"]
-        motor_1_closed_loop_error = self.motor_1.get_closed_loop_error(True)
-        if motor_1_closed_loop_error >= 100:
-            runtime_errors["motor_1_closed_loop_error"] = motor_1_closed_loop_error
-        motor_2_closed_loop_error = self.motor_2.get_closed_loop_error(True)
-        if motor_2_closed_loop_error >= 100:
-            runtime_errors["motor_2_closed_loop_error"] = motor_2_closed_loop_error
-        return runtime_errors
-        #self.board.get_volts(True)
-        #self.motor_1.get_motor_amps(True)
-        #self.motor_1.get_expected_motor_position(True)
-        #self.motor_1.get_encoder_counter_absolute(True)
-        #self.motor_1.get_encoder_motor_speed_in_rpm(True)
-
-
-    def get_device_id_list(self):
-        matching_serial_device_paths = []
-        for serial_device_path_pattern in self.serial_device_path_patterns:
-            matching_serial_device_paths.extend(glob.glob(serial_device_path_pattern))
-        return matching_serial_device_paths
-
-    def add_to_queue(self, system_int, method, response_str):
-        self.queue.put(( board_name, channel, method, response_str))
-    def run(self):
-        last_runtime_errors = {}
-        while True:
-            time.sleep(.5)
-            try:
-                board_name, channel, method, response_str = self.queue.get(False)
-                print("Controllers.run", board_name, channel, method, response_str)
-            except queue.Empty:
-                runtime_errors = self.get_runtime_errors()
-                if last_runtime_errors != runtime_errors:
-                    print("runtime_errors",runtime_errors)
-                last_runtime_errors = runtime_errors
-
-def data_receiver_stub(msg):
-    print("data_receiver_stub",msg)
-def status_receiver_stub(msg):
-    print("status_receiver_stub",msg)
-def exception_receiver_stub(msg):
-    print("exception_receiver_stub",msg)
-
-test_controller = Controller(
+test_controller = SDC(
         data_receiver_stub, 
         status_receiver_stub, 
         exception_receiver_stub,
-        {}, #boards_config
-        {}, #motor_1_config 
-        {}, #motor_2_config
+        {}, #config
     )
-
