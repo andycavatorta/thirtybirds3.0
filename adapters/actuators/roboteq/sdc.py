@@ -1441,7 +1441,7 @@ class SDC(threading.Thread):
             parity=serial.PARITY_NONE,
         )
 
-        self.board_states = {
+        self.states = {
             "B":None,
             "BKD":None,
             "BRUN":None,
