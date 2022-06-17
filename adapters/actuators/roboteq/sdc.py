@@ -1463,6 +1463,7 @@ class SDC(threading.Thread):
             "V":None,
             "VAR":None,
         }
+        self.start()
         self.status_poller = Status_Poller(
             self, 
             data_receiver, 
