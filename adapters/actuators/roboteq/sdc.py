@@ -155,7 +155,6 @@ class Status_Poller(threading.Thread):
                 self.status_receiver("motor_2_temperature",motor_2_temperature)
                 self.states["motor_2_temperature"] = motor_2_temperature
             time.sleep(self.period_s)
-            """
             runtime_status_flags = self.sdc.motor_1.get_runtime_status_flags()
             if runtime_status_flags["amps_limit_activated"] != self.states["motor_1_amps_limit_activated"]:
                 self.status_receiver("motor_1_amps_limit_activated",runtime_status_flags["amps_limit_activated"])
@@ -204,6 +203,7 @@ class Status_Poller(threading.Thread):
                 self.states["motor_2_amps_trigger_activated"] = runtime_status_flags["amps_trigger_activated"]
             time.sleep(self.period_s)
 
+            """
             runtime_fault_flags = self.sdc.get_runtime_fault_flags()
             if runtime_fault_flags["overheat"] != self.states["overheat"]:
                 self.status_receiver("overheat",runtime_fault_flags["overheat"])
