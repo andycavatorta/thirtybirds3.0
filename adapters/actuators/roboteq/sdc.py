@@ -1382,7 +1382,7 @@ class Motor():
 
     def _store_temperature_(self, values_str, event):
         channel_1, channel_2 = values_str.split(":")
-        self.states["T"] = [int(channel_1).int(channel_2)]
+        self.states["T"] = [int(channel_1),int(channel_2)]
         event.set()
 
     ##############################################
