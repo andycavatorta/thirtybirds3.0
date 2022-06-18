@@ -1979,7 +1979,7 @@ class SDC(threading.Thread):
             "user_variable":self.get_user_variable(True),
             #"volts":self.get_volts(True),
             "motor_1":{
-                #"closed_loop_error_detection":self.motor_1.get_closed_loop_error_detection(True),
+                "closed_loop_error_detection":self.motor_1.get_closed_loop_error_detection(True),
                 "current_limit":self.motor_1.get_current_limit(True),
                 "current_limit_action":self.motor_1.get_current_limit_action(True),
                 "current_limit_amps":self.motor_1.get_current_limit_amps(True),
@@ -2005,7 +2005,7 @@ class SDC(threading.Thread):
                 "stall_detection":self.motor_1.get_stall_detection(True),
             },
             "motor_2":{
-                #"closed_loop_error_detection":self.motor_2.get_closed_loop_error_detection(True),
+                "closed_loop_error_detection":self.motor_2.get_closed_loop_error_detection(True),
                 "current_limit":self.motor_2.get_current_limit(True),
                 "current_limit_action":self.motor_2.get_current_limit_action(True),
                 "current_limit_amps":self.motor_2.get_current_limit_amps(True),
