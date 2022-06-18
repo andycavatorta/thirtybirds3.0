@@ -96,6 +96,8 @@ class Status_Poller(threading.Thread):
 
     def run(self):
         while True:
+            self.sdc.set_digital_out_bits(1) # this is just to keep the command watchdog alive
+
             motor_1_duty_cycle = self.sdc.motor_1.get_duty_cycle()
             if motor_1_duty_cycle != self.states["motor_1_duty_cycle"]:
                 self.status_receiver("motor_1_duty_cycle",motor_1_duty_cycle)
@@ -1734,6 +1736,25 @@ class SDC(threading.Thread):
     def _store_brake_activation_delay_(self, values_str, event):
         self.states["BKD"] = values_str
         event.set()
+
+
+    def set_digital_out_bits(self, output_number): # -500,000 to 500,000
+        """
+        Description:
+        D1 - Set Individual Digital Out bits
+        Description:
+        The D1 command will activate the single digital output that is selected by the parameter
+        that follows.
+        Syntax Serial:
+        !D1 nn
+        Where:
+        nn = Output number
+        Example:
+        !D1 1 : will activate output 1
+        """
+        serial_command = "!D1 {} ".format(output_number)
+        self.add_to_queue(serial_command)
+
 
     ##############################################
     #    SERIAL                                  #
