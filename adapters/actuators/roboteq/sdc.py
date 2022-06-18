@@ -1471,7 +1471,7 @@ class SDC(threading.Thread):
             status_receiver, 
             exception_receiver
         )
-        self.status_poller.start()
+        #self.status_poller.start()
 
 
     ##############################################
