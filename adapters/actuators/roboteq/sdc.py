@@ -2067,8 +2067,8 @@ class SDC(threading.Thread):
         # to do: specific write formats must be finished 
 
         for config_entry in config["motor_1"]:
-            if config_entry=="closed_loop_error_detection":
-                self.motor_1.set_closed_loop_error_detection(config["motor_1"][config_entry])
+            #if config_entry=="closed_loop_error_detection":
+            #    self.motor_1.set_closed_loop_error_detection(config["motor_1"][config_entry])
             if config_entry=="current_limit":
                 self.motor_1.set_current_limit(config["motor_1"][config_entry])
             if config_entry=="current_limit_action":
@@ -2117,8 +2117,8 @@ class SDC(threading.Thread):
                 self.motor_1.set_stall_detection(config["motor_1"][config_entry])
 
         for config_entry in config["motor_2"]:
-            if config_entry=="closed_loop_error_detection":
-                self.motor_2.set_closed_loop_error_detection(config["motor_2"][config_entry])
+            #if config_entry=="closed_loop_error_detection":
+            #    self.motor_2.set_closed_loop_error_detection(config["motor_2"][config_entry])
             if config_entry=="current_limit":
                 self.motor_2.set_current_limit(config["motor_2"][config_entry])
             if config_entry=="current_limit_action":
