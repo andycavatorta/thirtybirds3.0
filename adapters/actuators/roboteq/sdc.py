@@ -2206,7 +2206,7 @@ class SDC(threading.Thread):
     def run(self):
         while True:
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
-            print("serial_command",serial_command)6666
+            print("serial_command",serial_command)
             self.serial.write(str.encode(serial_command +'\r'))
             command_response_l = self.get_serial_response()
             print("command_response_l",command_response_l)
