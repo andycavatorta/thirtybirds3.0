@@ -1966,7 +1966,7 @@ class SDC(threading.Thread):
             "lock_status":self.get_lock_status(True),
             "mixed_mode":self.get_mixed_mode(True),
             "overvoltage_cutoff_threhold":self.get_overvoltage_cutoff_threhold(True),
-            "overvoltage_hysteresis":self.get_overvoltage_hysteresis(True),
+            #"overvoltage_hysteresis":self.get_overvoltage_hysteresis(True),
             "pwm_frequency":self.get_pwm_frequency(True),
             "rs232_bit_rate":self.get_rs232_bit_rate(True),
             #"runtime_fault_flags":self.get_runtime_fault_flags(True),
