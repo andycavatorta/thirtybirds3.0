@@ -2206,10 +2206,10 @@ class SDC(threading.Thread):
     def run(self):
         while True:
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
-            #print("serial_command",serial_command)6666
+            print("serial_command",serial_command)6666
             self.serial.write(str.encode(serial_command +'\r'))
             command_response_l = self.get_serial_response()
-            #print("command_response_l",command_response_l)
+            print("command_response_l",command_response_l)
             if len(command_response_l)==1: # one element means 
                 if command_response_l[0]=="+":
                     pass
@@ -2218,7 +2218,7 @@ class SDC(threading.Thread):
                     self.status_receiver("SDC command error",serial_command)
                 else:# this is a command echo string. now fetch command response
                     command_response_l = self.get_serial_response()
-                    #print("command_response_l",command_response_l)
+                    print("command_response_l",command_response_l)
                     if len(command_response_l)!=2:
                         if command_response_l == ['-']:
                             self.status_receiver("SDC command error",serial_command)
