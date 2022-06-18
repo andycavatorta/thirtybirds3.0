@@ -1471,7 +1471,7 @@ class SDC(threading.Thread):
             status_receiver, 
             exception_receiver
         )
-        666666666self.status_poller.start()
+        self.status_poller.start()
 
 
     ##############################################
@@ -1977,7 +1977,7 @@ class SDC(threading.Thread):
             "undervoltage_limit":self.get_undervoltage_limit(True),
             "user_boolean_value":self.get_user_boolean_value(True),
             "user_variable":self.get_user_variable(True),
-            "volts":self.get_volts(True),
+            #"volts":self.get_volts(True),
             "motor_1":{
                 "closed_loop_error_detection":self.motor_1.get_closed_loop_error_detection(True),
                 "current_limit":self.motor_1.get_current_limit(True),
