@@ -1969,7 +1969,7 @@ class SDC(threading.Thread):
             #"overvoltage_hysteresis":self.get_overvoltage_hysteresis(True),
             "pwm_frequency":self.get_pwm_frequency(True),
             #"rs232_bit_rate":self.get_rs232_bit_rate(True),
-            #"runtime_fault_flags":self.get_runtime_fault_flags(True),
+            "runtime_fault_flags":self.get_runtime_fault_flags(True),
             "script_auto_start":self.get_script_auto_start(True),
             "serial_data_watchdog":self.get_serial_data_watchdog(True),
             "serial_echo":self.get_serial_echo(True),
