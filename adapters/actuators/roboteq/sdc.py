@@ -1838,7 +1838,7 @@ class SDC(threading.Thread):
         if self.states["FID"] is None or force_update:
             event = threading.Event()
             serial_command = "?FID"
-            self.add_to_queue(serial_command, event, self._store_mcu_id_)
+            self.add_to_queue(serial_command, event, self._store_firmware_version_)
             event.wait()
         return self.states["FID"]
 
