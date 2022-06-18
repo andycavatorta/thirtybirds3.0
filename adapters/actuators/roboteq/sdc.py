@@ -130,12 +130,10 @@ class Status_Poller(threading.Thread):
                 time.sleep(self.period_s)
 
             motor_1_encoder_motor_speed_in_rpm = self.sdc.motor_1.get_encoder_motor_speed_in_rpm()
-            print(motor_1_encoder_motor_speed_in_rpm)
             if motor_1_encoder_motor_speed_in_rpm != self.states["motor_1_encoder_motor_speed_in_rpm"]:
                 self.status_receiver("motor_1_encoder_motor_speed_in_rpm",motor_1_encoder_motor_speed_in_rpm)
                 self.states["motor_1_encoder_motor_speed_in_rpm"] = motor_1_encoder_motor_speed_in_rpm
             motor_2_encoder_motor_speed_in_rpm = self.sdc.motor_2.get_encoder_motor_speed_in_rpm()
-            print(motor_2_encoder_motor_speed_in_rpm)
             if motor_2_encoder_motor_speed_in_rpm != self.states["motor_2_encoder_motor_speed_in_rpm"]:
                 self.status_receiver("motor_2_encoder_motor_speed_in_rpm",motor_2_encoder_motor_speed_in_rpm)
                 self.states["motor_2_encoder_motor_speed_in_rpm"] = motor_2_encoder_motor_speed_in_rpm
