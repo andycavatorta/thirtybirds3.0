@@ -821,7 +821,7 @@ class Motor():
             0: Other feedback
             1: Brushless sensor feedback (Hall, SPI, Sin/Cos)
         """
-        serial_command = "^BLFB {} {}".format(encoder_or_other)
+        serial_command = "^BLFB {}".format(encoder_or_other)
         self.add_to_queue(serial_command)
 
     def get_sensor_type_select(self, force_update = True):
