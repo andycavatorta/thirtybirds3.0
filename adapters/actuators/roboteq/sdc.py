@@ -808,6 +808,22 @@ class Motor():
         serial_command = "^BLFB {} {}".format(self.channel, encoder_or_other)
         self.add_to_queue(serial_command)
 
+    def set_sensor_type_select_legacy(self, encoder_or_other):
+        """
+        This parameter is used to select which feedback sensor will be used to measure speed
+        or positions. On brushless motors system equipped with optical encoders, this parame-
+        ter lets you select the encoder or the brushless sensors (ie. Hall, Sin/Cos, or SPI) as the
+        source of speed or position feedback. Encoders provide higher precision capture and
+        should be preferred whenever possible. The choice Other is also used to select pulse or
+        analog feedback in some position modes,
+
+        encoder_or_other =
+            0: Other feedback
+            1: Brushless sensor feedback (Hall, SPI, Sin/Cos)
+        """
+        serial_command = "^BLFB {} {}".format(encoder_or_other)
+        self.add_to_queue(serial_command)
+
     def get_sensor_type_select(self, force_update = True):
         if self.states["BLFB"] is None or force_update:
             event = threading.Event()
