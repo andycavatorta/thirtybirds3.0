@@ -833,7 +833,7 @@ class Motor():
         return self.states["BLFB"]
 
     def _store_sensor_type_select_(self, values_str, event):
-        self.states["BLFB"] = values_str
+        self.states["BLFB"] = values_str.split(":")
         event.set()
 
     def set_encoder_usage(self, action):
