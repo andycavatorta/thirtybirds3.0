@@ -833,7 +833,8 @@ class Motor():
         return self.states["BLFB"]
 
     def _store_sensor_type_select_(self, values_str, event):
-        self.states["BLFB"] = values_str.split(":")
+        values_a = values_str.split(":")
+        self.states["BLFB"] = [values_a[0]:values_a[1]]
         event.set()
 
     def set_encoder_usage(self, action):
@@ -1801,7 +1802,8 @@ class SDC(threading.Thread):
         return self.states["CPRI"]
 
     def _store_command_priorities_(self, values_str, event):
-        self.states["CPRI"] = values_str
+        values_a = values_str.split(":")
+        self.states["CPRI"] = values_a
         event.set()
 
     def set_serial_echo(self, enable_disable):
