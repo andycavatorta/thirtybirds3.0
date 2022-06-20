@@ -1519,7 +1519,7 @@ class SDC(threading.Thread):
         return self.states["MXMD"]
 
     def _store_mixed_mode_(self, values_str, event):
-        self.states["MXMD"] = values_str
+        self.states["MXMD"] = 0 if values_str == "0:0" else 1
         event.set()
 
     def set_pwm_frequency(self,kilohertz):
