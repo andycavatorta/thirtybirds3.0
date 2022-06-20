@@ -1750,7 +1750,7 @@ class SDC(threading.Thread):
         return self.states["BKD"]
 
     def _store_brake_activation_delay_(self, values_str, event):
-        self.states["BKD"] = values_str
+        self.states["BKD"] = int(values_str)
         event.set()
 
 
@@ -1822,7 +1822,7 @@ class SDC(threading.Thread):
         return self.states["ECHOF"]
 
     def _store_serial_echo_(self, values_str, event):
-        self.states["ECHOF"] = values_str
+        self.states["ECHOF"] = int(values_str)
         event.set()
 
     def set_rs232_bit_rate(self, bit_rate_code):
@@ -1959,7 +1959,7 @@ class SDC(threading.Thread):
         return self.states["LK"]
 
     def _store_lock_status_(self, values_str, event):
-        self.states["LK"] = values_str
+        self.states["LK"] = int(values_str)
         event.set()
 
     ##############################################
