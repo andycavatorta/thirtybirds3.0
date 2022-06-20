@@ -337,7 +337,7 @@ class Motor():
         return self.states["MAC"]
 
     def _store_motor_acceleration_rate_(self, values_str, event):
-        self.states["MAC"] = values_str
+        self.states["MAC"] = int(values_str)
         event.set()
 
     def set_motor_deceleration_rate(self, rate):
@@ -371,7 +371,7 @@ class Motor():
         return self.states["MDEC"]
 
     def _store_motor_deceleration_rate_(self, values_str, event):
-        self.states["MDEC"] = values_str
+        self.states["MDEC"] = int(values_str)
         event.set()
 
     def set_operating_mode(self, mode):
@@ -399,7 +399,7 @@ class Motor():
         return self.states["MMOD"]
 
     def _store_operating_mode_(self, values_str, event):
-        self.states["MMOD"] = values_str
+        self.states["MMOD"] = int(values_str)
         event.set()
 
     def set_default_velocity_in_position_mode(self, velocity):
@@ -427,7 +427,7 @@ class Motor():
         return self.states["MVEL"]
 
     def _store_default_velocity_in_position_mode_(self, values_str, event):
-        self.states["MVEL"] = values_str
+        self.states["MVEL"] = int(values_str)
         event.set()
 
     def set_max_power_forward(self, max_power):
@@ -455,7 +455,7 @@ class Motor():
         return self.states["MXPF"]
 
     def _store_max_power_forward_(self, values_str, event):
-        self.states["MXPF"] = values_str
+        self.states["MXPF"] = int(values_str)
         event.set()
 
     def set_max_power_reverse(self, max_power):
@@ -484,7 +484,7 @@ class Motor():
         return self.states["MXPR"]
 
     def _store_max_power_reverse_(self, values_str, event):
-        self.states["MXPR"] = values_str
+        self.states["MXPR"] = int(values_str)
         event.set()
 
     def set_max_rpm(self, max_rpm):
@@ -512,7 +512,7 @@ class Motor():
         return self.states["MXRPM"]
 
     def _store_max_rpm_(self, values_str, event):
-        self.states["MXRPM"] = values_str
+        self.states["MXRPM"] = int(values_str)
         event.set()
 
     ##############################################
@@ -673,7 +673,7 @@ class Motor():
         return self.states["ICAP"]
 
     def _store_pid_integral_cap_(self, values_str, event):
-        self.states["ICAP"] = values_str
+        self.states["ICAP"] = int(values_str)
         event.set()
 
     def set_pid_differential_gain(self, gain):
@@ -705,7 +705,7 @@ class Motor():
         return self.states["KD"]
 
     def _store_pid_differential_gain_(self, values_str, event):
-        self.states["KD"] = values_str
+        self.states["KD"] = float(values_str) / 10.0
         event.set()
 
 
@@ -734,7 +734,7 @@ class Motor():
         return self.states["KI"]
 
     def _store_pid_integral_gain_(self, values_str, event):
-        self.states["KI"] = values_str
+        self.states["KI"] = float(values_str) / 10.0
         event.set()
 
     def set_pid_proportional_gain(self, gain):
@@ -761,7 +761,7 @@ class Motor():
         return self.states["KP"]
 
     def _store_pid_proportional_gain_(self, values_str, event):
-        self.states["KP"] = values_str
+        self.states["KP"] = float(values_str) / 10.0
         event.set()
 
 
@@ -862,7 +862,7 @@ class Motor():
         return self.states["EMOD"]
 
     def _store_encoder_usage_(self, values_str, event):
-        self.states["EMOD"] = values_str
+        self.states["EMOD"] = int(values_str) - self.bit_offset
         event.set()
 
     def set_encoder_ppr_value(self, ppr):
@@ -891,7 +891,7 @@ class Motor():
         return self.states["EPPR"]
 
     def _store_encoder_ppr_value_(self, values_str, event):
-        self.states["EPPR"] = values_str
+        self.states["EPPR"] = int(values_str)
         event.set()
 
     ##############################################
@@ -1048,7 +1048,7 @@ class Motor():
         return self.states["ALIM"]
 
     def _store_current_limit_(self, values_str, event):
-        self.states["ALIM"] = values_str
+        self.states["ALIM"] = float(values_str) / 10.0
         event.set()
 
     def set_current_limit_action(self, action):
@@ -1077,7 +1077,7 @@ class Motor():
         return self.states["ATGA"]
 
     def _store_current_limit_action_(self, values_str, event):
-        self.states["ATGA"] = values_str
+        self.states["ATGA"] = int(values_str) - self.bit_offset
         event.set()
 
     def set_current_limit_min_period(self, milliseconds):
@@ -1098,7 +1098,7 @@ class Motor():
         return self.states["ATGD"]
 
     def _store_current_limit_min_period_(self, values_str, event):
-        self.states["ATGD"] = values_str
+        self.states["ATGD"] = int(values_str)
         event.set()
 
 
@@ -1122,7 +1122,7 @@ class Motor():
         return self.states["ATRIG"]
 
     def _store_current_limit_amps_(self, values_str, event):
-        self.states["ATRIG"] = values_str
+        self.states["ATRIG"] = float(values_str) / 10.0
         event.set()
 
     def set_stall_detection(self, threshold):
@@ -1248,7 +1248,7 @@ class Motor():
         return self.states["EHLA"]
 
     def _store_encoder_high_limit_action_(self, values_str, event):
-        self.states["EHLA"] = int(values_str)
+        self.states["EHLA"] = int(values_str) - self.bit_offset
         event.set()
 
     def set_encoder_low_count_limit(self, limit):
@@ -1326,7 +1326,7 @@ class Motor():
         return self.states["ELLA"]
 
     def _store_encoder_low_limit_action_(self, values_str, event):
-        self.states["ELLA"] = int(values_str)
+        self.states["ELLA"] = int(values_str) - self.bit_offset
         event.set()
 
     def get_closed_loop_error(self, force_update = True):
@@ -1541,7 +1541,7 @@ class SDC(threading.Thread):
         return self.states["PWMF"]
 
     def _store_pwm_frequency_(self, values_str, event):
-        self.states["PWMF"] = values_str
+        self.states["PWMF"] = int(values_str)
         event.set()
 
 
@@ -1630,7 +1630,7 @@ class SDC(threading.Thread):
         return self.states["RWD"]
 
     def _store_serial_data_watchdog_(self, values_str, event):
-        self.states["RWD"] = values_str
+        self.states["RWD"] = int(values_str)
         event.set()
 
     def set_overvoltage_hysteresis(self,volts):
@@ -1681,7 +1681,7 @@ class SDC(threading.Thread):
         return self.states["OVL"]
 
     def _store_overvoltage_cutoff_threhold_(self, values_str, event):
-        self.states["OVL"] = values_str
+        self.states["OVL"] = float(values_str) / 10.0
         event.set()
 
 
@@ -1708,7 +1708,7 @@ class SDC(threading.Thread):
         return self.states["THLD"]
 
     def _store_short_circuit_detection_threshold_(self, values_str, event):
-        self.states["THLD"] = values_str
+        self.states["THLD"] = int(values_str)
         event.set()
 
     def set_undervoltage_limit(self,volts):
@@ -1729,7 +1729,7 @@ class SDC(threading.Thread):
         return self.states["UVL"]
 
     def _store_undervoltage_limit_(self, values_str, event):
-        self.states["UVL"] = values_str
+        self.states["UVL"] = int(values_str)
         event.set()
 
     def set_brake_activation_delay(self,miliseconds):
@@ -1985,7 +1985,7 @@ class SDC(threading.Thread):
         return self.states["BRUN"]
 
     def _store_script_auto_start_(self, values_str, event):
-        self.states["BRUN"] = values_str
+        self.states["BRUN"] = int(values_str)
         event.set()
 
     def run_script(self):
@@ -2012,8 +2012,8 @@ class SDC(threading.Thread):
             "serial_echo":self.get_serial_echo(True),
             "short_circuit_detection_threshold":self.get_short_circuit_detection_threshold(True),
             "undervoltage_limit":self.get_undervoltage_limit(True),
-            "user_boolean_value":self.get_user_boolean_value(True),
-            "user_variable":self.get_user_variable(True),
+            #"user_boolean_value":self.get_user_boolean_value(True),
+            #"user_variable":self.get_user_variable(True),
             #"volts":self.get_volts(True),
             "motor_1":{
                 "closed_loop_error_detection":self.motor_1.get_closed_loop_error_detection(True),
@@ -2076,12 +2076,12 @@ class SDC(threading.Thread):
         for config_entry in config:
             if config_entry=="brake_activation_delay":
                 self.set_brake_activation_delay(config[config_entry])
-            if config_entry=="command_priorities":
-                self.set_command_priorities(config[config_entry])
-            if config_entry=="lock_status":
-                self.set_lock_status(config[config_entry])
-            if config_entry=="mixed_mode":
-                self.set_mixed_mode(config[config_entry])
+            #if config_entry=="command_priorities":
+            #    self.set_command_priorities(config[config_entry])
+            #if config_entry=="lock_status":
+            #    self.set_lock_status(config[config_entry])
+            #if config_entry=="mixed_mode":
+            #    self.set_mixed_mode(config[config_entry])
             if config_entry=="overvoltage_cutoff_threhold":
                 self.set_overvoltage_cutoff_threhold(config[config_entry])
             if config_entry=="pwm_frequency":
@@ -2096,10 +2096,10 @@ class SDC(threading.Thread):
                 self.set_short_circuit_detection_threshold(config[config_entry])
             if config_entry=="undervoltage_limit":
                 self.set_undervoltage_limit(config[config_entry])
-            if config_entry=="user_boolean_value":
-                self.set_user_boolean_value(config[config_entry])
-            if config_entry=="user_variable":
-                self.set_user_variable(config[config_entry])
+            #if config_entry=="user_boolean_value":
+            #    self.set_user_boolean_value(config[config_entry])
+            #if config_entry=="user_variable":
+            #    self.set_user_variable(config[config_entry])
 
         # to do: specific write formats must be finished 
 
