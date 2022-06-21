@@ -2219,7 +2219,7 @@ class SDC(threading.Thread):
             if config_entry=="pid_proportional_gain":
                 self.motor_1.set_pid_proportional_gain(config["motor_1"][config_entry])
             if config_entry=="sensor_type_select":
-                self.motor_1.set_sensor_type_select(config["motor_1"][config_entry])
+                self.motor_1.set_sensor_type_select(config["motor_1"][config_entry][0])
             if config_entry=="stall_detection":
                 self.motor_1.set_stall_detection(config["motor_1"][config_entry])
 
@@ -2269,7 +2269,7 @@ class SDC(threading.Thread):
             if config_entry=="pid_proportional_gain":
                 self.motor_2.set_pid_proportional_gain(config["motor_2"][config_entry])
             if config_entry=="sensor_type_select":
-                self.motor_2.set_sensor_type_select(config["motor_2"][config_entry])
+                self.motor_2.set_sensor_type_select(config["motor_2"][config_entry][0])
             if config_entry=="stall_detection":
                 self.motor_2.set_stall_detection(config["motor_2"][config_entry])
         if save:
