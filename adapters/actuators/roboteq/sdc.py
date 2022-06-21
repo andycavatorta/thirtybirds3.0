@@ -2144,6 +2144,7 @@ class SDC(threading.Thread):
         self.emergency_stop()
         # apply emergency stop
         for config_entry in config:
+            print(config_entry)
             if config_entry=="brake_activation_delay":
                 self.set_brake_activation_delay(config[config_entry])
             #if config_entry=="command_priorities":
@@ -2174,6 +2175,7 @@ class SDC(threading.Thread):
         # to do: specific write formats must be finished 
 
         for config_entry in config["motor_1"]:
+            print(config_entry)
             if config_entry=="closed_loop_error_detection":
                 self.motor_1.set_closed_loop_error_detection(config["motor_1"][config_entry])
             if config_entry=="current_limit":
@@ -2219,12 +2221,14 @@ class SDC(threading.Thread):
             if config_entry=="pid_proportional_gain":
                 self.motor_1.set_pid_proportional_gain(config["motor_1"][config_entry])
             if config_entry=="sensor_type_select":
+                print("self.motor_1.set_sensor_type_select(0)")
                 self.motor_1.set_sensor_type_select(0)
                 #self.motor_1.set_sensor_type_select(config["motor_1"][config_entry][0])
             if config_entry=="stall_detection":
                 self.motor_1.set_stall_detection(config["motor_1"][config_entry])
 
         for config_entry in config["motor_2"]:
+            print(config_entry)
             if config_entry=="closed_loop_error_detection":
                 self.motor_2.set_closed_loop_error_detection(config["motor_2"][config_entry])
             if config_entry=="current_limit":
@@ -2270,6 +2274,7 @@ class SDC(threading.Thread):
             if config_entry=="pid_proportional_gain":
                 self.motor_2.set_pid_proportional_gain(config["motor_2"][config_entry])
             if config_entry=="sensor_type_select":
+                print("self.motor_2.set_sensor_type_select(18)")
                 self.motor_2.set_sensor_type_select(18)
                 #self.motor_2.set_sensor_type_select(config["motor_2"][config_entry][0])
             if config_entry=="stall_detection":
