@@ -863,7 +863,7 @@ class Motor():
         return self.states["EMOD"]
 
     def _store_encoder_usage_(self, values_str, event):
-        self.states["EMOD"] = int(values_str) - self.bit_offset
+        self.states["EMOD"] = int(values_str)
         event.set()
 
     def set_encoder_ppr_value(self, ppr):
@@ -1078,7 +1078,7 @@ class Motor():
         return self.states["ATGA"]
 
     def _store_current_limit_action_(self, values_str, event):
-        self.states["ATGA"] = int(values_str) - self.bit_offset
+        self.states["ATGA"] = int(values_str)
         event.set()
 
     def set_current_limit_min_period(self, milliseconds):
@@ -1327,7 +1327,7 @@ class Motor():
         return self.states["ELLA"]
 
     def _store_encoder_low_limit_action_(self, values_str, event):
-        self.states["ELLA"] = int(values_str) - self.bit_offset
+        self.states["ELLA"] = int(values_str)
         event.set()
 
     def get_closed_loop_error(self, force_update = True):
