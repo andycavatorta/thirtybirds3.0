@@ -863,7 +863,7 @@ class Motor():
         return self.states["EMOD"]
 
     def _store_encoder_usage_(self, values_str, event):
-        self.states["EMOD"] = int(values_str)
+        self.states["EMOD"] = int(values_str) - self.bit_offset
         event.set()
 
     def set_encoder_ppr_value(self, ppr):
