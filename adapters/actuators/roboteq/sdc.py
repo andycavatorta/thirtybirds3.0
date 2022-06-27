@@ -17,13 +17,9 @@ sdc.motor_2.set_speed()
 
 position, success = SDC2130.get_position()
 
-
 to do:
+make this work for version other than RCB100
 unify the types of status messages
-
-
-
-
 
 """
 
@@ -1560,7 +1556,7 @@ class SDC(threading.Thread):
             status_receiver, 
             exception_receiver
         )
-        #self.status_poller.start()
+        self.status_poller.start()
 
 
     ##############################################
