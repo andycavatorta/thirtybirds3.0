@@ -99,7 +99,7 @@ class Hardware_Management():
             "memory_free":self.get_memory_free(),
             "system_disk":self.get_system_disk(),
             "core_temp":self.get_core_temp(),
-            "core_voltage":self.get_core_voltage()
+            "core_voltage":self.get_core_voltage(),
             "os_version":[self.os_name,self.os_version],
             "wifi_strength":0 #self.get_wifi_strength()
         }
