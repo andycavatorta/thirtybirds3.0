@@ -89,8 +89,6 @@ class Software_Management():
             "uptime":self.get_os_uptime(),
             "runtime":self.get_script_runtime(),
             "os_version":self.get_os_version(),
-            "app_git_timestamp":,
-            "tb_git_timestamp":,
         }
 
     def run_update_scripts(self):
