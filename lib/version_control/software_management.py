@@ -72,7 +72,7 @@ class Software_Management():
     def get_git_timestamp(self):
         process = subprocess.run("cd {}; git log -1 --format=%cd".format(self.path), shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
         git_timestamp =  process.stdout
-        return git_timestamp.strip()
+        return git_timestamp
 
     def get_scripts_version(self):
         if self.using_scripts:
