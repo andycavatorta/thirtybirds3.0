@@ -31,7 +31,7 @@ import queue
 import RPi.GPIO as GPIO 
 import serial
 import sys
-import tim
+import time
 import threading
 
 sample_config = {
