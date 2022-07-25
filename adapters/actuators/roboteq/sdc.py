@@ -32,7 +32,7 @@ import RPi.GPIO as GPIO
 import serial
 import sys
 import tim
-eimport threading
+import threading
 
 sample_config = {
     "brake_activation_delay": 250,
