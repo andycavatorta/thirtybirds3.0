@@ -40,7 +40,6 @@ class Hardware_Management():
 
     def get_wifi_strength(self):
         process = subprocess.run('iwconfig', shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
-
         lines_from_bash_str = process.stdout
         lines_from_bash_l = lines_from_bash_str.split("\n")
         for line in lines_from_bash_l:
@@ -53,10 +52,16 @@ class Hardware_Management():
 
     def get_core_voltage(self):
         try:
-            return float(commands.getstatusoutput("/opt/vc/bin/vcgencmd measure_volts core")[1])
-            # ^ not formatted yet
+            process = subprocess.run("sensors", shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
+            process_lines = process.stdout.split("\n")
+            for line in process_lines:
+                if line[0:4] == "temp":
+                    templine = line
+                    break
+            temp_st = templine.split("+")
+            return float(temp_st[1][0:4])
         except Exception:
-            return False
+            return -1
 
     def get_system_cpu(self):
         return [x / os.cpu_count() * 100 for x in os.getloadavg()][-1]
@@ -86,7 +91,6 @@ class Hardware_Management():
                 kb_total = float(line_l_total[1])
                 mb_total = kb_total*1000.0
         return [mb_free,mb_total]
-            
 
     def get_system_status(self):
         report = {
@@ -95,6 +99,7 @@ class Hardware_Management():
             "memory_free":self.get_memory_free(),
             "system_disk":self.get_system_disk(),
             "core_temp":self.get_core_temp(),
+            "core_voltage":self.get_core_voltage()
             "os_version":[self.os_name,self.os_version],
             "wifi_strength":0 #self.get_wifi_strength()
         }

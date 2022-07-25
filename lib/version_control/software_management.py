@@ -10,10 +10,13 @@ import os
 import pickle
 import subprocess
 import sys
+import time
 
 root_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(root_path[0:root_path.find("/thirtybirds")])
 from thirtybirds3.reporting.exceptions import capture_exceptions
+
+START_TIME = time.time()
 
 #@capture_exceptions.Class
 class Software_Management():
@@ -40,15 +43,20 @@ class Software_Management():
             self.set_scripts_version(self.default_script_version_number)
         self.status_receiver.collect("started",self.status_receiver.types.INITIALIZATIONS)
 
+    def get_os_uptime(self):
+        process = subprocess.run('uptime -s', shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
+        return process.stdout.strip()
+
+    def get_script_runtime(self):
+        return time.time() - START_TIME
+
     def get_os_version(self):
         name = ""
         version = ""
         lines_from_bash = []
-
         process = subprocess.run('cat /etc/os-release', shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
         lines_from_bash_str = process.stdout
         lines_from_bash_l = lines_from_bash_str.split("\n")
-
         for line_from_bash in lines_from_bash_l:
             if line_from_bash.startswith("ID="):
                 name = line_from_bash[line_from_bash.index("=")+1:].strip("\"")
@@ -75,6 +83,15 @@ class Software_Management():
     def set_scripts_version(self, version):
         with open(self.version_pickle_path, "wb") as pickle_file:
             pickle.dump(float(version),pickle_file)
+
+    def get_system_status(self):
+        return {
+            "uptime":self.get_os_uptime(),
+            "runtime":self.get_script_runtime(),
+            "os_version":self.get_os_version(),
+            "app_git_timestamp":,
+            "tb_git_timestamp":,
+        }
 
     def run_update_scripts(self):
         command_errors = []

@@ -207,6 +207,8 @@ class Thirtybirds():
         self.tb_get_scripts_version = self.tb_software_management.get_scripts_version
         self.app_get_git_timestamp = self.app_software_management.get_git_timestamp
         self.app_get_scripts_version = self.app_software_management.get_scripts_version
+        self.get_os_uptime = self.app_software_management.get_os_uptime
+        self.get_script_runtime = self.app_software_management.get_script_runtime
         # commands
         self.app_pull_from_github = self.app_software_management.pull_from_github
         self.app_run_update_scripts = self.app_software_management.run_update_scripts
