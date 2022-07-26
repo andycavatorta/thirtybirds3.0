@@ -2464,6 +2464,8 @@ class SDC(threading.Thread):
                             print("a20")
                             #if callback is not None:
                             #    callback("error", event)
+                        else:
+                            callback(False, None, event)
                     else:
                         print("a21")
                         if callback is not None:
