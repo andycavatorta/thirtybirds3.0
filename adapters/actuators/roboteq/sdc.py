@@ -2325,8 +2325,8 @@ class SDC(threading.Thread):
             self.serial.write(str.encode(serial_command +'\r'))
             command_success, command_response_l = self.get_serial_response()
             if not command_success:
-                self.status_receiver("motor_controller_not_found")
-
+                self.status_receiver("motor_controller_unresponsive")
+                continue
             print("command_response_l",command_success,command_response_l)
             if len(command_response_l)==1: # one element means 
                 if command_response_l[0]=="+":
@@ -2335,7 +2335,10 @@ class SDC(threading.Thread):
                 elif command_response_l[0]=="-":
                     self.status_receiver("SDC command error",serial_command)
                 else:# this is a command echo string. now fetch command response
-                    command_success, command_response_l = self.get_serial_response()
+                    command_success, command_response_l = self.get_serial_response()()
+                    if not command_success:
+                        self.status_receiver("motor_controller_unresponsive")
+                        continue
                     print("command_response_2",command_success,command_response_l)
                     if len(command_response_l)!=2:
                         if command_response_l == ['-']:
