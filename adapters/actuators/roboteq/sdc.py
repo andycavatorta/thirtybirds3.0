@@ -2322,13 +2322,13 @@ class SDC(threading.Thread):
         while True:
             print("blocking at top of main thread")
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
-            print("serial_command",serial_command)
+            #print("serial_command",serial_command)
             self.serial.write(str.encode(serial_command +'\r'))
             command_success, command_response_l = self.get_serial_response()
             if not command_success:
                 self.status_receiver("motor_controller_unresponsive")
                 continue
-            print("command_response_l",command_success,command_response_l)
+            #print("command_response_l",command_success,command_response_l)
             if len(command_response_l)==1: # one element means 
                 if command_response_l[0]=="+":
                     pass
@@ -2340,7 +2340,7 @@ class SDC(threading.Thread):
                     if not command_success:
                         self.status_receiver("motor_controller_unresponsive")
                         continue
-                    print("command_response_2",command_success,command_response_l)
+                    #print("command_response_2",command_success,command_response_l)
                     if len(command_response_l)!=2:
                         if command_response_l == ['-']:
                             self.status_receiver("SDC command error",serial_command)
