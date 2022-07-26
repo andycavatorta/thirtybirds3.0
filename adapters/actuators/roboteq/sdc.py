@@ -2430,7 +2430,7 @@ class SDC(threading.Thread):
             self.status_receiver("motor_controller_unresponsive")
             return False, command_response_l
         # the response should be in ["+","-"]
-        if len(command_response_l)>1: #if this is the wrong phase of the request
+        if len(command_response_l[0])>1: #if this is the wrong phase of the request
             return True, command_response_l
         if command_response_l[0]=="-":
             self.status_receiver("motor controller returns nak")
