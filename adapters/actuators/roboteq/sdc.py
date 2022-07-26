@@ -1531,7 +1531,7 @@ class SDC(threading.Thread):
         self.serial = serial.Serial(
             port=self.serial_device_paths[0],
             baudrate=115200,
-            timeout=1.0,
+            timeout=2.0,
             bytesize=serial.EIGHTBITS,
             stopbits=serial.STOPBITS_ONE,
             parity=serial.PARITY_NONE,
