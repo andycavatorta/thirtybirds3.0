@@ -216,10 +216,15 @@ class Status_Poller(threading.Thread):
                 self.states["motor_1_closed_loop_error"] = motor_1_closed_loop_error
             print("8")
             motor_2_closed_loop_error = self.sdc.motor_2.get_closed_loop_error()
+            print("8.1")
             if motor_2_closed_loop_error != self.states["motor_2_closed_loop_error"]:
+                print("8.2")
                 self.status_receiver("motor_2_closed_loop_error",motor_2_closed_loop_error)
+                print("8.3")
                 self.states["motor_2_closed_loop_error"] = motor_2_closed_loop_error
+                print("8.4")
             time.sleep(self.period_s)
+            print("8.5")
             """
             motor_1_temperature = self.sdc.motor_1.get_temperature()
             if motor_1_temperature != self.states["motor_1_temperature"]:
