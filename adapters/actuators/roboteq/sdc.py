@@ -2419,7 +2419,7 @@ class SDC(threading.Thread):
             return False, ""
 
     def send_serial_command(self,serial_command):
-
+        pass
 
 
 
