@@ -409,8 +409,9 @@ class Motor():
             event.wait()
         return self.states["MAC"]
 
-    def _store_motor_acceleration_rate_(self, values_str, event):
-        self.states["MAC"] = int(values_str)
+    def _store_motor_acceleration_rate_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["MAC"] = int(values_str)
         event.set()
 
     def set_motor_deceleration_rate(self, rate):
@@ -443,8 +444,9 @@ class Motor():
             event.wait()
         return self.states["MDEC"]
 
-    def _store_motor_deceleration_rate_(self, values_str, event):
-        self.states["MDEC"] = int(values_str)
+    def _store_motor_deceleration_rate_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["MDEC"] = int(values_str)
         event.set()
 
     def set_operating_mode(self, mode):
@@ -471,8 +473,9 @@ class Motor():
             event.wait()
         return self.states["MMOD"]
 
-    def _store_operating_mode_(self, values_str, event):
-        self.states["MMOD"] = int(values_str)
+    def _store_operating_mode_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["MMOD"] = int(values_str)
         event.set()
 
     def set_default_velocity_in_position_mode(self, velocity):
@@ -499,8 +502,9 @@ class Motor():
             event.wait()
         return self.states["MVEL"]
 
-    def _store_default_velocity_in_position_mode_(self, values_str, event):
-        self.states["MVEL"] = int(values_str)
+    def _store_default_velocity_in_position_mode_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["MVEL"] = int(values_str)
         event.set()
 
     def set_max_power_forward(self, max_power):
@@ -527,8 +531,9 @@ class Motor():
             event.wait()
         return self.states["MXPF"]
 
-    def _store_max_power_forward_(self, values_str, event):
-        self.states["MXPF"] = int(values_str)
+    def _store_max_power_forward_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["MXPF"] = int(values_str)
         event.set()
 
     def set_max_power_reverse(self, max_power):
@@ -556,8 +561,9 @@ class Motor():
             event.wait()
         return self.states["MXPR"]
 
-    def _store_max_power_reverse_(self, values_str, event):
-        self.states["MXPR"] = int(values_str)
+    def _store_max_power_reverse_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["MXPR"] = int(values_str)
         event.set()
 
     def set_max_rpm(self, max_rpm):
@@ -584,8 +590,9 @@ class Motor():
             event.wait()
         return self.states["MXRPM"]
 
-    def _store_max_rpm_(self, values_str, event):
-        self.states["MXRPM"] = int(values_str)
+    def _store_max_rpm_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["MXRPM"] = int(values_str)
         event.set()
 
     ##############################################
@@ -695,8 +702,9 @@ class Motor():
             event.wait()
         return self.states["P"]
 
-    def _store_duty_cycle_(self, values_str, event):
-        self.states["P"] = values_str
+    def _store_duty_cycle_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["P"] = values_str
         event.set()
 
     def get_motor_amps(self, force_update = True):
@@ -711,8 +719,9 @@ class Motor():
             event.wait()
         return self.states["A"]
 
-    def _store_motor_amps_(self, values_str, event):
-        self.states["A"] = float(values_str)
+    def _store_motor_amps_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["A"] = float(values_str)
         event.set()
 
     ##############################################
@@ -745,8 +754,9 @@ class Motor():
             event.wait()
         return self.states["ICAP"]
 
-    def _store_pid_integral_cap_(self, values_str, event):
-        self.states["ICAP"] = int(values_str)
+    def _store_pid_integral_cap_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["ICAP"] = int(values_str)
         event.set()
 
     def set_pid_differential_gain(self, gain):
@@ -777,8 +787,9 @@ class Motor():
             event.wait()
         return self.states["KD"]
 
-    def _store_pid_differential_gain_(self, values_str, event):
-        self.states["KD"] = float(values_str) / 10.0
+    def _store_pid_differential_gain_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["KD"] = float(values_str) / 10.0
         event.set()
 
 
@@ -806,8 +817,9 @@ class Motor():
             event.wait()
         return self.states["KI"]
 
-    def _store_pid_integral_gain_(self, values_str, event):
-        self.states["KI"] = float(values_str) / 10.0
+    def _store_pid_integral_gain_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["KI"] = float(values_str) / 10.0
         event.set()
 
     def set_pid_proportional_gain(self, gain):
@@ -833,8 +845,9 @@ class Motor():
             event.wait()
         return self.states["KP"]
 
-    def _store_pid_proportional_gain_(self, values_str, event):
-        self.states["KP"] = float(values_str) / 10.0
+    def _store_pid_proportional_gain_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["KP"] = float(values_str) / 10.0
         event.set()
 
 
@@ -853,8 +866,9 @@ class Motor():
             event.wait()
         return self.states["TR"]
 
-    def _store_expected_motor_position_(self, values_str, event):
-        self.states["TR"] = values_str
+    def _store_expected_motor_position_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["TR"] = values_str
         event.set()
 
     ##############################################
@@ -905,11 +919,12 @@ class Motor():
             event.wait()
         return self.states["BLFB"]
 
-    def _store_sensor_type_select_(self, values_str, event):
+    def _store_sensor_type_select_(self, success_bool, values_str, event):
         #print("_store_sensor_type_select_", repr(values_str))
-        if values_str != "":
-            values_a = values_str.split(":")
-            self.states["BLFB"] = [int(values_a[0]),int(values_a[1])]
+        if success_bool:
+            if values_str != "":
+                values_a = values_str.split(":")
+                self.states["BLFB"] = [int(values_a[0]),int(values_a[1])]
         event.set()
 
     def set_encoder_usage(self, action):
@@ -937,8 +952,9 @@ class Motor():
             event.wait()
         return self.states["EMOD"]
 
-    def _store_encoder_usage_(self, values_str, event):
-        self.states["EMOD"] = int(values_str) - self.bit_offset
+    def _store_encoder_usage_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["EMOD"] = int(values_str) - self.bit_offset
         event.set()
 
     def set_encoder_ppr_value(self, ppr):
@@ -966,8 +982,9 @@ class Motor():
             event.wait()
         return self.states["EPPR"]
 
-    def _store_encoder_ppr_value_(self, values_str, event):
-        self.states["EPPR"] = int(values_str)
+    def _store_encoder_ppr_value_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["EPPR"] = int(values_str)
         event.set()
 
     ##############################################
@@ -989,9 +1006,10 @@ class Motor():
             self.add_to_queue(serial_command, event, self._store_encoder_counter_absolute_)
         return int(self.states["C"])
 
-    def _store_encoder_counter_absolute_(self, values_str, event):
+    def _store_encoder_counter_absolute_(self, success_bool, values_str, event):
         #print("_store_encoder_counter_absolute_",values_str,event)
-        self.states["C"] = values_str
+        if success_bool:
+            self.states["C"] = values_str
         event.set()
 
     def get_feedback(self, force_update = True):
@@ -1009,8 +1027,9 @@ class Motor():
             event.wait()
         return self.states["F"]
 
-    def _store_feedback_(self, values_str, event):
-        self.states["F"] = values_str
+    def _store_feedback_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["F"] = values_str
         event.set()
 
     def get_encoder_counter_relative(self, force_update = True):
@@ -1025,8 +1044,9 @@ class Motor():
             self.add_to_queue(serial_command, event, self._store_encoder_counter_relative_)
         return int(self.states["CR"])
 
-    def _store_encoder_counter_relative_(self, values_str, event):
-        self.states["CR"] = values_str
+    def _store_encoder_counter_relative_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["CR"] = values_str
         event.set()
 
 
@@ -1042,8 +1062,9 @@ class Motor():
             event.wait()
         return self.states["S"]
 
-    def _store_encoder_motor_speed_in_rpm_(self, values_str, event):
-        self.states["S"] = values_str
+    def _store_encoder_motor_speed_in_rpm_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["S"] = values_str
         event.set()
 
 
@@ -1068,8 +1089,9 @@ class Motor():
             event.wait()
         return self.states["SR"]
 
-    def _store_encoder_speed_relative_(self, values_str, event):
-        self.states["SR"] = values_str
+    def _store_encoder_speed_relative_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["SR"] = values_str
         event.set()
 
 
@@ -1107,8 +1129,9 @@ class Motor():
             event.wait()
         return self.states["FS"]
 
-    def _store_config_flags_(self, values_str, event):
-        self.states["FS"] = values_str
+    def _store_config_flags_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["FS"] = values_str
         event.set()
 
     def set_current_limit(self, amps):
@@ -1123,8 +1146,9 @@ class Motor():
             event.wait()
         return self.states["ALIM"]
 
-    def _store_current_limit_(self, values_str, event):
-        self.states["ALIM"] = float(values_str) / 10.0
+    def _store_current_limit_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["ALIM"] = float(values_str) / 10.0
         event.set()
 
     def set_current_limit_action(self, action):
@@ -1152,8 +1176,9 @@ class Motor():
             event.wait()
         return self.states["ATGA"]
 
-    def _store_current_limit_action_(self, values_str, event):
-        self.states["ATGA"] = int(values_str)
+    def _store_current_limit_action_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["ATGA"] = int(values_str)
         event.set()
 
     def set_current_limit_min_period(self, milliseconds):
@@ -1173,8 +1198,9 @@ class Motor():
             event.wait()
         return self.states["ATGD"]
 
-    def _store_current_limit_min_period_(self, values_str, event):
-        self.states["ATGD"] = int(values_str)
+    def _store_current_limit_min_period_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["ATGD"] = int(values_str)
         event.set()
 
 
@@ -1197,8 +1223,9 @@ class Motor():
             event.wait()
         return self.states["ATRIG"]
 
-    def _store_current_limit_amps_(self, values_str, event):
-        self.states["ATRIG"] = float(values_str) / 10.0
+    def _store_current_limit_amps_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["ATRIG"] = float(values_str) / 10.0
         event.set()
 
     def set_stall_detection(self, threshold):
@@ -1229,8 +1256,9 @@ class Motor():
             event.wait()
         return self.states["BLSTD"]
 
-    def _store_stall_detection_(self, values_str, event):
-        self.states["BLSTD"] = int(values_str)
+    def _store_stall_detection_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["BLSTD"] = int(values_str)
         event.set()
 
     def set_closed_loop_error_detection(self, threshold):
@@ -1261,8 +1289,9 @@ class Motor():
             event.wait()
         return self.states["CLERD"]
 
-    def _store_closed_loop_error_detection_(self, values_str, event):
-        self.states["CLERD"] = int(values_str)
+    def _store_closed_loop_error_detection_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["CLERD"] = int(values_str)
         event.set()
 
     def set_encoder_high_count_limit(self, limit):
@@ -1289,8 +1318,9 @@ class Motor():
             event.wait()
         return self.states["EHL"]
 
-    def _store_encoder_high_count_limit_(self, values_str, event):
-        self.states["EHL"] = int(values_str)
+    def _store_encoder_high_count_limit_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["EHL"] = int(values_str)
         event.set()
 
     def set_encoder_high_limit_action(self, action):
@@ -1323,8 +1353,9 @@ class Motor():
             event.wait()
         return self.states["EHLA"]
 
-    def _store_encoder_high_limit_action_(self, values_str, event):
-        self.states["EHLA"] = int(values_str) - self.bit_offset
+    def _store_encoder_high_limit_action_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["EHLA"] = int(values_str) - self.bit_offset
         event.set()
 
     def set_encoder_low_count_limit(self, limit):
@@ -1363,8 +1394,9 @@ class Motor():
             event.wait()
         return self.states["ELL"]
 
-    def _store_encoder_low_count_limit_(self, values_str, event):
-        self.states["ELL"] = int(values_str)
+    def _store_encoder_low_count_limit_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["ELL"] = int(values_str)
         event.set()
 
     def set_encoder_low_limit_action(self, action):
@@ -1401,8 +1433,9 @@ class Motor():
             event.wait()
         return self.states["ELLA"]
 
-    def _store_encoder_low_limit_action_(self, values_str, event):
-        self.states["ELLA"] = int(values_str)
+    def _store_encoder_low_limit_action_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["ELLA"] = int(values_str)
         event.set()
 
     def get_closed_loop_error(self, force_update = True):
@@ -1418,8 +1451,9 @@ class Motor():
             event.wait()
         return self.states["E"]
 
-    def _store_closed_loop_error_(self, values_str, event):
-        self.states["E"] = int(values_str)
+    def _store_closed_loop_error_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["E"] = int(values_str)
         event.set()
 
     def get_runtime_status_flags(self, force_update = True):
@@ -1446,17 +1480,18 @@ class Motor():
             event.wait()
         return self.states["FM"]
 
-    def _store_runtime_status_flags_(self, values_str, event):
-        values_int = int(values_str)
-        self.states["FM"] = {
-            "amps_limit_activated":self._get_bit_(values_int, 0),
-            "motor_stalled":self._get_bit_(values_int, 1),
-            "loop_error_detected":self._get_bit_(values_int, 2),
-            "safety_stop_active":self._get_bit_(values_int, 3),
-            "forward_limit_triggered":self._get_bit_(values_int, 4),
-            "reverse_limit_triggered":self._get_bit_(values_int, 5),
-            "amps_trigger_activated":self._get_bit_(values_int, 6),
-        }
+    def _store_runtime_status_flags_(self, success_bool, values_str, event):
+        if success_bool:
+            values_int = int(values_str)
+            self.states["FM"] = {
+                "amps_limit_activated":self._get_bit_(values_int, 0),
+                "motor_stalled":self._get_bit_(values_int, 1),
+                "loop_error_detected":self._get_bit_(values_int, 2),
+                "safety_stop_active":self._get_bit_(values_int, 3),
+                "forward_limit_triggered":self._get_bit_(values_int, 4),
+                "reverse_limit_triggered":self._get_bit_(values_int, 5),
+                "amps_trigger_activated":self._get_bit_(values_int, 6),
+            }
         event.set()
 
     def get_temperature(self, force_update = True):
@@ -1475,9 +1510,10 @@ class Motor():
             event.wait()
         return self.states["T"]
 
-    def _store_temperature_(self, values_str, event):
-        channel_1, channel_2 = values_str.split(":")
-        self.states["T"] = [int(channel_1),int(channel_2)]
+    def _store_temperature_(self, success_bool, values_str, event):
+        if success_bool:
+            channel_1, channel_2 = values_str.split(":")
+            self.states["T"] = [int(channel_1),int(channel_2)]
         event.set()
 
     ##############################################
@@ -1595,8 +1631,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["MXMD"]
 
-    def _store_mixed_mode_(self, values_str, event):
-        self.states["MXMD"] = 0 if values_str == "0:0" else 1
+    def _store_mixed_mode_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["MXMD"] = 0 if values_str == "0:0" else 1
         event.set()
 
     def set_pwm_frequency(self,kilohertz):
@@ -1617,8 +1654,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["PWMF"]
 
-    def _store_pwm_frequency_(self, values_str, event):
-        self.states["PWMF"] = int(values_str)
+    def _store_pwm_frequency_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["PWMF"] = int(values_str)
         event.set()
 
 
@@ -1650,18 +1688,19 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["FF"]
 
-    def _store_runtime_fault_flags_(self, values_str, event):
-        values_int = int(values_str)
-        self.states["FF"] = {
-            "overheat":self._get_bit_(values_int, 0),
-            "overvoltage":self._get_bit_(values_int, 1),
-            "undervoltage":self._get_bit_(values_int, 2),
-            "short_circuit":self._get_bit_(values_int, 3),
-            "emergency_stop":self._get_bit_(values_int, 4),
-            "brushless_sensor_fault":self._get_bit_(values_int, 5),
-            "MOSFET_failure":self._get_bit_(values_int, 6),
-            "default_configuration_loaded_at_startup":self._get_bit_(values_int, 7),
-        }
+    def _store_runtime_fault_flags_(self, success_bool, values_str, event):
+        if success_bool:
+            values_int = int(values_str)
+            self.states["FF"] = {
+                "overheat":self._get_bit_(values_int, 0),
+                "overvoltage":self._get_bit_(values_int, 1),
+                "undervoltage":self._get_bit_(values_int, 2),
+                "short_circuit":self._get_bit_(values_int, 3),
+                "emergency_stop":self._get_bit_(values_int, 4),
+                "brushless_sensor_fault":self._get_bit_(values_int, 5),
+                "MOSFET_failure":self._get_bit_(values_int, 6),
+                "default_configuration_loaded_at_startup":self._get_bit_(values_int, 7),
+            }
         event.set()
 
     def get_volts(self, force_update = True):
@@ -1681,8 +1720,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["V"]
 
-    def _store_volts_(self, values_str, event):
-        self.states["V"] = values_str
+    def _store_volts_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["V"] = values_str
         event.set()
 
 
@@ -1706,8 +1746,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["RWD"]
 
-    def _store_serial_data_watchdog_(self, values_str, event):
-        self.states["RWD"] = int(values_str)
+    def _store_serial_data_watchdog_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["RWD"] = int(values_str)
         event.set()
 
     def set_overvoltage_hysteresis(self,volts):
@@ -1729,8 +1770,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["OVH"]
 
-    def _store_overvoltage_hysteresis_(self, values_str, event):
-        self.states["OVH"] = values_str
+    def _store_overvoltage_hysteresis_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["OVH"] = values_str
         event.set()
        
     def set_overvoltage_cutoff_threhold(self,volts):
@@ -1757,8 +1799,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["OVL"]
 
-    def _store_overvoltage_cutoff_threhold_(self, values_str, event):
-        self.states["OVL"] = float(values_str) / 10.0
+    def _store_overvoltage_cutoff_threhold_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["OVL"] = float(values_str) / 10.0
         event.set()
 
 
@@ -1784,8 +1827,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["THLD"]
 
-    def _store_short_circuit_detection_threshold_(self, values_str, event):
-        self.states["THLD"] = int(values_str)
+    def _store_short_circuit_detection_threshold_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["THLD"] = int(values_str)
         event.set()
 
     def set_undervoltage_limit(self,volts):
@@ -1805,8 +1849,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["UVL"]
 
-    def _store_undervoltage_limit_(self, values_str, event):
-        self.states["UVL"] = int(values_str)
+    def _store_undervoltage_limit_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["UVL"] = int(values_str)
         event.set()
 
     def set_brake_activation_delay(self,miliseconds):
@@ -1826,8 +1871,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["BKD"]
 
-    def _store_brake_activation_delay_(self, values_str, event):
-        self.states["BKD"] = int(values_str)
+    def _store_brake_activation_delay_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["BKD"] = int(values_str)
         event.set()
 
 
@@ -1877,9 +1923,10 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["CPRI"]
 
-    def _store_command_priorities_(self, values_str, event):
-        values_a = values_str.split(":")
-        self.states["CPRI"] = values_a
+    def _store_command_priorities_(self, success_bool, values_str, event):
+        if success_bool:
+            values_a = values_str.split(":")
+            self.states["CPRI"] = values_a
         event.set()
 
     def set_serial_echo(self, enable_disable):
@@ -1899,8 +1946,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["ECHOF"]
 
-    def _store_serial_echo_(self, values_str, event):
-        self.states["ECHOF"] = int(values_str)
+    def _store_serial_echo_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["ECHOF"] = int(values_str)
         event.set()
 
     def set_rs232_bit_rate(self, bit_rate_code):
@@ -1928,8 +1976,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["RSBR"]
 
-    def _store_rs232_bit_rate_(self, values_str, event):
-        self.states["RSBR"] = values_str
+    def _store_rs232_bit_rate_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["RSBR"] = values_str
         event.set()
 
     ##############################################
@@ -1944,9 +1993,10 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["UID"]
 
-    def _store_mcu_id_(self, values_str, event):
-        self.states["UID"] = values_str
-        self.mcu_id = values_str
+    def _store_mcu_id_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["UID"] = values_str
+            self.mcu_id = values_str
         event.set()
 
     def get_firmware_version(self, force_update = True):
@@ -1957,9 +2007,10 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["FID"]
 
-    def _store_firmware_version_(self, values_str, event):
-        self.states["FID"] = values_str
-        self.mcu_id = values_str
+    def _store_firmware_version_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["FID"] = values_str
+            self.mcu_id = values_str
         event.set()
 
     def set_user_boolean_variable(self, position, value):
@@ -1974,8 +2025,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["B"]
 
-    def _store_user_boolean_value_(self, values_str, event):
-        self.states["B"] = values_str
+    def _store_user_boolean_value_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["B"] = values_str
         event.set()
 
     def set_user_variable(self, position, value):
@@ -1990,8 +2042,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["VAR"]
 
-    def _store_user_variable_(self, values_str, event):
-        self.states["VAR"] = values_str
+    def _store_user_variable_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["VAR"] = values_str
         event.set()
 
     def set_user_data_in_ram(self, address, data):
@@ -2012,8 +2065,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["EE"]
 
-    def _store_user_data_in_ram_(self, values_str, event):
-        self.states["EE"] = values_str
+    def _store_user_data_in_ram_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["EE"] = values_str
         event.set()
 
 
@@ -2036,8 +2090,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["LK"]
 
-    def _store_lock_status_(self, values_str, event):
-        self.states["LK"] = int(values_str)
+    def _store_lock_status_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["LK"] = int(values_str)
         event.set()
 
     ##############################################
@@ -2062,8 +2117,9 @@ class SDC(threading.Thread):
             event.wait()
         return self.states["BRUN"]
 
-    def _store_script_auto_start_(self, values_str, event):
-        self.states["BRUN"] = int(values_str)
+    def _store_script_auto_start_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["BRUN"] = int(values_str)
         event.set()
 
     def run_script(self):
@@ -2337,8 +2393,7 @@ class SDC(threading.Thread):
             command_success, command_response_l = self.get_serial_response()
             if not command_success:
                 self.status_receiver("motor_controller_unresponsive")
-                if callback is not None:
-                    callback(None, event)
+                callback(command_success, None, event)
                 continue
             #print("command_response_l",command_success,command_response_l)
             if len(command_response_l)==1: # one element means 
@@ -2351,8 +2406,7 @@ class SDC(threading.Thread):
                     command_success, command_response_l = self.get_serial_response()
                     if not command_success:
                         self.status_receiver("motor_controller_unresponsive")
-                        if callback is not None:
-                            callback(None, event)
+                        callback(command_success, None, event)
                         continue
                     #print("command_response_2",command_success,command_response_l)
                     if len(command_response_l)!=2:
@@ -2362,7 +2416,7 @@ class SDC(threading.Thread):
                             #    callback("error", event)
                     else:
                         if callback is not None:
-                            callback(command_response_l[1], event)
+                            callback(True, command_response_l[1], event)
 
 
 def data_receiver_stub(msg):
