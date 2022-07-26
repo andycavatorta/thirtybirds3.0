@@ -1301,17 +1301,27 @@ class Motor():
         self.add_to_queue(serial_command)
 
     def get_closed_loop_error_detection(self, force_update = True):
+        print("b1")
         if self.states["CLERD"] is None or force_update:
+            print("b2")
             event = threading.Event()
+            print("b3")
             serial_command = "~CLERD {}".format(self.channel)
+            print("b4")
             self.add_to_queue(serial_command, event, self._store_closed_loop_error_detection_)
+            print("b5")
             event.wait()
+            print("b6")
         return self.states["CLERD"]
 
     def _store_closed_loop_error_detection_(self, success_bool, values_str, event):
+        print("b7")
         if success_bool:
+            print("b8")
             self.states["CLERD"] = int(values_str)
+            print("b9")
         event.set()
+        print("b10")
 
     def set_encoder_high_count_limit(self, limit):
         """
