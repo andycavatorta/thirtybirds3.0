@@ -2321,9 +2321,12 @@ class SDC(threading.Thread):
     def run(self):
         while True:
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
-            print("serial_command",serial_command)
+            #print("serial_command",serial_command)
             self.serial.write(str.encode(serial_command +'\r'))
             command_success, command_response_l = self.get_serial_response()
+            if not command_success:
+                self.status_receiver("motor_controller_not_found")
+
             print("command_response_l",command_success,command_response_l)
             if len(command_response_l)==1: # one element means 
                 if command_response_l[0]=="+":
