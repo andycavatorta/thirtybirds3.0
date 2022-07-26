@@ -2445,34 +2445,34 @@ class SDC(threading.Thread):
                     print("a11")
                     self.status_receiver("SDC command error",serial_command)
                     print("a12")
-                else:# this is a command echo string. now fetch command response
-                    print("a13")
-                    command_success, command_response_l = self.get_serial_response()
-                    print("a14")
-                    if not command_success:
-                        print("a15")
-                        self.status_receiver("motor_controller_unresponsive")
-                        print("a16")
-                        if callback is not None:
-                            print("a17")
-                            callback(command_success, None, event)
-                        continue
-                    #print("command_response_2",command_success,command_response_l)
-                    if len(command_response_l)!=2:
-                        print("a18", command_response_l)
-                        if command_response_l == ['-']:
-                            print("a19")
-                            self.status_receiver("SDC command error",serial_command)
-                            print("a20")
-                            #if callback is not None:
-                            #    callback("error", event)
-                        else:
-                            callback(False, None, event)
+            else:# this is a command echo string. now fetch command response
+                print("a13")
+                command_success, command_response_l = self.get_serial_response()
+                print("a14")
+                if not command_success:
+                    print("a15")
+                    self.status_receiver("motor_controller_unresponsive")
+                    print("a16")
+                    if callback is not None:
+                        print("a17")
+                        callback(command_success, None, event)
+                    continue
+                #print("command_response_2",command_success,command_response_l)
+                if len(command_response_l)!=2:
+                    print("a18", command_response_l)
+                    if command_response_l == ['-']:
+                        print("a19")
+                        self.status_receiver("SDC command error",serial_command)
+                        print("a20")
+                        #if callback is not None:
+                        #    callback("error", event)
                     else:
-                        print("a21")
-                        if callback is not None:
-                            print("a22")
-                            callback(True, command_response_l[1], event)
+                        callback(False, None, event)
+                else:
+                    print("a21")
+                    if callback is not None:
+                        print("a22")
+                        callback(True, command_response_l[1], event)
 
 
 def data_receiver_stub(msg):
