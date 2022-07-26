@@ -2413,6 +2413,8 @@ class SDC(threading.Thread):
             return True, command_response_l
         except TypeError as te:
             return False, 0
+        except UnicodeDecodeError as ude:
+            print(response_str, ude)
 
     def run(self):
         while True:
