@@ -2457,7 +2457,7 @@ class SDC(threading.Thread):
                         continue
                     #print("command_response_2",command_success,command_response_l)
                     if len(command_response_l)!=2:
-                        print("a18")
+                        print("a18", command_response_l)
                         if command_response_l == ['-']:
                             print("a19")
                             self.status_receiver("SDC command error",serial_command)
