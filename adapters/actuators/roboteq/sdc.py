@@ -2460,15 +2460,25 @@ class SDC(threading.Thread):
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
             self.serial.write(str.encode(serial_command +'\r'))
             command_success, command_response_l = self.get_command_echo()
+            print("c0",command_success,command_response_l)
             if command_success:
+                print("c1",command_success,command_response_l)
                 command_success, command_response_l = self.get_command_response()
+                print("c2",command_success,command_response_l)
                 if command_success:
+                    print("c3",command_success,command_response_l)
                     if callback is not None:
+                        print("c4",command_success,command_response_l)
                         callback(True, command_response_l[1], event)
+                        print("c5",command_success,command_response_l)
             else: 
+                print("c6",command_success,command_response_l)
                 self.clear_remote_serial_buffer()
+                print("c7",command_success,command_response_l)
                 if callback is not None:
+                    print("c8",command_success,command_response_l)
                     callback(False, "", event)
+                    print("c9",command_success,command_response_l)
 
             """
             # get command echo
