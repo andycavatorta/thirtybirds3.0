@@ -2465,7 +2465,7 @@ class SDC(threading.Thread):
                     print("c3",command_success,command_response_l)
                     if callback is not None:
                         print("c4",command_success,command_response_l)
-                        callback(True, command_response_l[1], event)
+                        callback(True, command_response_l, event)
                         print("c5",command_success,command_response_l)
             else: 
                 print("c6",command_success,command_response_l)
