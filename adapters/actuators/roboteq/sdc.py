@@ -2337,6 +2337,7 @@ class SDC(threading.Thread):
             command_success, command_response_l = self.get_serial_response()
             if not command_success:
                 self.status_receiver("motor_controller_unresponsive")
+                event.set()
                 continue
             #print("command_response_l",command_success,command_response_l)
             if len(command_response_l)==1: # one element means 
@@ -2349,6 +2350,7 @@ class SDC(threading.Thread):
                     command_success, command_response_l = self.get_serial_response()
                     if not command_success:
                         self.status_receiver("motor_controller_unresponsive")
+                        event.set()
                         continue
                     #print("command_response_2",command_success,command_response_l)
                     if len(command_response_l)!=2:
