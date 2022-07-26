@@ -2431,7 +2431,7 @@ class SDC(threading.Thread):
                     print("a7")
                     callback(command_success, None, event)
                 continue
-            print("a8",command_response_l)
+            print("a8",command_response_l, event, callback)
             #print("command_response_l",command_success,command_response_l)
             if len(command_response_l)==1: # one element means 
                 print("a9")
