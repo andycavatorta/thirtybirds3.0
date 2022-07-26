@@ -161,26 +161,31 @@ class Status_Poller(threading.Thread):
         while True:
             self.sdc.set_digital_out_bits(1) # this is just to keep the command watchdog alive
 
+            print("0")
             motor_1_duty_cycle = self.sdc.motor_1.get_duty_cycle()
             if motor_1_duty_cycle != self.states["motor_1_duty_cycle"]:
                 self.status_receiver("motor_1_duty_cycle",motor_1_duty_cycle)
                 self.states["motor_1_duty_cycle"] = motor_1_duty_cycle
+            print("1")
             motor_2_duty_cycle = self.sdc.motor_2.get_duty_cycle()
             if motor_2_duty_cycle != self.states["motor_2_duty_cycle"]:
                 self.status_receiver("motor_2_duty_cycle",motor_2_duty_cycle)
                 self.states["motor_2_duty_cycle"] = motor_2_duty_cycle
             time.sleep(self.period_s)
 
+            print("2")
             motor_1_motor_amps = self.sdc.motor_1.get_motor_amps()
             if motor_1_motor_amps != self.states["motor_1_motor_amps"]:
                 self.status_receiver("motor_1_motor_amps",motor_1_motor_amps)
                 self.states["motor_1_motor_amps"] = motor_1_motor_amps
+            print("3")
             motor_2_motor_amps = self.sdc.motor_2.get_motor_amps()
             if motor_2_motor_amps != self.states["motor_2_motor_amps"]:
                 self.status_receiver("motor_2_motor_amps",motor_2_motor_amps)
                 self.states["motor_2_motor_amps"] = motor_2_motor_amps
             time.sleep(self.period_s)
 
+            print("4")
             if self.report_position:
                 motor_1_encoder_counter_absolute = self.sdc.motor_1.get_encoder_counter_absolute()
                 if motor_1_encoder_counter_absolute != self.states["motor_1_encoder_counter_absolute"]:
@@ -192,20 +197,24 @@ class Status_Poller(threading.Thread):
                     self.states["motor_2_encoder_counter_absolute"] = motor_2_encoder_counter_absolute
                 time.sleep(self.period_s)
 
+            print("5")
             motor_1_encoder_motor_speed_in_rpm = self.sdc.motor_1.get_encoder_motor_speed_in_rpm()
             if motor_1_encoder_motor_speed_in_rpm != self.states["motor_1_encoder_motor_speed_in_rpm"]:
                 self.status_receiver("motor_1_encoder_motor_speed_in_rpm",motor_1_encoder_motor_speed_in_rpm)
                 self.states["motor_1_encoder_motor_speed_in_rpm"] = motor_1_encoder_motor_speed_in_rpm
+            print("6")
             motor_2_encoder_motor_speed_in_rpm = self.sdc.motor_2.get_encoder_motor_speed_in_rpm()
             if motor_2_encoder_motor_speed_in_rpm != self.states["motor_2_encoder_motor_speed_in_rpm"]:
                 self.status_receiver("motor_2_encoder_motor_speed_in_rpm",motor_2_encoder_motor_speed_in_rpm)
                 self.states["motor_2_encoder_motor_speed_in_rpm"] = motor_2_encoder_motor_speed_in_rpm
             time.sleep(self.period_s)
 
+            print("7")
             motor_1_closed_loop_error = self.sdc.motor_1.get_closed_loop_error()
             if motor_1_closed_loop_error != self.states["motor_1_closed_loop_error"]:
                 self.status_receiver("motor_1_closed_loop_error",motor_1_closed_loop_error)
                 self.states["motor_1_closed_loop_error"] = motor_1_closed_loop_error
+            print("8")
             motor_2_closed_loop_error = self.sdc.motor_2.get_closed_loop_error()
             if motor_2_closed_loop_error != self.states["motor_2_closed_loop_error"]:
                 self.status_receiver("motor_2_closed_loop_error",motor_2_closed_loop_error)
@@ -270,6 +279,7 @@ class Status_Poller(threading.Thread):
             time.sleep(self.period_s)
 
             """
+            print("9")
             runtime_fault_flags = self.sdc.get_runtime_fault_flags()
             if runtime_fault_flags["overheat"] != self.states["overheat"]:
                 self.status_receiver("overheat",runtime_fault_flags["overheat"])
