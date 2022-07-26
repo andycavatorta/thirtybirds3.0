@@ -159,8 +159,6 @@ class Status_Poller(threading.Thread):
 
     def run(self):
         while True:
-            """
-            print("-1")
             self.sdc.set_digital_out_bits(1) # this is just to keep the command watchdog alive
             print("0")
             motor_1_duty_cycle = self.sdc.motor_1.get_duty_cycle()
@@ -216,27 +214,15 @@ class Status_Poller(threading.Thread):
                 self.states["motor_2_encoder_motor_speed_in_rpm"] = motor_2_encoder_motor_speed_in_rpm
                 print("6.4")
             time.sleep(self.period_s)
-            """
-            print("7")
             motor_1_closed_loop_error = self.sdc.motor_1.get_closed_loop_error()
-            print("7.1")
             if motor_1_closed_loop_error != self.states["motor_1_closed_loop_error"]:
-                print("7.2")
                 self.status_receiver("motor_1_closed_loop_error",motor_1_closed_loop_error)
-                print("7.3")
                 self.states["motor_1_closed_loop_error"] = motor_1_closed_loop_error
-                print("7.4")
-            print("8")
             motor_2_closed_loop_error = self.sdc.motor_2.get_closed_loop_error()
-            print("8.1")
             if motor_2_closed_loop_error != self.states["motor_2_closed_loop_error"]:
-                print("8.2")
                 self.status_receiver("motor_2_closed_loop_error",motor_2_closed_loop_error)
-                print("8.3")
                 self.states["motor_2_closed_loop_error"] = motor_2_closed_loop_error
-                print("8.4")
             time.sleep(self.period_s)
-            print("8.5")
             """
             motor_1_temperature = self.sdc.motor_1.get_temperature()
             if motor_1_temperature != self.states["motor_1_temperature"]:
@@ -296,7 +282,6 @@ class Status_Poller(threading.Thread):
             time.sleep(self.period_s)
 
             """
-            """
             print("9")
             runtime_fault_flags = self.sdc.get_runtime_fault_flags()
             if runtime_fault_flags is not None:
@@ -325,7 +310,6 @@ class Status_Poller(threading.Thread):
                     self.status_receiver("default_configuration_loaded_at_startup",runtime_fault_flags["default_configuration_loaded_at_startup"])
                     self.states["default_configuration_loaded_at_startup"] = runtime_fault_flags["default_configuration_loaded_at_startup"]
             time.sleep(self.period_s)
-            """
 
 
 #@capture_exceptions.Class
@@ -2409,7 +2393,7 @@ class SDC(threading.Thread):
                 response_char = self.serial.read(1)
                 response_str += response_char.decode('utf-8')
             response_str = response_str[:-1] # trim /r from end
-            print("response_str",response_str)
+            #print("response_str",response_str)
             command_response_l = response_str.split('=')
             return True, command_response_l
         except TypeError as te:
@@ -2425,7 +2409,7 @@ class SDC(threading.Thread):
 
     def get_command_echo(self):
         command_success, command_response_l = self.get_serial_response()
-        print("get_command_echo",command_success, command_response_l)
+        #print("get_command_echo",command_success, command_response_l)
         if not command_success:
             self.status_receiver("motor_controller_unresponsive")
             return False, command_response_l
@@ -2440,7 +2424,7 @@ class SDC(threading.Thread):
 
     def get_command_response(self):
         command_success, command_response_l = self.get_serial_response()
-        print("get_command_response",command_success, command_response_l)
+        #print("get_command_response",command_success, command_response_l)
         if not command_success:
             self.status_receiver("motor_controller_unresponsive")
             return False, command_response_l
@@ -2456,25 +2440,25 @@ class SDC(threading.Thread):
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
             self.serial.write(str.encode(serial_command +'\r'))
             command_success, command_response_l = self.get_command_echo()
-            print("c0",command_success,command_response_l)
+            #print("c0",command_success,command_response_l)
             if command_success:
-                print("c1",command_success,command_response_l)
+                #print("c1",command_success,command_response_l)
                 command_success, command_response_l = self.get_command_response()
-                print("c2",command_success,command_response_l)
+                #print("c2",command_success,command_response_l)
                 if command_success:
-                    print("c3",command_success,command_response_l)
+                    #print("c3",command_success,command_response_l)
                     if callback is not None:
-                        print("c4",command_success,command_response_l)
+                        #print("c4",command_success,command_response_l)
                         callback(True, command_response_l, event)
-                        print("c5",command_success,command_response_l)
+                        #print("c5",command_success,command_response_l)
             else: 
-                print("c6",command_success,command_response_l)
+                #print("c6",command_success,command_response_l)
                 self.clear_remote_serial_buffer()
-                print("c7",command_success,command_response_l)
+                #print("c7",command_success,command_response_l)
                 if callback is not None:
-                    print("c8",command_success,command_response_l)
+                    #print("c8",command_success,command_response_l)
                     callback(False, "", event)
-                    print("c9",command_success,command_response_l)
+                    #print("c9",command_success,command_response_l)
 
             """
             # get command echo
