@@ -2424,6 +2424,7 @@ class SDC(threading.Thread):
             command_success, command_response_l = self.get_serial_response()
 
     def get_command_echo(self):
+        print("get_command_echo")
         command_success, command_response_l = self.get_serial_response()
         if not command_success:
             self.status_receiver("motor_controller_unresponsive")
@@ -2440,6 +2441,7 @@ class SDC(threading.Thread):
         return False, command_response_l
 
     def get_command_response(self):
+        print("get_command_response")
         command_success, command_response_l = self.get_serial_response()
         if not command_success:
             self.status_receiver("motor_controller_unresponsive")
@@ -2453,7 +2455,6 @@ class SDC(threading.Thread):
             return False, command_response_l
         if command_response_l[0]=="+":
             return True, command_response_l
-
 
     def run(self):
         while True:
