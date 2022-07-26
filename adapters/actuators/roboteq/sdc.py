@@ -281,30 +281,31 @@ class Status_Poller(threading.Thread):
             """
             print("9")
             runtime_fault_flags = self.sdc.get_runtime_fault_flags()
-            if runtime_fault_flags["overheat"] != self.states["overheat"]:
-                self.status_receiver("overheat",runtime_fault_flags["overheat"])
-                self.states["overheat"] = runtime_fault_flags["overheat"]
-            if runtime_fault_flags["overvoltage"] != self.states["overvoltage"]:
-                self.status_receiver("overvoltage",runtime_fault_flags["overvoltage"])
-                self.states["overvoltage"] = runtime_fault_flags["overvoltage"]
-            if runtime_fault_flags["undervoltage"] != self.states["undervoltage"]:
-                self.status_receiver("undervoltage",runtime_fault_flags["undervoltage"])
-                self.states["undervoltage"] = runtime_fault_flags["undervoltage"]
-            if runtime_fault_flags["short_circuit"] != self.states["short_circuit"]:
-                self.status_receiver("short_circuit",runtime_fault_flags["short_circuit"])
-                self.states["short_circuit"] = runtime_fault_flags["short_circuit"]
-            if runtime_fault_flags["emergency_stop"] != self.states["emergency_stop"]:
-                self.status_receiver("emergency_stop",runtime_fault_flags["emergency_stop"])
-                self.states["emergency_stop"] = runtime_fault_flags["emergency_stop"]
-            if runtime_fault_flags["brushless_sensor_fault"] != self.states["brushless_sensor_fault"]:
-                self.status_receiver("brushless_sensor_fault",runtime_fault_flags["brushless_sensor_fault"])
-                self.states["brushless_sensor_fault"] = runtime_fault_flags["brushless_sensor_fault"]
-            if runtime_fault_flags["MOSFET_failure"] != self.states["MOSFET_failure"]:
-                self.status_receiver("MOSFET_failure",runtime_fault_flags["MOSFET_failure"])
-                self.states["MOSFET_failure"] = runtime_fault_flags["MOSFET_failure"]
-            if runtime_fault_flags["default_configuration_loaded_at_startup"] != self.states["default_configuration_loaded_at_startup"]:
-                self.status_receiver("default_configuration_loaded_at_startup",runtime_fault_flags["default_configuration_loaded_at_startup"])
-                self.states["default_configuration_loaded_at_startup"] = runtime_fault_flags["default_configuration_loaded_at_startup"]
+            if runtime_fault_flags is not None:
+                if runtime_fault_flags["overheat"] != self.states["overheat"]:
+                    self.status_receiver("overheat",runtime_fault_flags["overheat"])
+                    self.states["overheat"] = runtime_fault_flags["overheat"]
+                if runtime_fault_flags["overvoltage"] != self.states["overvoltage"]:
+                    self.status_receiver("overvoltage",runtime_fault_flags["overvoltage"])
+                    self.states["overvoltage"] = runtime_fault_flags["overvoltage"]
+                if runtime_fault_flags["undervoltage"] != self.states["undervoltage"]:
+                    self.status_receiver("undervoltage",runtime_fault_flags["undervoltage"])
+                    self.states["undervoltage"] = runtime_fault_flags["undervoltage"]
+                if runtime_fault_flags["short_circuit"] != self.states["short_circuit"]:
+                    self.status_receiver("short_circuit",runtime_fault_flags["short_circuit"])
+                    self.states["short_circuit"] = runtime_fault_flags["short_circuit"]
+                if runtime_fault_flags["emergency_stop"] != self.states["emergency_stop"]:
+                    self.status_receiver("emergency_stop",runtime_fault_flags["emergency_stop"])
+                    self.states["emergency_stop"] = runtime_fault_flags["emergency_stop"]
+                if runtime_fault_flags["brushless_sensor_fault"] != self.states["brushless_sensor_fault"]:
+                    self.status_receiver("brushless_sensor_fault",runtime_fault_flags["brushless_sensor_fault"])
+                    self.states["brushless_sensor_fault"] = runtime_fault_flags["brushless_sensor_fault"]
+                if runtime_fault_flags["MOSFET_failure"] != self.states["MOSFET_failure"]:
+                    self.status_receiver("MOSFET_failure",runtime_fault_flags["MOSFET_failure"])
+                    self.states["MOSFET_failure"] = runtime_fault_flags["MOSFET_failure"]
+                if runtime_fault_flags["default_configuration_loaded_at_startup"] != self.states["default_configuration_loaded_at_startup"]:
+                    self.status_receiver("default_configuration_loaded_at_startup",runtime_fault_flags["default_configuration_loaded_at_startup"])
+                    self.states["default_configuration_loaded_at_startup"] = runtime_fault_flags["default_configuration_loaded_at_startup"]
             time.sleep(self.period_s)
 
 
