@@ -2335,7 +2335,7 @@ class SDC(threading.Thread):
                 elif command_response_l[0]=="-":
                     self.status_receiver("SDC command error",serial_command)
                 else:# this is a command echo string. now fetch command response
-                    command_success, command_response_l = self.get_serial_response()()
+                    command_success, command_response_l = self.get_serial_response()
                     if not command_success:
                         self.status_receiver("motor_controller_unresponsive")
                         continue
