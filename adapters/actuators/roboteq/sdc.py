@@ -199,21 +199,32 @@ class Status_Poller(threading.Thread):
 
             print("5")
             motor_1_encoder_motor_speed_in_rpm = self.sdc.motor_1.get_encoder_motor_speed_in_rpm()
+            print("5.1")
             if motor_1_encoder_motor_speed_in_rpm != self.states["motor_1_encoder_motor_speed_in_rpm"]:
+                print("5.2")
                 self.status_receiver("motor_1_encoder_motor_speed_in_rpm",motor_1_encoder_motor_speed_in_rpm)
+                print("5.3")
                 self.states["motor_1_encoder_motor_speed_in_rpm"] = motor_1_encoder_motor_speed_in_rpm
             print("6")
             motor_2_encoder_motor_speed_in_rpm = self.sdc.motor_2.get_encoder_motor_speed_in_rpm()
+            print("6.1")
             if motor_2_encoder_motor_speed_in_rpm != self.states["motor_2_encoder_motor_speed_in_rpm"]:
+                print("6.2")
                 self.status_receiver("motor_2_encoder_motor_speed_in_rpm",motor_2_encoder_motor_speed_in_rpm)
+                print("6.3")
                 self.states["motor_2_encoder_motor_speed_in_rpm"] = motor_2_encoder_motor_speed_in_rpm
+                print("6.4")
             time.sleep(self.period_s)
 
             print("7")
             motor_1_closed_loop_error = self.sdc.motor_1.get_closed_loop_error()
+            print("7.1")
             if motor_1_closed_loop_error != self.states["motor_1_closed_loop_error"]:
+                print("7.2")
                 self.status_receiver("motor_1_closed_loop_error",motor_1_closed_loop_error)
+                print("7.3")
                 self.states["motor_1_closed_loop_error"] = motor_1_closed_loop_error
+                print("7.4")
             print("8")
             motor_2_closed_loop_error = self.sdc.motor_2.get_closed_loop_error()
             print("8.1")
