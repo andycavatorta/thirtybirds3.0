@@ -2306,22 +2306,25 @@ class SDC(threading.Thread):
         self.queue.put((serial_command, event, callback))
 
     def get_serial_response(self):
-        response_char = " "
-        response_str = ""
-        while ord(response_char) != 13:
-            response_char = self.serial.read(1)
-            response_str += response_char.decode('utf-8')
-        response_str = response_str[:-1] # trim /r from end
-        command_response_l = response_str.split('=')
-        return command_response_l
+        try:
+            response_char = " "
+            response_str = ""
+            while ord(response_char) != 13:
+                response_char = self.serial.read(1)
+                response_str += response_char.decode('utf-8')
+            response_str = response_str[:-1] # trim /r from end
+            command_response_l = response_str.split('=')
+            return True, command_response_l
+        except TypeError as te:
+            return False, 0
 
     def run(self):
         while True:
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
             print("serial_command",serial_command)
             self.serial.write(str.encode(serial_command +'\r'))
-            command_response_l = self.get_serial_response()
-            print("command_response_l",command_response_l)
+            command_success, command_response_l = self.get_serial_response()
+            print("command_response_l",command_success,command_response_l)
             if len(command_response_l)==1: # one element means 
                 if command_response_l[0]=="+":
                     pass
@@ -2329,8 +2332,8 @@ class SDC(threading.Thread):
                 elif command_response_l[0]=="-":
                     self.status_receiver("SDC command error",serial_command)
                 else:# this is a command echo string. now fetch command response
-                    command_response_l = self.get_serial_response()
-                    print("command_response_2",command_response_l)
+                    command_success, command_response_l = self.get_serial_response()
+                    print("command_response_2",command_success,command_response_l)
                     if len(command_response_l)!=2:
                         if command_response_l == ['-']:
                             self.status_receiver("SDC command error",serial_command)
