@@ -2461,9 +2461,9 @@ class SDC(threading.Thread):
             command_success, command_response_l = self.get_command_echo()
             if command_success:
                 command_success, command_response_l = self.get_command_response()
-                    if command_success:
-                        if callback is not None:
-                            callback(True, command_response_l[1], event)
+                if command_success:
+                    if callback is not None:
+                        callback(True, command_response_l[1], event)
             else: 
                 self.clear_remote_serial_buffer()
                 if callback is not None:
