@@ -1447,28 +1447,17 @@ class Motor():
         the measured feedback. This query can be used to detect when the motor has reached
         the desired speed or position. In open loop mode, this query returns 0.
         """
-        print("b0")
         if self.states["E"] is None or force_update:
-            print("b1")
             event = threading.Event()
-            print("b2")
             serial_command = "?E {}".format(self.channel)
-            print("b3")
             self.add_to_queue(serial_command, event, self._store_closed_loop_error_)
-            print("b4")
             event.wait()
-            print("b5")
-        print("b6")
         return self.states["E"]
 
     def _store_closed_loop_error_(self, success_bool, values_str, event):
-        print("b7")
         if success_bool:
-            print("b8")
             self.states["E"] = int(values_str)
-            print("b9")
         event.set()
-        print("b10")
 
     def get_runtime_status_flags(self, force_update = True):
         """
