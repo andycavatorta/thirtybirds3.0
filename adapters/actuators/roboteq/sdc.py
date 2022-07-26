@@ -2418,18 +2418,59 @@ class SDC(threading.Thread):
             print(response_str, ude)
             return False, ""
 
-    def send_serial_command(self,serial_command):
-        pass
+    def clear_remote_serial_buffer(self):
+        command_success = True
+        while command_success:
+            command_success, command_response_l = self.get_serial_response()
 
+    def get_command_echo(self):
+        command_success, command_response_l = self.get_serial_response()
+        if not command_success:
+            self.status_receiver("motor_controller_unresponsive")
+            return False, command_response_l
+        # the response should be in ["+","-"]
+        if len(command_response_l)>1: #if this is the wrong phase of the request
+            self.status_receiver("expected command ack/nak but got {}".format(command_response_l))
+            return False, command_response_l
+        if command_response_l[0]=="-":
+            self.status_receiver("motor controller returns nak")
+            return False, command_response_l
+        if command_response_l[0]=="+":
+            return True, command_response_l
 
+    def get_command_response(self):
+        command_success, command_response_l = self.get_serial_response()
+        if not command_success:
+            self.status_receiver("motor_controller_unresponsive")
+            return False, command_response_l
+        # the response should be in ["+","-"]
+        if len(command_response_l)>1: #if this is the wrong phase of the request
+            self.status_receiver("expected command ack/nak but got {}".format(command_response_l))
+            return False, command_response_l
+        if command_response_l[0]=="-":
+            self.status_receiver("motor controller returns nak")
+            return False, command_response_l
+        if command_response_l[0]=="+":
+            return True, command_response_l
 
 
     def run(self):
         while True:
-
-
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
             self.serial.write(str.encode(serial_command +'\r'))
+            command_success, command_response_l = self.get_command_echo()
+            if command_success:
+                command_success, command_response_l = self.get_command_response()
+                    if command_success:
+                        if callback is not None:
+                            callback(True, command_response_l[1], event)
+            else: 
+                self.clear_remote_serial_buffer()
+                if callback is not None:
+                    callback(False, "", event)
+
+            """
+            # get command echo
             command_success, command_response_l = self.get_serial_response()
             if not command_success:
                 self.status_receiver("5 motor_controller_unresponsive")
@@ -2443,8 +2484,6 @@ class SDC(threading.Thread):
                 elif command_response_l[0]=="-":
                     self.status_receiver("SDC command error",serial_command)
                 else:# this is a command echo string. now fetch command response
-
-
                     command_success, command_response_l = self.get_serial_response()
                     if not command_success:
                         self.status_receiver("motor_controller_unresponsive")
@@ -2462,7 +2501,8 @@ class SDC(threading.Thread):
                     else:
                         if callback is not None:
                             callback(True, command_response_l[1], event)
-
+            """
+            
 def data_receiver_stub(msg):
     print("data_receiver_stub",msg)
 def status_receiver_stub(msg,msg2=""):
