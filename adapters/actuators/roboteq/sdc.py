@@ -2409,71 +2409,59 @@ class SDC(threading.Thread):
                 response_char = self.serial.read(1)
                 response_str += response_char.decode('utf-8')
             response_str = response_str[:-1] # trim /r from end
+            print("response_str",response_str)
             command_response_l = response_str.split('=')
             return True, command_response_l
         except TypeError as te:
-            return False, 0
+            return False, ""
         except UnicodeDecodeError as ude:
             print(response_str, ude)
+            return False, ""
+
+    def send_serial_command(self,serial_command):
+
+
+
+
 
     def run(self):
         while True:
-            print("a0 blocking at top of main thread")
+
+
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
-            print("a1 serial_command",serial_command)
             self.serial.write(str.encode(serial_command +'\r'))
-            print("a2 serial_command",serial_command)
             command_success, command_response_l = self.get_serial_response()
-            print("a3 serial_command",serial_command)
             if not command_success:
-                print("a4")
                 self.status_receiver("5 motor_controller_unresponsive")
-                print("a6")
                 if callback is not None:
-                    print("a7")
                     callback(command_success, None, event)
                 continue
-            print("a8",command_response_l, event, callback)
-            #print("command_response_l",command_success,command_response_l)
             if len(command_response_l)==1: # one element means 
-                print("a9")
                 if command_response_l[0]=="+":
-                    print("a10")
                     pass
                     # todo: do we need to pass affirmation?
                 elif command_response_l[0]=="-":
-                    print("a11")
                     self.status_receiver("SDC command error",serial_command)
-                    print("a12")
                 else:# this is a command echo string. now fetch command response
-                    print("a13")
+
+
                     command_success, command_response_l = self.get_serial_response()
-                    print("a14")
                     if not command_success:
-                        print("a15")
                         self.status_receiver("motor_controller_unresponsive")
-                        print("a16")
                         if callback is not None:
-                            print("a17")
                             callback(command_success, None, event)
                         continue
                     #print("command_response_2",command_success,command_response_l)
                     if len(command_response_l)!=2:
-                        print("a18", command_response_l)
                         if command_response_l == ['-']:
-                            print("a19")
                             self.status_receiver("SDC command error",serial_command)
-                            print("a20")
                             #if callback is not None:
                             #    callback("error", event)
                         else:
                             callback(False, None, event)
                     else:
-                        print("a21")
                         if callback is not None:
-                            print("a22")
                             callback(True, command_response_l[1], event)
-
 
 def data_receiver_stub(msg):
     print("data_receiver_stub",msg)
