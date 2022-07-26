@@ -159,8 +159,9 @@ class Status_Poller(threading.Thread):
 
     def run(self):
         while True:
+            """
+            print("-1")
             self.sdc.set_digital_out_bits(1) # this is just to keep the command watchdog alive
-
             print("0")
             motor_1_duty_cycle = self.sdc.motor_1.get_duty_cycle()
             if motor_1_duty_cycle != self.states["motor_1_duty_cycle"]:
@@ -215,7 +216,7 @@ class Status_Poller(threading.Thread):
                 self.states["motor_2_encoder_motor_speed_in_rpm"] = motor_2_encoder_motor_speed_in_rpm
                 print("6.4")
             time.sleep(self.period_s)
-
+            """
             print("7")
             motor_1_closed_loop_error = self.sdc.motor_1.get_closed_loop_error()
             print("7.1")
@@ -295,6 +296,7 @@ class Status_Poller(threading.Thread):
             time.sleep(self.period_s)
 
             """
+            """
             print("9")
             runtime_fault_flags = self.sdc.get_runtime_fault_flags()
             if runtime_fault_flags is not None:
@@ -323,7 +325,7 @@ class Status_Poller(threading.Thread):
                     self.status_receiver("default_configuration_loaded_at_startup",runtime_fault_flags["default_configuration_loaded_at_startup"])
                     self.states["default_configuration_loaded_at_startup"] = runtime_fault_flags["default_configuration_loaded_at_startup"]
             time.sleep(self.period_s)
-
+            """
 
 
 #@capture_exceptions.Class
@@ -2403,38 +2405,58 @@ class SDC(threading.Thread):
 
     def run(self):
         while True:
-            print("blocking at top of main thread")
+            print("a0 blocking at top of main thread")
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
-            #print("serial_command",serial_command)
+            print("a1 serial_command",serial_command)
             self.serial.write(str.encode(serial_command +'\r'))
+            print("a2 serial_command",serial_command)
             command_success, command_response_l = self.get_serial_response()
+            print("a3 serial_command",serial_command)
             if not command_success:
-                self.status_receiver("motor_controller_unresponsive")
+                print("a4")
+                self.status_receiver("5 motor_controller_unresponsive")
+                print("a6")
                 if callback is not None:
+                    print("a7")
                     callback(command_success, None, event)
                 continue
+            print("a8")
             #print("command_response_l",command_success,command_response_l)
             if len(command_response_l)==1: # one element means 
+                print("a9")
                 if command_response_l[0]=="+":
+                    print("a10")
                     pass
                     # todo: do we need to pass affirmation?
                 elif command_response_l[0]=="-":
+                    print("a11")
                     self.status_receiver("SDC command error",serial_command)
+                    print("a12")
                 else:# this is a command echo string. now fetch command response
+                    print("a13")
                     command_success, command_response_l = self.get_serial_response()
+                    print("a14")
                     if not command_success:
+                        print("a15")
                         self.status_receiver("motor_controller_unresponsive")
+                        print("a16")
                         if callback is not None:
+                            print("a17")
                             callback(command_success, None, event)
                         continue
                     #print("command_response_2",command_success,command_response_l)
                     if len(command_response_l)!=2:
+                        print("a18")
                         if command_response_l == ['-']:
+                            print("a19")
                             self.status_receiver("SDC command error",serial_command)
+                            print("a20")
                             #if callback is not None:
                             #    callback("error", event)
                     else:
+                        print("a21")
                         if callback is not None:
+                            print("a22")
                             callback(True, command_response_l[1], event)
 
 
@@ -2447,8 +2469,8 @@ def exception_receiver_stub(msg):
 
 
 sdc = SDC(
-        data_receiver_stub, 
-        status_receiver_stub, 
-        exception_receiver_stub,
-        {}, #config
-    )
+    data_receiver_stub, 
+    status_receiver_stub, 
+    exception_receiver_stub,
+    {}, #config
+)
