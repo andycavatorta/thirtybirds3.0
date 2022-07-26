@@ -2437,7 +2437,7 @@ class SDC(threading.Thread):
             return False, command_response_l
         if command_response_l[0]=="+":
             return True, command_response_l
-        print("get_command_echo", command_response_l)
+        return False, command_response_l
 
     def get_command_response(self):
         command_success, command_response_l = self.get_serial_response()
