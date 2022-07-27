@@ -2420,9 +2420,14 @@ class SDC(threading.Thread):
         # the response should be in ["+","-"]
         if len(command_response_l)==2: #if this is the wrong phase of the request
             return True, command_response_l[1]
-        else:
-            self.status_receiver("unexpected command response {}".format(command_response_l))
-            return False, ""
+        if len(command_response_l)==1:
+            if command_response_l[0]=="+":
+                return True, command_response_l
+            if command_response_l[0]=="-":
+                self.status_receiver("nak response for command {}".format(command_response_l))
+                return False, command_response_l
+        self.status_receiver("unexpected command response {}".format(command_response_l))
+        return False, ""
 
     def run(self):
         while True:
