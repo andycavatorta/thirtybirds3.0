@@ -2414,6 +2414,9 @@ class SDC(threading.Thread):
     def get_command_response(self):
         command_success, command_response_l = self.get_serial_response()
         print("get_command_response",command_success, command_response_l)
+        if command_response_l=="":
+            self.clear_remote_serial_buffer()
+            return False, ""
         if not command_success:
             self.status_receiver("motor_controller_unresponsive")
             return False, command_response_l
