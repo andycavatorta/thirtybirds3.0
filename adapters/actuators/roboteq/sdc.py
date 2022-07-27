@@ -1546,6 +1546,7 @@ class SDC(threading.Thread):
         self.config = config
         self.serial_device_path_patterns = serial_device_path_patterns
         self.queue = queue.Queue()
+        self.device_connected = False
 
         self.motor_1 = Motor(
             self.add_to_queue,
@@ -2400,13 +2401,16 @@ class SDC(threading.Thread):
         command_success, command_response_l = self.get_serial_response()
         print("get_command_echo",command_success, command_response_l)
         if not command_success:
+            if self.device_connected == True:
+                self.tb.publish(event_controller_connected, True)
+                self.device_connected = False
             self.status_receiver("motor_controller_unresponsive")
             return False, command_response_l
         # the response should be in ["+","-"]
         if len(command_response_l[0])>1: #if this is the wrong phase of the request
             return True, command_response_l
         if command_response_l[0]=="-":
-            self.status_receiver("motor controller returns nak")
+            self.status_receiver("nak response for command {}".format(command_response_l))
             return False, command_response_l
         if command_response_l[0]=="+":
             return True, command_response_l
@@ -2418,6 +2422,9 @@ class SDC(threading.Thread):
             self.clear_remote_serial_buffer()
             return False, ""
         if not command_success:
+            if self.device_connected == True:
+                self.tb.publish(event_controller_connected, True)
+                self.device_connected = False
             self.status_receiver("motor_controller_unresponsive")
             return False, command_response_l
         # the response should be in ["+","-"]
@@ -2439,25 +2446,20 @@ class SDC(threading.Thread):
             print("c-1",serial_command, event, callback)
             self.serial.write(str.encode(serial_command +'\r'))
             command_success, command_response_l = self.get_command_echo()
-            #print("c0",command_success,command_response_l)
             if command_success:
-                #print("c1",command_success,command_response_l)
                 command_success, command_response_l = self.get_command_response()
-                #print("c2",command_success,command_response_l)
                 if command_success:
-                    #print("c3",command_success,command_response_l)
+                    if self.device_connected == False:
+                        self.device_connected = True
+                        self.tb.publish(event_controller_connected, True)
                     if callback is not None:
-                        #print("c4",command_success,command_response_l)
                         callback(True, command_response_l, event)
-                        #print("c5",command_success,command_response_l)
             else: 
-                #print("c6",command_success,command_response_l)
                 self.clear_remote_serial_buffer()
-                #print("c7",command_success,command_response_l)
                 if callback is not None:
-                    #print("c8",command_success,command_response_l)
                     callback(False, "", event)
-                    #print("c9",command_success,command_response_l)
+
+
 
             """
             # get command echo
