@@ -2431,7 +2431,8 @@ class SDC(threading.Thread):
                     if self.device_connected == False:
                         self.device_connected = True
                         self.status_receiver("event_controller_connected", True)
-                    self.status_receiver("command_response", command_response_l)
+                    print(command_response_l)
+                    #self.status_receiver("command_response", command_response_l)
                     if callback is not None:
                         callback(True, command_response_l, event)
             else: 
