@@ -2336,7 +2336,6 @@ class SDC(threading.Thread):
             self.save_configuration_in_eeprom()
         self.emergency_stop_release()
 
-
     ##############################################
     #    CLASS INTERNALS                         #
     ##############################################
@@ -2346,7 +2345,6 @@ class SDC(threading.Thread):
         for serial_device_path_pattern in self.serial_device_path_patterns:
             matching_serial_device_paths.extend(glob.glob(serial_device_path_pattern))
         return matching_serial_device_paths
-
 
     def _get_bit_(self, number, place):
         return (number & (1 << place)) >> place
@@ -2476,6 +2474,7 @@ class SDC(threading.Thread):
                             callback(True, command_response_l[1], event)
             """
 
+"""
 def data_receiver_stub(msg):
     print("data_receiver_stub",msg)
 def status_receiver_stub(msg,msg2=""):
@@ -2483,10 +2482,10 @@ def status_receiver_stub(msg,msg2=""):
 def exception_receiver_stub(msg):
     print("exception_receiver_stub",msg)
 
-
 sdc = SDC(
     data_receiver_stub, 
     status_receiver_stub, 
     exception_receiver_stub,
     {}, #config
 )
+"""
