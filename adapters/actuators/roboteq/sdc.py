@@ -160,31 +160,26 @@ class Status_Poller(threading.Thread):
     def run(self):
         while True:
             self.sdc.set_digital_out_bits(1) # this is just to keep the command watchdog alive
-            print("0")
             motor_1_duty_cycle = self.sdc.motor_1.get_duty_cycle()
             if motor_1_duty_cycle != self.states["motor_1_duty_cycle"]:
                 self.status_receiver("motor_1_duty_cycle",motor_1_duty_cycle)
                 self.states["motor_1_duty_cycle"] = motor_1_duty_cycle
-            print("1")
             motor_2_duty_cycle = self.sdc.motor_2.get_duty_cycle()
             if motor_2_duty_cycle != self.states["motor_2_duty_cycle"]:
                 self.status_receiver("motor_2_duty_cycle",motor_2_duty_cycle)
                 self.states["motor_2_duty_cycle"] = motor_2_duty_cycle
             time.sleep(self.period_s)
 
-            print("2")
             motor_1_motor_amps = self.sdc.motor_1.get_motor_amps()
             if motor_1_motor_amps != self.states["motor_1_motor_amps"]:
                 self.status_receiver("motor_1_motor_amps",motor_1_motor_amps)
                 self.states["motor_1_motor_amps"] = motor_1_motor_amps
-            print("3")
             motor_2_motor_amps = self.sdc.motor_2.get_motor_amps()
             if motor_2_motor_amps != self.states["motor_2_motor_amps"]:
                 self.status_receiver("motor_2_motor_amps",motor_2_motor_amps)
                 self.states["motor_2_motor_amps"] = motor_2_motor_amps
             time.sleep(self.period_s)
 
-            print("4")
             if self.report_position:
                 motor_1_encoder_counter_absolute = self.sdc.motor_1.get_encoder_counter_absolute()
                 if motor_1_encoder_counter_absolute != self.states["motor_1_encoder_counter_absolute"]:
@@ -196,23 +191,14 @@ class Status_Poller(threading.Thread):
                     self.states["motor_2_encoder_counter_absolute"] = motor_2_encoder_counter_absolute
                 time.sleep(self.period_s)
 
-            print("5")
             motor_1_encoder_motor_speed_in_rpm = self.sdc.motor_1.get_encoder_motor_speed_in_rpm()
-            print("5.1")
             if motor_1_encoder_motor_speed_in_rpm != self.states["motor_1_encoder_motor_speed_in_rpm"]:
-                print("5.2")
                 self.status_receiver("motor_1_encoder_motor_speed_in_rpm",motor_1_encoder_motor_speed_in_rpm)
-                print("5.3")
                 self.states["motor_1_encoder_motor_speed_in_rpm"] = motor_1_encoder_motor_speed_in_rpm
-            print("6")
             motor_2_encoder_motor_speed_in_rpm = self.sdc.motor_2.get_encoder_motor_speed_in_rpm()
-            print("6.1")
             if motor_2_encoder_motor_speed_in_rpm != self.states["motor_2_encoder_motor_speed_in_rpm"]:
-                print("6.2")
                 self.status_receiver("motor_2_encoder_motor_speed_in_rpm",motor_2_encoder_motor_speed_in_rpm)
-                print("6.3")
                 self.states["motor_2_encoder_motor_speed_in_rpm"] = motor_2_encoder_motor_speed_in_rpm
-                print("6.4")
             time.sleep(self.period_s)
             motor_1_closed_loop_error = self.sdc.motor_1.get_closed_loop_error()
             if motor_1_closed_loop_error != self.states["motor_1_closed_loop_error"]:
@@ -282,7 +268,6 @@ class Status_Poller(threading.Thread):
             time.sleep(self.period_s)
 
             """
-            print("9")
             runtime_fault_flags = self.sdc.get_runtime_fault_flags()
             if runtime_fault_flags is not None:
                 if runtime_fault_flags["overheat"] != self.states["overheat"]:
@@ -2389,7 +2374,6 @@ class SDC(threading.Thread):
         except TypeError as te:
             return False, ""
         except UnicodeDecodeError as ude:
-            print(response_str, ude)
             return False, ""
 
     def clear_remote_serial_buffer(self):
@@ -2399,10 +2383,9 @@ class SDC(threading.Thread):
 
     def get_command_echo(self):
         command_success, command_response_l = self.get_serial_response()
-        print("get_command_echo",command_success, command_response_l)
         if not command_success:
             if self.device_connected == True:
-                self.tb.publish(event_controller_connected, True)
+                self.tb.status_receiver(event_controller_connected, True)
                 self.device_connected = False
             self.status_receiver("motor_controller_unresponsive")
             return False, command_response_l
@@ -2417,13 +2400,12 @@ class SDC(threading.Thread):
 
     def get_command_response(self):
         command_success, command_response_l = self.get_serial_response()
-        print("get_command_response",command_success, command_response_l)
         if command_response_l=="":
             self.clear_remote_serial_buffer()
             return False, ""
         if not command_success:
             if self.device_connected == True:
-                self.tb.publish(event_controller_connected, True)
+                self.tb.status_receiver(event_controller_connected, True)
                 self.device_connected = False
             self.status_receiver("motor_controller_unresponsive")
             return False, command_response_l
@@ -2443,7 +2425,6 @@ class SDC(threading.Thread):
     def run(self):
         while True:
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
-            print("c-1",serial_command, event, callback)
             self.serial.write(str.encode(serial_command +'\r'))
             command_success, command_response_l = self.get_command_echo()
             if command_success:
@@ -2451,7 +2432,7 @@ class SDC(threading.Thread):
                 if command_success:
                     if self.device_connected == False:
                         self.device_connected = True
-                        self.tb.publish(event_controller_connected, True)
+                        self.tb.status_receiver(event_controller_connected, True)
                     if callback is not None:
                         callback(True, command_response_l, event)
             else: 
