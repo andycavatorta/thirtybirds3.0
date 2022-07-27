@@ -162,51 +162,51 @@ class Status_Poller(threading.Thread):
             self.sdc.set_digital_out_bits(1) # this is just to keep the command watchdog alive
             motor_1_duty_cycle = self.sdc.motor_1.get_duty_cycle()
             if motor_1_duty_cycle != self.states["motor_1_duty_cycle"]:
-                self.status_receiver("motor_1_duty_cycle",motor_1_duty_cycle)
+                #self.status_receiver("motor_1_duty_cycle",motor_1_duty_cycle)
                 self.states["motor_1_duty_cycle"] = motor_1_duty_cycle
             motor_2_duty_cycle = self.sdc.motor_2.get_duty_cycle()
             if motor_2_duty_cycle != self.states["motor_2_duty_cycle"]:
-                self.status_receiver("motor_2_duty_cycle",motor_2_duty_cycle)
+                #self.status_receiver("motor_2_duty_cycle",motor_2_duty_cycle)
                 self.states["motor_2_duty_cycle"] = motor_2_duty_cycle
             time.sleep(self.period_s)
 
             motor_1_motor_amps = self.sdc.motor_1.get_motor_amps()
             if motor_1_motor_amps != self.states["motor_1_motor_amps"]:
-                self.status_receiver("motor_1_motor_amps",motor_1_motor_amps)
+                #self.status_receiver("motor_1_motor_amps",motor_1_motor_amps)
                 self.states["motor_1_motor_amps"] = motor_1_motor_amps
             motor_2_motor_amps = self.sdc.motor_2.get_motor_amps()
             if motor_2_motor_amps != self.states["motor_2_motor_amps"]:
-                self.status_receiver("motor_2_motor_amps",motor_2_motor_amps)
+                #self.status_receiver("motor_2_motor_amps",motor_2_motor_amps)
                 self.states["motor_2_motor_amps"] = motor_2_motor_amps
             time.sleep(self.period_s)
 
             if self.report_position:
                 motor_1_encoder_counter_absolute = self.sdc.motor_1.get_encoder_counter_absolute()
                 if motor_1_encoder_counter_absolute != self.states["motor_1_encoder_counter_absolute"]:
-                    self.status_receiver("motor_1_encoder_counter_absolute",motor_1_encoder_counter_absolute)
+                    #self.status_receiver("motor_1_encoder_counter_absolute",motor_1_encoder_counter_absolute)
                     self.states["motor_1_encoder_counter_absolute"] = motor_1_encoder_counter_absolute
                 motor_2_encoder_counter_absolute = self.sdc.motor_2.get_encoder_counter_absolute()
                 if motor_2_encoder_counter_absolute != self.states["motor_2_encoder_counter_absolute"]:
-                    self.status_receiver("motor_2_encoder_counter_absolute",motor_2_encoder_counter_absolute)
+                    #self.status_receiver("motor_2_encoder_counter_absolute",motor_2_encoder_counter_absolute)
                     self.states["motor_2_encoder_counter_absolute"] = motor_2_encoder_counter_absolute
                 time.sleep(self.period_s)
 
             motor_1_encoder_motor_speed_in_rpm = self.sdc.motor_1.get_encoder_motor_speed_in_rpm()
             if motor_1_encoder_motor_speed_in_rpm != self.states["motor_1_encoder_motor_speed_in_rpm"]:
-                self.status_receiver("motor_1_encoder_motor_speed_in_rpm",motor_1_encoder_motor_speed_in_rpm)
+                #self.status_receiver("motor_1_encoder_motor_speed_in_rpm",motor_1_encoder_motor_speed_in_rpm)
                 self.states["motor_1_encoder_motor_speed_in_rpm"] = motor_1_encoder_motor_speed_in_rpm
             motor_2_encoder_motor_speed_in_rpm = self.sdc.motor_2.get_encoder_motor_speed_in_rpm()
             if motor_2_encoder_motor_speed_in_rpm != self.states["motor_2_encoder_motor_speed_in_rpm"]:
-                self.status_receiver("motor_2_encoder_motor_speed_in_rpm",motor_2_encoder_motor_speed_in_rpm)
+                #self.status_receiver("motor_2_encoder_motor_speed_in_rpm",motor_2_encoder_motor_speed_in_rpm)
                 self.states["motor_2_encoder_motor_speed_in_rpm"] = motor_2_encoder_motor_speed_in_rpm
             time.sleep(self.period_s)
             motor_1_closed_loop_error = self.sdc.motor_1.get_closed_loop_error()
             if motor_1_closed_loop_error != self.states["motor_1_closed_loop_error"]:
-                self.status_receiver("motor_1_closed_loop_error",motor_1_closed_loop_error)
+                #self.status_receiver("motor_1_closed_loop_error",motor_1_closed_loop_error)
                 self.states["motor_1_closed_loop_error"] = motor_1_closed_loop_error
             motor_2_closed_loop_error = self.sdc.motor_2.get_closed_loop_error()
             if motor_2_closed_loop_error != self.states["motor_2_closed_loop_error"]:
-                self.status_receiver("motor_2_closed_loop_error",motor_2_closed_loop_error)
+                #self.status_receiver("motor_2_closed_loop_error",motor_2_closed_loop_error)
                 self.states["motor_2_closed_loop_error"] = motor_2_closed_loop_error
             time.sleep(self.period_s)
             """
@@ -271,28 +271,28 @@ class Status_Poller(threading.Thread):
             runtime_fault_flags = self.sdc.get_runtime_fault_flags()
             if runtime_fault_flags is not None:
                 if runtime_fault_flags["overheat"] != self.states["overheat"]:
-                    self.status_receiver("overheat",runtime_fault_flags["overheat"])
+                    #self.status_receiver("overheat",runtime_fault_flags["overheat"])
                     self.states["overheat"] = runtime_fault_flags["overheat"]
                 if runtime_fault_flags["overvoltage"] != self.states["overvoltage"]:
-                    self.status_receiver("overvoltage",runtime_fault_flags["overvoltage"])
+                    #self.status_receiver("overvoltage",runtime_fault_flags["overvoltage"])
                     self.states["overvoltage"] = runtime_fault_flags["overvoltage"]
                 if runtime_fault_flags["undervoltage"] != self.states["undervoltage"]:
-                    self.status_receiver("undervoltage",runtime_fault_flags["undervoltage"])
+                    #self.status_receiver("undervoltage",runtime_fault_flags["undervoltage"])
                     self.states["undervoltage"] = runtime_fault_flags["undervoltage"]
                 if runtime_fault_flags["short_circuit"] != self.states["short_circuit"]:
-                    self.status_receiver("short_circuit",runtime_fault_flags["short_circuit"])
+                    #self.status_receiver("short_circuit",runtime_fault_flags["short_circuit"])
                     self.states["short_circuit"] = runtime_fault_flags["short_circuit"]
                 if runtime_fault_flags["emergency_stop"] != self.states["emergency_stop"]:
-                    self.status_receiver("emergency_stop",runtime_fault_flags["emergency_stop"])
+                    #self.status_receiver("emergency_stop",runtime_fault_flags["emergency_stop"])
                     self.states["emergency_stop"] = runtime_fault_flags["emergency_stop"]
                 if runtime_fault_flags["brushless_sensor_fault"] != self.states["brushless_sensor_fault"]:
-                    self.status_receiver("brushless_sensor_fault",runtime_fault_flags["brushless_sensor_fault"])
+                    #self.status_receiver("brushless_sensor_fault",runtime_fault_flags["brushless_sensor_fault"])
                     self.states["brushless_sensor_fault"] = runtime_fault_flags["brushless_sensor_fault"]
                 if runtime_fault_flags["MOSFET_failure"] != self.states["MOSFET_failure"]:
-                    self.status_receiver("MOSFET_failure",runtime_fault_flags["MOSFET_failure"])
+                    #self.status_receiver("MOSFET_failure",runtime_fault_flags["MOSFET_failure"])
                     self.states["MOSFET_failure"] = runtime_fault_flags["MOSFET_failure"]
                 if runtime_fault_flags["default_configuration_loaded_at_startup"] != self.states["default_configuration_loaded_at_startup"]:
-                    self.status_receiver("default_configuration_loaded_at_startup",runtime_fault_flags["default_configuration_loaded_at_startup"])
+                    #self.status_receiver("default_configuration_loaded_at_startup",runtime_fault_flags["default_configuration_loaded_at_startup"])
                     self.states["default_configuration_loaded_at_startup"] = runtime_fault_flags["default_configuration_loaded_at_startup"]
             time.sleep(self.period_s)
 
@@ -2385,7 +2385,7 @@ class SDC(threading.Thread):
         command_success, command_response_l = self.get_serial_response()
         if not command_success:
             if self.device_connected == True:
-                self.tb.status_receiver(event_controller_connected, True)
+                self.status_receiver("event_controller_connected", True)
                 self.device_connected = False
             self.status_receiver("motor_controller_unresponsive")
             return False, command_response_l
@@ -2405,7 +2405,7 @@ class SDC(threading.Thread):
             return False, ""
         if not command_success:
             if self.device_connected == True:
-                self.tb.status_receiver(event_controller_connected, True)
+                self.status_receiver("event_controller_connected", True)
                 self.device_connected = False
             self.status_receiver("motor_controller_unresponsive")
             return False, command_response_l
@@ -2432,7 +2432,7 @@ class SDC(threading.Thread):
                 if command_success:
                     if self.device_connected == False:
                         self.device_connected = True
-                        self.tb.status_receiver(event_controller_connected, True)
+                        self.status_receiver("event_controller_connected", True)
                     if callback is not None:
                         callback(True, command_response_l, event)
             else: 
