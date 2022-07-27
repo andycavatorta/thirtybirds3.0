@@ -2427,6 +2427,7 @@ class SDC(threading.Thread):
                 self.status_receiver("nak response for command {}".format(command_response_l))
                 return False, command_response_l
         self.status_receiver("unexpected command response {}".format(command_response_l))
+        self.clear_remote_serial_buffer()
         return False, ""
 
     def run(self):
