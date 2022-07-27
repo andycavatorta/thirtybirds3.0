@@ -2385,7 +2385,7 @@ class SDC(threading.Thread):
         command_success, command_response_l = self.get_serial_response()
         if not command_success:
             if self.device_connected == True:
-                self.status_receiver("event_controller_connected", True)
+                self.status_receiver("event_controller_connected", False)
                 self.device_connected = False
             self.status_receiver("motor_controller_unresponsive")
             return False, command_response_l
@@ -2405,7 +2405,7 @@ class SDC(threading.Thread):
             return False, ""
         if not command_success:
             if self.device_connected == True:
-                self.status_receiver("event_controller_connected", True)
+                self.status_receiver("event_controller_connected", False)
                 self.device_connected = False
             self.status_receiver("motor_controller_unresponsive")
             return False, command_response_l
