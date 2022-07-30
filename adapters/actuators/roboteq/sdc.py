@@ -2405,7 +2405,7 @@ class SDC(threading.Thread):
             if self.device_connected == True:
                 self.status_receiver("event_controller_connected", False)
                 self.device_connected = False
-            self.status_receiver("motor_controller_unresponsive")
+            self.status_receiver("motor_controller_unresponsive", False)
             return False, command_response_l
         # the response should be in ["+","-"]
         if len(command_response_l)==2: #if this is the wrong phase of the request
@@ -2414,9 +2414,9 @@ class SDC(threading.Thread):
             if command_response_l[0]=="+":
                 return True, command_response_l
             if command_response_l[0]=="-":
-                self.status_receiver("nak response for command {}".format(command_response_l))
+                self.status_receiver("nak response for command", command_response_l)
                 return False, command_response_l
-        self.status_receiver("unexpected command response {}".format(command_response_l))
+        self.status_receiver("unexpected command response", command_response_l)
         self.clear_remote_serial_buffer()
         return False, ""
 
