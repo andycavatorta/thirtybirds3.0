@@ -44,8 +44,9 @@ class Software_Management():
         self.status_receiver.collect("started",self.status_receiver.types.INITIALIZATIONS)
 
     def get_os_uptime(self):
-        process = subprocess.run('uptime -s', shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
-        return process.stdout.strip()
+        process = subprocess.run('more /proc/uptime', shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
+        response = process.stdout.strip()
+        return response.split(" ")
 
     def get_script_runtime(self):
         return time.time() - START_TIME
