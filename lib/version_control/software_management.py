@@ -70,7 +70,7 @@ class Software_Management():
         return True if process.returncode == 0 else False
 
     def get_git_timestamp(self):
-        process = subprocess.run("cd {}; git log -1 --format=%cd".format(self.path), shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
+        process = subprocess.run("cd {}; git log -1 --format=%ct".format(self.path), shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
         git_timestamp =  process.stdout
         return git_timestamp
 
