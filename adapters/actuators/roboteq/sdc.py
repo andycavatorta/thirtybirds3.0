@@ -2440,8 +2440,6 @@ class SDC(threading.Thread):
                 if callback is not None:
                     callback(False, "", event)
 
-
-
             """
             # get command echo
             command_success, command_response_l = self.get_serial_response()
