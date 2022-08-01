@@ -63,6 +63,7 @@ import copy
 import logging
 from logging.handlers import RotatingFileHandler
 import os
+import sh
 import sys
 import time
 
@@ -226,8 +227,9 @@ class Thirtybirds():
         self.get_memory_free = self.hardware_management.get_memory_free
         self.get_system_status = self.hardware_management.get_system_status
         # commands
-        self.restart = self.hardware_management.restart
+        self.reboot = self.hardware_management.restart
         self.shutdown = self.hardware_management.shutdown
+        self.restart = self.restart_service
 
         ## S T A T U S ##
         # commands
@@ -394,3 +396,6 @@ class Thirtybirds():
                 optional_settings_class_variable_names = [attr for attr in dir(optional_settings_class_ref) if not callable(getattr(optional_settings_class_ref, attr)) and not attr.startswith("__")]
                 for optional_settings_class_variable_name in optional_settings_class_variable_names:
                     setattr(base_settings_class_ref, optional_settings_class_variable_name, getattr(optional_settings_class_ref, optional_settings_class_variable_name))
+
+    def restart_service(self, service_name):
+        sh.systemctl("restart", service_name)
