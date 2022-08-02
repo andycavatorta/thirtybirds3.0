@@ -2424,7 +2424,11 @@ class SDC(threading.Thread):
         while True:
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
             self.serial.write(str.encode(serial_command +'\r'))
-            command_success, command_response_l = self.get_command_echo()
+            command_echo = self.get_command_echo()
+            is command_echo is None:
+                continue
+            command_success = self.get_command_echo[0]
+            command_response_l = self.get_command_echo[1]
             if command_success:
                 command_success, command_response_l = self.get_command_response()
                 if command_success:
