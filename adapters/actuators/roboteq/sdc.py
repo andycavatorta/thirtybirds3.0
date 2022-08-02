@@ -2424,40 +2424,40 @@ class SDC(threading.Thread):
     def run(self):
         while True:
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
-            print("----->0", serial_command, event, callback)
+            #print("----->0", serial_command, event, callback)
             self.serial.write(str.encode(serial_command +'\r'))
             command_echo = self.get_command_echo()
-            print("----->1", command_echo)
+            #print("----->1", command_echo)
             if command_echo is None:
-                print("----->2")
+                #print("----->2")
                 continue
             command_success = command_echo[0]
-            print("----->3", command_success)
+            #print("----->3", command_success)
             command_response_l = command_echo[1]
-            print("----->4", command_response_l)
+            #print("----->4", command_response_l)
             if command_success:
-                print("----->5")
+                #print("----->5")
                 command_success, command_response_l = self.get_command_response()
-                print("----->6", command_success, command_response_l)
+                #print("----->6", command_success, command_response_l)
                 if command_success:
-                    print("----->7",self.device_connected)
+                    #print("----->7",self.device_connected)
                     if self.device_connected == False:
                         self.device_connected = True
                         self.status_receiver("event_controller_connected", True)
                     #print(command_response_l)
                     #self.status_receiver("command_response", command_response_l)
                     if callback is not None:
-                        print("----->8")
+                        #print("----->8")
                         if command_response_l.startswith("Roboteq"):
                             if serial_command=="?FID":
                                 callback(True, command_response_l, event)
                         else:
                             callback(True, command_response_l, event)
             else: 
-                print("----->9")
+                #print("----->9")
                 self.clear_remote_serial_buffer()
                 if callback is not None:
-                    print("----->10")
+                    #print("----->10")
                     callback(False, "", event)
 
             """
