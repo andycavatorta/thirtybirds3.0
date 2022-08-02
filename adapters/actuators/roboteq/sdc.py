@@ -2434,7 +2434,11 @@ class SDC(threading.Thread):
                     #print(command_response_l)
                     #self.status_receiver("command_response", command_response_l)
                     if callback is not None:
-                        callback(True, command_response_l, event)
+                        if command_response_l.startswith("Roboteq"):
+                            if serial_command=="?FID":
+                                callback(True, command_response_l, event)
+                        else:
+                            callback(True, command_response_l, event)
             else: 
                 self.clear_remote_serial_buffer()
                 if callback is not None:
