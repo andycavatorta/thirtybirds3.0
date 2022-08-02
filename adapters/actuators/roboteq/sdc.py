@@ -2415,6 +2415,7 @@ class SDC(threading.Thread):
                 return True, command_response_l
             if command_response_l[0]=="-":
                 self.status_receiver("nak response for command", command_response_l)
+                self.clear_remote_serial_buffer()
                 return False, command_response_l
         self.status_receiver("unexpected command response", command_response_l)
         self.clear_remote_serial_buffer()
