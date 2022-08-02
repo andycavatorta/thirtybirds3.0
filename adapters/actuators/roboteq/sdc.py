@@ -2427,8 +2427,8 @@ class SDC(threading.Thread):
             command_echo = self.get_command_echo()
             if command_echo is None:
                 continue
-            command_success = self.get_command_echo[0]
-            command_response_l = self.get_command_echo[1]
+            command_success = command_echo[0]
+            command_response_l = command_echo[1]
             if command_success:
                 command_success, command_response_l = self.get_command_response()
                 if command_success:
