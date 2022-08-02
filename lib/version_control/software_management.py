@@ -67,6 +67,7 @@ class Software_Management():
 
     def pull_from_github(self):
         bash_command = "cd {} && git pull -q --all -p".format(self.path)
+        print("pull_from_github", bash_command)
         process = subprocess.run(bash_command, shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
         return True if process.returncode == 0 else False
 
