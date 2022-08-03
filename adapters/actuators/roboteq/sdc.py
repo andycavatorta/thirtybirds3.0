@@ -2445,6 +2445,14 @@ class SDC(threading.Thread):
                     callback(False, "", event)
                 else:
                     continue
+            if command_echo == ['\x00Starting ...']:
+                print("----->2.5")
+                if callback is not None:
+                    #print("----->10")
+                    callback(False, "", event)
+                else:
+                    continue
+
             command_success = command_echo[0]
             print("----->3", command_success)
             command_response_l = command_echo[1]
@@ -2467,11 +2475,16 @@ class SDC(threading.Thread):
                                 callback(True, command_response_l, event)
                         else:
                             callback(True, command_response_l, event)
+                else:
+                    print("----->9")
+                    if callback is not None:
+                        print("----->10")
+                        callback(False, "", event)
             else: 
-                print("----->9")
+                print("----->11")
                 self.clear_remote_serial_buffer()
                 if callback is not None:
-                    #print("----->10")
+                    print("----->12")
                     callback(False, "", event)
 
             """
