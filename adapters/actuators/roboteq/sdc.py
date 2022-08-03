@@ -1594,6 +1594,11 @@ class SDC(threading.Thread):
         self.status_poller.start()
 
 
+    def get_device_connected(self):
+        # warning: this may not be threadsafe
+        return self.device_connected
+
+
     ##############################################
     #    MOTORS CONFIG                           #
     ##############################################
