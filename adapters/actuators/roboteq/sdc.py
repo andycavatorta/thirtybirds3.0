@@ -1887,6 +1887,7 @@ class SDC(threading.Thread):
         Example:
         !D1 1 : will activate output 1
         """
+        # warning: this is a hack. connect/disconnect flow needs refactoring
         if self.device_connected:
             serial_command = "!D1 {} ".format(output_number)
             self.add_to_queue(serial_command)
@@ -2438,8 +2439,12 @@ class SDC(threading.Thread):
             command_echo = self.get_command_echo()
             print("----->1", command_echo)
             if command_echo is None:
-                #print("----->2")
-                continue
+                print("----->2")
+                if callback is not None:
+                    #print("----->10")
+                    callback(False, "", event)
+                else:
+                    continue
             command_success = command_echo[0]
             print("----->3", command_success)
             command_response_l = command_echo[1]
