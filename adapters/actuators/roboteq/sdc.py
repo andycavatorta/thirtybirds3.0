@@ -160,6 +160,8 @@ class Status_Poller(threading.Thread):
     def run(self):
         while True:
             self.sdc.set_digital_out_bits(1) # this is just to keep the command watchdog alive
+
+            """
             motor_1_duty_cycle = self.sdc.motor_1.get_duty_cycle()
             if motor_1_duty_cycle != self.states["motor_1_duty_cycle"]:
                 #self.status_receiver("motor_1_duty_cycle",motor_1_duty_cycle)
@@ -209,7 +211,6 @@ class Status_Poller(threading.Thread):
                 #self.status_receiver("motor_2_closed_loop_error",motor_2_closed_loop_error)
                 self.states["motor_2_closed_loop_error"] = motor_2_closed_loop_error
             time.sleep(self.period_s)
-            """
             motor_1_temperature = self.sdc.motor_1.get_temperature()
             if motor_1_temperature != self.states["motor_1_temperature"]:
                 self.status_receiver("motor_1_temperature",motor_1_temperature)
@@ -267,7 +268,6 @@ class Status_Poller(threading.Thread):
                 self.states["motor_2_amps_trigger_activated"] = runtime_status_flags["amps_trigger_activated"]
             time.sleep(self.period_s)
 
-            """
             runtime_fault_flags = self.sdc.get_runtime_fault_flags()
             if runtime_fault_flags is not None:
                 if runtime_fault_flags["overheat"] != self.states["overheat"]:
@@ -294,6 +294,8 @@ class Status_Poller(threading.Thread):
                 if runtime_fault_flags["default_configuration_loaded_at_startup"] != self.states["default_configuration_loaded_at_startup"]:
                     #self.status_receiver("default_configuration_loaded_at_startup",runtime_fault_flags["default_configuration_loaded_at_startup"])
                     self.states["default_configuration_loaded_at_startup"] = runtime_fault_flags["default_configuration_loaded_at_startup"]
+
+            """
             time.sleep(self.period_s)
 
 
