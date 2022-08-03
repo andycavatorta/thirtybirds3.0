@@ -2372,7 +2372,7 @@ class SDC(threading.Thread):
             response_char = " "
             response_str = ""
             while ord(response_char) != 13:
-                response_char = self.serial.read(1)
+                response_char = self.serial.read(0.2)
                 response_str += response_char.decode('utf-8')
             response_str = response_str[:-1] # trim /r from end
             #print("response_str",response_str)
