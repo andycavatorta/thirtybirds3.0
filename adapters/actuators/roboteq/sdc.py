@@ -2375,14 +2375,14 @@ class SDC(threading.Thread):
                 response_char = self.serial.read(1)
                 response_str += response_char.decode('utf-8')
             response_str = response_str[:-1] # trim /r from end
-            print("----->13 response_str",response_str)
+            #print("----->13 response_str",response_str)
             command_response_l = response_str.split('=')
             return True, command_response_l
         except TypeError as te:
-            print("----->14",te)
+            #print("----->14",te)
             return False, ""
         except UnicodeDecodeError as ude:
-            print("----->15",ude)
+            #print("----->15",ude)
             return False, ""
 
     def clear_remote_serial_buffer(self):
@@ -2434,21 +2434,21 @@ class SDC(threading.Thread):
 
     def run(self):
         while True:
-            print("----->-1",self.device_connected, self.queue.qsize())
+            #print("----->-1",self.device_connected, self.queue.qsize())
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
-            print("----->0", serial_command, event, callback)
+            #print("----->0", serial_command, event, callback)
             self.serial.write(str.encode(serial_command +'\r'))
             command_echo = self.get_command_echo()
-            print("----->1", command_echo)
+            #print("----->1", command_echo)
             if command_echo is None:
-                print("----->2")
+                #print("----->2")
                 if callback is not None:
                     #print("----->10")
                     callback(False, "", event)
                 else:
                     continue
             if command_echo == ['\x00Starting ...']:
-                print("----->2.5")
+                #print("----->2.5")
                 if callback is not None:
                     #print("----->10")
                     callback(False, "", event)
@@ -2456,72 +2456,39 @@ class SDC(threading.Thread):
                     continue
 
             command_success = command_echo[0]
-            print("----->3", command_success)
+            #print("----->3", command_success)
             command_response_l = command_echo[1]
-            print("----->4", command_response_l)
+            #print("----->4", command_response_l)
             if command_success:
-                print("----->5")
+                #print("----->5")
                 command_success, command_response_l = self.get_command_response()
-                print("----->6", command_success, command_response_l)
+                #print("----->6", command_success, command_response_l)
                 if command_success:
-                    print("----->7",self.device_connected)
+                    #print("----->7",self.device_connected)
                     if self.device_connected == False:
                         self.device_connected = True
                         self.status_receiver("event_controller_connected", True)
-                    print(command_response_l)
+                    #print(command_response_l)
                     self.status_receiver("command_response", command_response_l)
                     if callback is not None:
-                        print("----->8")
+                        #print("----->8")
                         if command_response_l.startswith("Roboteq"):
                             if serial_command=="?FID":
                                 callback(True, command_response_l, event)
                         else:
                             callback(True, command_response_l, event)
                 else:
-                    print("----->9")
+                    #print("----->9")
                     if callback is not None:
                         print("----->10")
                         callback(False, "", event)
             else: 
-                print("----->11")
+                #print("----->11")
                 self.clear_remote_serial_buffer()
                 if callback is not None:
-                    print("----->12")
+                    #print("----->12")
                     callback(False, "", event)
 
-            """
-            # get command echo
-            command_success, command_response_l = self.get_serial_response()
-            if not command_success:
-                self.status_receiver("5 motor_controller_unresponsive")
-                if callback is not None:
-                    callback(command_success, None, event)
-                continue
-            if len(command_response_l)==1: # one element means 
-                if command_response_l[0]=="+":
-                    pass
-                    # todo: do we need to pass affirmation?
-                elif command_response_l[0]=="-":
-                    self.status_receiver("SDC command error",serial_command)
-                else:# this is a command echo string. now fetch command response
-                    command_success, command_response_l = self.get_serial_response()
-                    if not command_success:
-                        self.status_receiver("motor_controller_unresponsive")
-                        if callback is not None:
-                            callback(command_success, None, event)
-                        continue
-                    #print("command_response_2",command_success,command_response_l)
-                    if len(command_response_l)!=2:
-                        if command_response_l == ['-']:
-                            self.status_receiver("SDC command error",serial_command)
-                            #if callback is not None:
-                            #    callback("error", event)
-                        else:
-                            callback(False, None, event)
-                    else:
-                        if callback is not None:
-                            callback(True, command_response_l[1], event)
-            """
 
 """
 def data_receiver_stub(msg):
