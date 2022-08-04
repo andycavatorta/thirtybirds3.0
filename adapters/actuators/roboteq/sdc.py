@@ -2375,12 +2375,14 @@ class SDC(threading.Thread):
                 response_char = self.serial.read(0.2)
                 response_str += response_char.decode('utf-8')
             response_str = response_str[:-1] # trim /r from end
-            #print("response_str",response_str)
+            print("----->13 response_str",response_str)
             command_response_l = response_str.split('=')
             return True, command_response_l
         except TypeError as te:
+            print("----->14",te)
             return False, ""
         except UnicodeDecodeError as ude:
+            print("----->15",ude)
             return False, ""
 
     def clear_remote_serial_buffer(self):
