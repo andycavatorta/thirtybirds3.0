@@ -1721,7 +1721,6 @@ class SDC(threading.Thread):
             self.states["V"] = values_str
         event.set()
 
-
     def emergency_stop(self):
         serial_command = "!EX"
         self.add_to_queue(serial_command)
@@ -1729,6 +1728,20 @@ class SDC(threading.Thread):
     def emergency_stop_release(self):
         serial_command = "!MG"
         self.add_to_queue(serial_command)
+
+    def set_emergency_stop(self, value_bool):
+        if value_bool:
+            self.emergency_stop()
+        else:
+            self.emergency_stop_release()
+
+    def get_emergency_stop(self):
+        runtime_fault_flags = self.get_runtime_fault_flags()
+        print("emergency_stop", runtime_fault_flags)
+        if runtime_fault_flags["emergency_stop"] == 1:
+            return True
+        else:
+            return False
 
     def set_serial_data_watchdog(self, miliseconds):
         serial_command = "^RWD {}".format(miliseconds)
