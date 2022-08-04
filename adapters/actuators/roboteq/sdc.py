@@ -2440,13 +2440,6 @@ class SDC(threading.Thread):
             self.serial.write(str.encode(serial_command +'\r'))
             command_echo = self.get_command_echo()
             #print("----->1", command_echo)
-            if command_echo is None:
-                #print("----->2")
-                if callback is not None:
-                    #print("----->10")
-                    callback(False, "", event)
-                else:
-                    continue
             if command_echo == ['\x00Starting ...']:
                 #print("----->2.5")
                 if callback is not None:
@@ -2454,11 +2447,17 @@ class SDC(threading.Thread):
                     callback(False, "", event)
                 else:
                     continue
-
-            command_success = command_echo[0]
-            #print("----->3", command_success)
-            command_response_l = command_echo[1]
-            #print("----->4", command_response_l)
+            try:
+                command_success = command_echo[0]
+                #print("----->3", command_success)
+                command_response_l = command_echo[1]
+                #print("----->4", command_response_l)
+            except TypeError te:
+                if callback is not None:
+                    #print("----->10")
+                    callback(False, "", event)
+                else:
+                    continue
             if command_success:
                 #print("----->5")
                 command_success, command_response_l = self.get_command_response()
