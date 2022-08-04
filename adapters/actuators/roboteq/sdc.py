@@ -2479,7 +2479,7 @@ class SDC(threading.Thread):
                 else:
                     #print("----->9")
                     if callback is not None:
-                        print("----->10")
+                        #print("----->10")
                         callback(False, "", event)
             else: 
                 #print("----->11")
