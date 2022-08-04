@@ -1731,8 +1731,10 @@ class SDC(threading.Thread):
 
     def set_emergency_stop(self, value_bool):
         if value_bool:
+            print("set_emergency_stop 1",value_bool)
             self.emergency_stop()
         else:
+            print("set_emergency_stop 2",value_bool)
             self.emergency_stop_release()
 
     def get_emergency_stop(self):
