@@ -2452,7 +2452,7 @@ class SDC(threading.Thread):
                 #print("----->3", command_success)
                 command_response_l = command_echo[1]
                 #print("----->4", command_response_l)
-            except TypeError te:
+            except TypeError as te:
                 if callback is not None:
                     #print("----->10")
                     callback(False, "", event)
