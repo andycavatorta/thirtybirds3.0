@@ -328,6 +328,31 @@ class Motor():
         self.target_value = 0
         self.queue = queue.Queue()
         self.states = {
+            "A":None,
+            "ALIM":None,
+            "ATGA":None,
+            "ATGD":None,
+            "ATRIG":None,
+            "BLFB":None,
+            "BLSTD":None,
+            "C":None,
+            "CLERD":None,
+            "CR":None,
+            "E":None,
+            "EHL":None,
+            "EHLA":None,
+            "ELL":None,
+            "ELLA":None,
+            "EMOD":None,
+            "EPPR":None,
+            "F":None,
+            "FM":None,
+            "FS":None,
+            "ICAP":None,
+            "KD":None,
+            "KI":None,
+            "KP":None,
+            "M":None,
             "MAC":None,
             "MDEC":None,
             "MMOD":None,
@@ -335,35 +360,11 @@ class Motor():
             "MXPF":None,
             "MXPR":None,
             "MXRPM":None,
-            "ICAP":None,
-            "KD":None,
-            "KI":None,
-            "KP":None,
-            "BLFB":None,
-            "EMOD":None,
-            "EPPR":None,
-            "CR":None,
-            "ALIM":None,
-            "ATGA":None,
-            "ATGD":None,
-            "ATRIG":None,
-            "BLSTD":None,
-            "CLERD":None,
-            "EHL":None,
-            "EHLA":None,
-            "ELL":None,
-            "ELLA":None,
             "P":None,
             "S":None,
-            "A":None,
-            "TR":None,
-            "C":None,
-            "F":None,
             "SR":None,
-            "FS":None,
-            "E":None,
-            "FM":None,
             "T":None,
+            "TR":None,
         }
 
     ##############################################
@@ -713,6 +714,24 @@ class Motor():
         if success_bool:
             self.states["A"] = float(values_str)
         event.set()
+
+    def get_motor_command_applied(self, force_update = True):
+        """
+        Measures and reports the motor Amps for all operating channels. Note that the current
+        flowing through the motors is often higher than this flowing through the battery.
+        """
+        if self.states["M"] is None or force_update:
+            event = threading.Event()
+            serial_command = "?M {}".format(self.channel)
+            self.add_to_queue(serial_command, event, self._store_motor_amps_)
+            event.wait()
+        return self.states["M"]
+
+    def _store_motor_amps_(self, success_bool, values_str, event):
+        if success_bool:
+            self.states["M"] = float(values_str)
+        event.set()
+
 
     ##############################################
     #    PID SETUP                               #
