@@ -1612,7 +1612,7 @@ class SDC(threading.Thread):
             status_receiver, 
             exception_receiver
         )
-        #self.status_poller.start()
+        self.status_poller.start()
 
 
     def get_device_connected(self):
@@ -2470,10 +2470,10 @@ class SDC(threading.Thread):
         while True:
             #print("----->-1",self.device_connected, self.queue.qsize())
             serial_command, event, callback = self.queue.get(block=True, timeout=None)
-            print("----->0", serial_command, event, callback)
+            #print("----->0", serial_command, event, callback)
             self.serial.write(str.encode(serial_command +'\r'))
             command_echo = self.get_command_echo()
-            print("----->1", command_echo)
+            #print("----->1", command_echo)
             if command_echo == ['\x00Starting ...']:
                 #print("----->2.5")
                 if callback is not None:
@@ -2488,20 +2488,20 @@ class SDC(threading.Thread):
                 #print("----->4", command_response_l)
             except TypeError as te:
                 if callback is not None:
-                    print("----->10")
+                    #print("----->10")
                     callback(False, "", event)
                 else:
                     continue
             if command_success:
                 #print("----->5")
                 command_success, command_response_l = self.get_command_response()
-                print("----->6", command_success, command_response_l)
+                #print("----->6", command_success, command_response_l)
                 if command_success:
-                    print("----->7",self.device_connected)
+                    #print("----->7",self.device_connected)
                     if self.device_connected == False:
                         self.device_connected = True
                         self.status_receiver("event_controller_connected", True)
-                    print(command_response_l)
+                    #print(command_response_l)
                     self.status_receiver("command_response", command_response_l)
                     if callback is not None:
                         #print("----->8")
