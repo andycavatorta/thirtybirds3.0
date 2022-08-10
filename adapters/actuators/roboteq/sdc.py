@@ -2502,7 +2502,7 @@ class SDC(threading.Thread):
                         self.device_connected = True
                         self.status_receiver("event_controller_connected", True)
                     #print(command_response_l)
-                    self.status_receiver("command_response", command_response_l)
+                    #self.status_receiver("command_response", command_response_l)
                     if callback is not None:
                         #print("----->8")
                         if command_response_l.startswith("Roboteq"):
