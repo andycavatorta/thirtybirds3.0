@@ -109,7 +109,7 @@ class Status_Poller(threading.Thread):
             data_receiver, 
             status_receiver, 
             exception_receiver,
-            period_s=0.1, 
+            period_s=0.5, 
             report_position=False,
         ):
         threading.Thread.__init__(self)
