@@ -605,6 +605,9 @@ class Motor():
         In Torque mode, the command value is the desired Motor Amps relative to the Amps Limit
         configuration parameters
         """
+        #the following is just for safety while working on The Whale
+        if value > 350:
+            value = 350
         serial_command = "!G {} {}".format(self.channel, value)
         self.add_to_queue(serial_command)
 
