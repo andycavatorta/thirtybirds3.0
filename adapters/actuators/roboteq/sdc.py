@@ -2508,6 +2508,8 @@ class SDC(threading.Thread):
                     #self.status_receiver("command_response", command_response_l)
                     if callback is not None:
                         print("----->8")
+                        if isinstance(command_response_l, list):
+                            continue
                         if command_response_l.startswith("Roboteq"):
                             if serial_command=="?FID":
                                 callback(True, command_response_l, event)
