@@ -310,7 +310,6 @@ class Thirtybirds():
                 sys.exit(0)
 
     def status_receiver(self, status_details):
-        return
         status_details_str = "{},{},{},{}{},{}.{},{},{}".format(
             time.strftime("%Y-%m-%d %H:%M:%S", status_details["time_local"]), 
             status_details["time_epoch"],
@@ -323,10 +322,11 @@ class Thirtybirds():
             status_details["args"]
         )
         self.status_logger.error(status_details_str)
-        #try:
-        #    self.dashboard_server.status_receiver(status_details_str)
-        #except AttributeError:
-        #    pass
+        if self.hostname != self.controller_hostname:
+            self.publish("tb_status", status_details_str)
+        else:
+            pass
+            #how to get this into the app loop?
         
     def exception_receiver(self, exception):
         # to do : add logging, if in config
@@ -346,9 +346,13 @@ class Thirtybirds():
             exception["exception_type"],
             exception["exception_message"],
             exception["stacktrace"]
-            )
+        )
         self.error_logger.error(exception_details_str)
-
+        if self.hostname != self.controller_hostname:
+            self.publish("tb_exception", exception_details_str)
+        else:
+            pass
+            #how to get this into the app loop?
         try:
             self.exception_callback(exception)
         except TypeError:

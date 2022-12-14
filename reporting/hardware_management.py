@@ -22,6 +22,7 @@ class Hardware_Management():
         
     def get_core_temp(self):
         if self.os_name == "ubuntu":
+            #cat /sys/class/thermal/thermal_zone0/temp
             sensors.init()
             max_temp = 0
             sensors.init()
