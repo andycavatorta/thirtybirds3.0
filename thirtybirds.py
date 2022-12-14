@@ -323,7 +323,10 @@ class Thirtybirds():
         )
         self.status_logger.error(status_details_str)
         if self.hostname != self.controller_hostname:
-            self.connection.send("tb_status", status_details_str)
+            try:
+                self.publish("tb_status", status_details_str)
+            except AttributeError:
+                print "tb_status", status_details_str
         else:
             pass
             #how to get this into the app loop?
@@ -349,7 +352,10 @@ class Thirtybirds():
         )
         self.error_logger.error(exception_details_str)
         if self.hostname != self.controller_hostname:
-            self.connection.send("tb_exception", exception_details_str)
+            try:
+                self.publish("tb_exception", exception_details_str)
+            except AttributeError:
+                print "tb_exception", exception_details_str
         else:
             pass
             #how to get this into the app loop?
