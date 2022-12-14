@@ -326,7 +326,7 @@ class Thirtybirds():
             try:
                 self.publish("tb_status", status_details_str)
             except AttributeError:
-                print "tb_status", status_details_str
+                print("tb_status", status_details_str)
         else:
             pass
             #how to get this into the app loop?
@@ -355,7 +355,7 @@ class Thirtybirds():
             try:
                 self.publish("tb_exception", exception_details_str)
             except AttributeError:
-                print "tb_exception", exception_details_str
+                print("tb_exception", exception_details_str )
         else:
             pass
             #how to get this into the app loop?
