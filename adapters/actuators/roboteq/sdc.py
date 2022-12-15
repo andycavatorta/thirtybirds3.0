@@ -1617,6 +1617,22 @@ class SDC(threading.Thread):
         )
         self.status_poller.start()
 
+    def reconnect(self):
+        try:
+            self.serial.close()
+        except:
+            print("error closing serial port")
+        try:
+            self.serial = serial.Serial(
+                port=self.serial_device_paths[0],
+                baudrate=115200,
+                timeout=0.2,
+                bytesize=serial.EIGHTBITS,
+                stopbits=serial.STOPBITS_ONE,
+                parity=serial.PARITY_NONE,
+            )
+        except:
+            print("error reconnecting to serial port")
 
     def get_device_connected(self):
         # warning: this may not be threadsafe
@@ -2529,7 +2545,7 @@ class SDC(threading.Thread):
                         callback(False, "", event)
 
             except queue.Empty:
-                pass
+                self.reconnect()
 
 """
 def data_receiver_stub(msg):
