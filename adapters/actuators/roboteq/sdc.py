@@ -2489,43 +2489,43 @@ class SDC(threading.Thread):
     def run(self):
         while True:
             try:
-                print("----->-1",self.device_connected, self.queue.qsize())
+                #print("----->-1",self.device_connected, self.queue.qsize())
                 serial_command, event, callback = self.queue.get(block=True, timeout=5)
-                print("----->0", serial_command, event, callback)
+                #print("----->0", serial_command, event, callback)
                 self.serial.write(str.encode(serial_command +'\r'))
                 command_echo = self.get_command_echo()
-                print("----->1", command_echo)
+                #print("----->1", command_echo)
                 if command_echo == ['\x00Starting ...']:
-                    print("----->2.5")
+                    #print("----->2.5")
                     if callback is not None:
-                        print("----->10")
+                        #print("----->10")
                         callback(False, "", event)
                     else:
                         continue
                 try:
                     command_success = command_echo[0]
-                    print("----->3", command_success)
+                    #print("----->3", command_success)
                     command_response_l = command_echo[1]
-                    print("----->4", command_response_l)
+                    #print("----->4", command_response_l)
                 except TypeError as te:
                     if callback is not None:
-                        print("----->10")
+                        #print("----->10")
                         callback(False, "", event)
                     else:
                         continue
                 if command_success:
-                    print("----->5")
+                    #print("----->5")
                     command_success, command_response_l = self.get_command_response()
-                    print("----->6", command_success, command_response_l)
+                    #print("----->6", command_success, command_response_l)
                     if command_success:
-                        print("----->7",self.device_connected)
+                        #print("----->7",self.device_connected)
                         if self.device_connected == False:
                             self.device_connected = True
                             self.status_receiver("event_controller_connected", True)
-                        print(command_response_l)
+                        #print(command_response_l)
                         #self.status_receiver("command_response", command_response_l)
                         if callback is not None:
-                            print("----->8")
+                            #print("----->8")
                             if isinstance(command_response_l, list):
                                 continue
                             if command_response_l.startswith("Roboteq"):
@@ -2534,15 +2534,15 @@ class SDC(threading.Thread):
                             else:
                                 callback(True, command_response_l, event)
                     else:
-                        print("----->9")
+                        #print("----->9")
                         if callback is not None:
                             #print("----->10")
                             callback(False, "", event)
                 else: 
-                    print("----->11")
+                    #print("----->11")
                     self.clear_remote_serial_buffer()
                     if callback is not None:
-                        print("----->12")
+                        #print("----->12")
                         callback(False, "", event)
 
             except queue.Empty:
