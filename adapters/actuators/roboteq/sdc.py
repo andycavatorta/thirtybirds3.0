@@ -1618,6 +1618,7 @@ class SDC(threading.Thread):
         self.status_poller.start()
 
     def reconnect(self):
+        print("sdc serial reconnect",self.serial)
         try:
             self.serial.close()
         except:
