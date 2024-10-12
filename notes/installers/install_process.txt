@@ -5,28 +5,30 @@ sudo usermod -aG sudo thirtybirds
 
 sudo apt-get update
 sudo apt-get upgrade
-ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+ssh-keygen -t rsa -b 4096 -C "thirtybirds@andycavatorta.com"
 git clone https://github.com/andycavatorta/thirtybirds3.0.git
 alias python='/usr/bin/python3'
 . ~/.bashrc
 
 sudo apt install python3-pip
-sudo pip3 install netifaces
+sudo pip3 install netifaces --break-system-packages
 sudo apt install python3-netifaces
 sudo apt install python3-yaml
 
+sudo apt install libsodium-dev libsodium23
+#wget https://github.com/jedisct1/libsodium/releases/download/1.0.3/libsodium-1.0.3.tar.gz
+#tar -zxvf libsodium-1.0.3.tar.gz
+#cd libsodium-1.0.3/
+#./configure
+#make
+#sudo make install
+#cd ..
+#rm libsodium-1.0.3.tar.gz
+#rm -R libsodium-1.0.3
 
-wget https://github.com/jedisct1/libsodium/releases/download/1.0.3/libsodium-1.0.3.tar.gz
-tar -zxvf libsodium-1.0.3.tar.gz
-cd libsodium-1.0.3/
-./configure
-make
-sudo make install
-cd ..
-rm libsodium-1.0.3.tar.gz
-rm -R libsodium-1.0.3
-
-apt-get install libzmq3-dev
+pip install sh --break-system-packages
+sudo apt install python3-spidev
+sudo apt install libzmq3-dev
 
 #wget http://download.zeromq.org/zeromq-4.1.3.tar.gz
 #tar -zxvf zeromq-4.1.3.tar.gz
@@ -39,14 +41,14 @@ apt-get install libzmq3-dev
 #rm zeromq-4.1.3.tar.gz
 #rm -R zeromq-4.1.3/
 
-sudo apt install python-dev
-sudo pip3 install pyzmq
+sudo apt install python-dev-is-python3
+pip3 install pyzmq --break-system-packages
 
 ##### for adapters #####
-sudo apt install python3-rpi.gpio
-sudo pip3 install pyserial
+pip3 install RPi.GPIO --break-system-packages
+pip3 install pyserial --break-system-packages
 sudo apt-get install -y python3-rtmidi
-pip3 install mido
+pip3 install mido --break-system-packages
 
 sudo apt-get install libjack-dev
 sudo apt-get install libasound2-dev
@@ -55,4 +57,4 @@ sudo apt install wireless-tools
 
 
 #pip3 install websockets
-pip3 install PySensors
+pip3 install PySensors --break-system-packages
