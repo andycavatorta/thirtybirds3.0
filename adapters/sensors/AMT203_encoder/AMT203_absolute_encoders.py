@@ -53,7 +53,6 @@ class AMT203():
       first_result = self.spi_write_read(chip_select_pin, [self.NO_OP])
 
   def get_position(self, chip_select_pin) -> int:
-    print("ggggggggggggggggg",chip_select_pin)
     request = self.spi_write_read(chip_select_pin, [self.READ_POS])
     counter = 0
     while request[0] != self.READ_POS:
