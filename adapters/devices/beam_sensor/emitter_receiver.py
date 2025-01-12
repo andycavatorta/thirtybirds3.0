@@ -53,7 +53,7 @@ class EmitterReceiver:
         status_receiver.collect(
             status_receiver.capture_local_details.get_location(self),
             "started",
-            status_receiver.types.INITIALIZATIONS,
+            status_receiver.Types.INITIALIZATIONS,
         )
 
     def set_emitter_power(self, power_bool):
