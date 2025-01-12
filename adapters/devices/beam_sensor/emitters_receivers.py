@@ -78,9 +78,10 @@ class EmitterReceiver:
         to do: finish docstring
         """
         self.__set_emitter_power(True)
-        time.sleep(0.05)
+        time.sleep(0.2)
         change, value = self.binary_input.get_change()
         self.__set_emitter_power(False)
+        time.sleep(0.2)
         return (change, value)
 
 
