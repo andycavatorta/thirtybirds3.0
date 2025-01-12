@@ -38,8 +38,8 @@ class Inputs(threading.Thread):
 
     def __init__(
         self,
-        status_receiver
-        named_gpios_d,,
+        status_receiver,
+        named_gpios_d,
         data_callback=lambda x: None,
         poll_interval=0,
     ):
