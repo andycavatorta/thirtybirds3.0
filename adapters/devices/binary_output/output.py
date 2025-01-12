@@ -52,7 +52,7 @@ class CaptureLocalDetails:
         pass
 
 class Status_Receiver_Stub:
-    self.catprure_local_details = CaptureLocalDetails()
+    capture_local_details = CaptureLocalDetails()
 
     class types:
         INITIALIZATIONS = "INITIALIZATIONS"
