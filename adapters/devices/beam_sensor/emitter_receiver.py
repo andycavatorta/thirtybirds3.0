@@ -62,3 +62,49 @@ class EmitterReceiver:
         """
         if self.control_emitter_power:
             self.emitter_power.set_value(power_bool)
+
+###############
+### T E S T ###
+###############
+
+class CaptureLocalDetails:
+    def __init__(self):
+        pass
+
+    def get_location(self, *args):
+        pass
+
+class Status_Receiver_Stub:
+    capture_local_details = CaptureLocalDetails()
+
+    class Types:
+        INITIALIZATIONS = "INITIALIZATIONS"
+
+    def __init__(self):
+        pass
+
+    def collect(self, *args):
+        pass
+
+def data_callback(current_value):
+    print(current_value)
+
+def make_r(recv_pin)
+    return EmitterReceiver(
+            Status_Receiver_Stub(),
+            recv_pin,
+            1,
+            0.25,
+            data_callback,
+        )
+
+
+def make_er(recv_pin, emit_pin)
+    return EmitterReceiver(
+            Status_Receiver_Stub(),
+            recv_pin,
+            emit_pin,
+            1,
+            0.25,
+            data_callback,
+        )
