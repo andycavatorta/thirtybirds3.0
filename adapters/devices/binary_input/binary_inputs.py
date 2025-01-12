@@ -38,8 +38,8 @@ class Inputs(threading.Thread):
 
     def __init__(
         self,
-        named_gpios_d,
-        status_receiver,
+        status_receiver
+        named_gpios_d,,
         data_callback=lambda x: None,
         poll_interval=0,
     ):
@@ -91,12 +91,18 @@ class Inputs(threading.Thread):
 ###############
 ### T E S T ###
 ###############
-"""
-def data_callback(name, position):
-    print(name, position)
+
+class CaptureLocalDetails:
+    def __init__(self):
+        pass
+
+    def get_location(self, *args):
+        pass
 
 class Status_Receiver_Stub:
-    class types:
+    capture_local_details = CaptureLocalDetails()
+
+    class Types:
         INITIALIZATIONS = "INITIALIZATIONS"
 
     def __init__(self):
@@ -105,11 +111,13 @@ class Status_Receiver_Stub:
     def collect(self, *args):
         pass
 
-def test(named_gpios_d):
+def data_callback(current_value):
+    print(current_value)
+
+def make_inputs(named_gpios_d):
     return Inputs(
-        named_gpios_d,
         Status_Receiver_Stub(),
+        named_gpios_d,
         data_callback,
         0.5
     )
-"""
