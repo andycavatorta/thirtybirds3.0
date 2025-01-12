@@ -7,7 +7,7 @@ import sys
 import threading
 import time
 
-import smbus
+import smbus2
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "binary_output"))
@@ -61,7 +61,7 @@ class SHT30(threading.Thread):
         self.poll_interval = max(poll_interval, 5)
         self.async_data_callback = async_data_callback
 
-        self.bus = smbus.SMBus(1)
+        self.bus = smbus2.SMBus(1)
         time.sleep(1)
         self.last_temperature = -1
         self.last_humidity = -1
