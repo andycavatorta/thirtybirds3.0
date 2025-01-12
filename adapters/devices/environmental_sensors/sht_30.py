@@ -273,7 +273,7 @@ def data_callback(current_value):
     print(current_value)
 
 
-def make_sht(pin, up_down):
+def make_sht():
     return SHT30(
             Status_Receiver_Stub(),
             async_data_callback = data_callback
