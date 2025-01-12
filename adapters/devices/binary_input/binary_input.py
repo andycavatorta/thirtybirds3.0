@@ -39,8 +39,8 @@ class Input(threading.Thread):
                 GPIO.setup(self.pin_number, GPIO.IN)
             case 1:
                 GPIO.setup(self.pin_number, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        self.last_value = self.get_value()
         if poll_interval > 0:
-            self.last_value = self.get_value()
             self.data_callback(self.last_value)
             threading.Thread.__init__(self)
             self.start()
