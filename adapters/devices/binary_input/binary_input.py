@@ -20,8 +20,8 @@ class Input(threading.Thread):
 
     def __init__(
         self,
-        gpio,
         status_receiver,
+        pin_number,
         data_callback=lambda x: None,
         pull_up_down=0,
         poll_interval=0,
@@ -29,16 +29,16 @@ class Input(threading.Thread):
         """
         to do: finish docstring
         """
-        self.gpio = gpio
+        self.pin_number = pin_number
         self.data_callback = data_callback
         self.poll_interval = poll_interval
         match pull_up_down:
             case -1:
-                GPIO.setup(self.gpio, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+                GPIO.setup(self.pin_number, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
             case 0:
-                GPIO.setup(self.gpio, GPIO.IN)
+                GPIO.setup(self.pin_number, GPIO.IN)
             case 1:
-                GPIO.setup(self.gpio, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+                GPIO.setup(self.pin_number, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         if poll_interval > 0:
             self.last_value = self.get_value()
             self.data_callback(self.last_value)
@@ -54,7 +54,7 @@ class Input(threading.Thread):
         """
         to do: finish docstring
         """
-        return GPIO.input(self.gpio)
+        return GPIO.input(self.pin_number)
 
     def get_change(self):
         """
@@ -78,18 +78,21 @@ class Input(threading.Thread):
                 self.last_value = current_value
 
 
-
-
-
 ###############
 ### T E S T ###
 ###############
-"""
-def data_callback(name, position):
-    print(name, position)
+
+class CaptureLocalDetails:
+    def __init__(self):
+        pass
+
+    def get_location(self, *args):
+        pass
 
 class Status_Receiver_Stub:
-    class types:
+    capture_local_details = CaptureLocalDetails()
+
+    class Types:
         INITIALIZATIONS = "INITIALIZATIONS"
 
     def __init__(self):
@@ -98,12 +101,14 @@ class Status_Receiver_Stub:
     def collect(self, *args):
         pass
 
-#up_down = [-1, 0, 1]
+def data_callback(name, position):
+    print(name, position)
 
-def test(pin, up_down):
+
+def make_input(pin, up_down):
     return Input(
-            pin,
             Status_Receiver_Stub(),
+            pin,
             data_callback,
             up_down,
             poll_interval=0.5
