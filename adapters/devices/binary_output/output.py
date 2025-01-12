@@ -15,8 +15,8 @@ class Output:
     """
     def __init__(
             self,
+            status_receiver,
             gpio,
-            status_receiver
         ):
         """
         to do: finish docstring
@@ -54,7 +54,7 @@ class CaptureLocalDetails:
 class Status_Receiver_Stub:
     capture_local_details = CaptureLocalDetails()
 
-    class types:
+    class Types:
         INITIALIZATIONS = "INITIALIZATIONS"
 
     def __init__(self):
@@ -68,6 +68,6 @@ output = None
 def make_output(pin):
     global output
     output = Output(
+        Status_Receiver_Stub(),
         pin,
-        Status_Receiver_Stub()
     )
