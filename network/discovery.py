@@ -106,14 +106,14 @@ class Caller_Send(threading.Thread):
         self.active = True
         self.lock = threading.Lock()
     def set_active(self,val):
-        self.lock .acquire()
+        self.lock.acquire()
         self.active = val
-        self.lock .release()
+        self.lock.release()
     def run(self):
         while True:
-            self.lock .acquire()
+            self.lock.acquire()
             active = bool(self.active)
-            self.lock .release()
+            self.lock.release()
             if active == True:
                 self.multicast_socket.sendto(self.mcast_msg, (self.discovery_multicast_group, self.discovery_multicast_port))
             time.sleep(self.caller_period)

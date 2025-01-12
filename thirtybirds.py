@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 """
 == major systems ==
@@ -7,16 +7,33 @@ network
     pubsub
     reverse ssh
     security
+    web interface with WebSockets
 reporting
     exception capture
     status and context capture
+    log forwarding
 interfaces
     http interface
     bash interface
     logs
 version control
+    hooks for git status/pull of Thirtybirds and Applications built with Thirtybirds
+    simple manager for non-python code such as drivers and OS congifs
+adapters
+    ever-growing collection of device/cloud adapters for Thirtybirds
+        standard:
+            exception reporting
+            status reporting with flags
+            no direct access to tb pubsub
+            device drivers are included
+            ? is it possible to include generalized code modules for Web/BASH interfaces?
+libraries
+    ever-growing collection of device-independent services such as machine vision or path planning
 
 synchronized time
+    all computers compare times to sync
+    sync time is an offset
+    
 
 == fix before proceeding ==
 
@@ -48,6 +65,7 @@ trim paths in status_receiver?
 installers for Raspbian, Ubuntu, Windows, OSX
 
 copyable disk images
+    Kubernetes?
     setup script:
         assign new hostname
         generate new ssh key
