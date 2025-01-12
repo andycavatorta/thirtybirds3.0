@@ -244,3 +244,50 @@ class SHT30(threading.Thread):
                 self.async_data_callback(TEMPERATURE_CHANGE, temperature)
             if self.get_humidity_change():
                 self.async_data_callback(HUMIDITY_CHANGE, humidity)
+
+
+###############
+### T E S T ###
+###############
+
+class CaptureLocalDetails:
+    def __init__(self):
+        pass
+
+    def get_location(self, *args):
+        pass
+
+class Status_Receiver_Stub:
+    capture_local_details = CaptureLocalDetails()
+
+    class Types:
+        INITIALIZATIONS = "INITIALIZATIONS"
+
+    def __init__(self):
+        pass
+
+    def collect(self, *args):
+        pass
+
+def data_callback(current_value):
+    print(current_value)
+
+
+def make_sht(pin, up_down):
+    return SHT30(
+            Status_Receiver_Stub(),
+            async_data_callback = data_callback
+    )
+
+"""
+        status_receiver,
+        minimum_temp_change_for_callback=0,
+        minimum_temp_for_callback=-1,
+        maximum_temp_for_callback=-1,
+        minimum_humidity_change_for_callback=0,
+        minimum_humidity_for_callback=-1,
+        maximum_humidity_for_callback=-1,
+        optional_power_pin=-1,
+        async_data_callback=lambda x: None,
+        poll_interval=0,
+"""
