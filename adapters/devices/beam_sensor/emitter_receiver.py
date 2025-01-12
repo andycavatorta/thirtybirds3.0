@@ -41,8 +41,8 @@ class EmitterReceiver:
         self.emitter_power_pin = emitter_power_pin
 
         self.binary_input = binary_input.Input(
-            receiver_pin,
             status_receiver,
+            receiver_pin,
             async_data_callback,
             pull_up_down,
             poll_interval,
