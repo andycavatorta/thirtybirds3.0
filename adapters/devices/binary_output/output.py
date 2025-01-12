@@ -43,7 +43,7 @@ class Output:
 ###############
 ### T E S T ###
 ###############
-"""
+
 class Status_Receiver_Stub:
     class types:
         INITIALIZATIONS = "INITIALIZATIONS"
@@ -55,10 +55,9 @@ class Status_Receiver_Stub:
         pass
 
 output = None
-def test(pin):
+def make_output(pin):
     global output
     output = Output(
         pin,
         Status_Receiver_Stub()
     )
-"""
