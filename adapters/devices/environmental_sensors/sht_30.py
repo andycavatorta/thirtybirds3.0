@@ -49,6 +49,7 @@ class SHT30(threading.Thread):
         """
         to do: finish docstring
         """
+        threading.Thread.__init__(self)
         self.status_receiver = status_receiver
         self.minimum_temp_change_for_callback = minimum_temp_change_for_callback
         self.minimum_temp_for_callback = minimum_temp_for_callback
@@ -69,7 +70,6 @@ class SHT30(threading.Thread):
             self.device_power = output.Output(optional_power_pin, status_receiver)
 
         if poll_interval > 0:
-            threading.Thread.__init__(self)
             self.start()
 
     def set_power(self, on_off):
