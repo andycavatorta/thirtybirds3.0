@@ -108,7 +108,7 @@ class EmittersReceivers(threading.Thread):
         for emitter_receiver_name in emitter_receiver_data:
             emitter_power_pin = (
                 self.emitter_receiver_data[emitter_receiver_name]["emitter_power_pin"]
-                if "emitter_power_pin" in self.emitters_receivers[emitter_receiver_name]
+                if "emitter_power_pin" in self.emitter_receiver_data[emitter_receiver_name]
                 else -1
             )
             self.emitters_receivers[emitter_receiver_name] = EmitterReceiver(
