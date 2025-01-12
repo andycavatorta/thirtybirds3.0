@@ -70,6 +70,7 @@ class EmitterReceiver:
         """
         to do: finish docstring
         """
+        print("__set_emitter_power", power_bool)
         if self.control_emitter_power:
             self.emitter_power.set_value(power_bool)
 
@@ -137,7 +138,7 @@ class EmittersReceivers(threading.Thread):
                 change, value = self.emitters_receivers[
                     emitter_receiver_name
                 ].get_change()
-                print(emitter_receiver_name,change, value)
+                # print(emitter_receiver_name,change, value)
                 if change:
                     self.async_data_callback(emitter_receiver_name, value)
 
