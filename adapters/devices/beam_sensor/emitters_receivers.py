@@ -167,7 +167,7 @@ class Status_Receiver_Stub:
         pass
 
 def data_callback(name, current_value):
-    print(current_value)
+    print(name, current_value)
 
 def make_r(er_data):
     return EmittersReceivers(
