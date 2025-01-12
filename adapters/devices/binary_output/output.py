@@ -54,6 +54,9 @@ class Status_Receiver_Stub:
     def collect(self, *args):
         pass
 
+    def capture_local_details(self, *args):
+        pass
+
 output = None
 def make_output(pin):
     global output
