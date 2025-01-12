@@ -48,7 +48,8 @@ class CaptureLocalDetails:
     def __init__(self):
         pass
 
-    def get_location(self, *args)
+    def get_location(self, *args):
+        pass
 
 class Status_Receiver_Stub:
     self.catprure_local_details = CaptureLocalDetails()
