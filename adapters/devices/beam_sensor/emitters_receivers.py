@@ -58,11 +58,11 @@ class EmitterReceiver:
         to do: finish docstring
         """
         self.binary_input = binary_input.Input(
-            receiver_pin, status_receiver, pull_up_down
+            status_receiver, receiver_pin, pull_up_down
         )
         self.control_emitter_power = emitter_power_pin > -1
         if self.control_emitter_power:
-            self.emitter_power = output.Output(emitter_power_pin, status_receiver)
+            self.emitter_power = output.Output(status_receiver, emitter_power_pin)
         else:
             self.emitter_power = None
 
@@ -123,7 +123,7 @@ class EmittersReceivers(threading.Thread):
         status_receiver.collect(
             status_receiver.capture_local_details.get_location(self),
             "started",
-            status_receiver.types.INITIALIZATIONS,
+            status_receiver.Types.INITIALIZATIONS,
         )
 
     def run(self):
@@ -138,3 +138,39 @@ class EmittersReceivers(threading.Thread):
                 ].get_change()
                 if change:
                     self.async_data_callback(emitter_receiver_name, value)
+
+
+###############
+### T E S T ###
+###############
+
+class CaptureLocalDetails:
+    def __init__(self):
+        pass
+
+    def get_location(self, *args):
+        pass
+
+class Status_Receiver_Stub:
+    capture_local_details = CaptureLocalDetails()
+
+    class Types:
+        INITIALIZATIONS = "INITIALIZATIONS"
+
+    def __init__(self):
+        pass
+
+    def collect(self, *args):
+        pass
+
+def data_callback(name, current_value):
+    print(current_value)
+
+def make_r(recv_pin):
+    return EmittersReceivers(
+            Status_Receiver_Stub(),
+            er_data,
+            poll_interval=0.25,
+            async_data_callback = data_callback,
+        )
+
