@@ -101,8 +101,8 @@ class Status_Receiver_Stub:
     def collect(self, *args):
         pass
 
-def data_callback(name, position):
-    print(name, position)
+def data_callback(current_value):
+    print(current_value)
 
 
 def make_input(pin, up_down):
