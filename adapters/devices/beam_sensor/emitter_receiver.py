@@ -49,7 +49,7 @@ class EmitterReceiver:
         )
         self.control_emitter_power = emitter_power_pin > -1
         if self.control_emitter_power:
-            self.emitter_power = output.Output(emitter_power_pin, status_receiver)
+            self.emitter_power = output.Output(status_receiver,emitter_power_pin)
         status_receiver.collect(
             status_receiver.capture_local_details.get_location(self),
             "started",
