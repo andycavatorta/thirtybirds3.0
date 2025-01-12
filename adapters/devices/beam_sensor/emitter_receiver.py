@@ -89,7 +89,7 @@ class Status_Receiver_Stub:
 def data_callback(current_value):
     print(current_value)
 
-def make_r(recv_pin)
+def make_r(recv_pin):
     return EmitterReceiver(
             Status_Receiver_Stub(),
             recv_pin,
@@ -99,7 +99,7 @@ def make_r(recv_pin)
         )
 
 
-def make_er(recv_pin, emit_pin)
+def make_er(recv_pin, emit_pin):
     return EmitterReceiver(
             Status_Receiver_Stub(),
             recv_pin,
