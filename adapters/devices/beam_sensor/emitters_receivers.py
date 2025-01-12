@@ -136,6 +136,7 @@ class EmittersReceivers(threading.Thread):
                 change, value = self.emitters_receivers[
                     emitter_receiver_name
                 ].get_change()
+                print(emitter_receiver_name,change, value)
                 if change:
                     self.async_data_callback(emitter_receiver_name, value)
 
