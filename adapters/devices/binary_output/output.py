@@ -44,7 +44,15 @@ class Output:
 ### T E S T ###
 ###############
 
+class CaptureLocalDetails:
+    def __init__(self):
+        pass
+
+    def get_location(self, *args)
+
 class Status_Receiver_Stub:
+    self.catprure_local_details = CaptureLocalDetails()
+
     class types:
         INITIALIZATIONS = "INITIALIZATIONS"
 
@@ -54,8 +62,6 @@ class Status_Receiver_Stub:
     def collect(self, *args):
         pass
 
-    def capture_local_details(self, *args):
-        pass
 
 output = None
 def make_output(pin):
