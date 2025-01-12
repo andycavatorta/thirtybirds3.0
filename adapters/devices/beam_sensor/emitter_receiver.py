@@ -102,8 +102,8 @@ def make_er(recv_pin, emit_pin):
     return EmitterReceiver(
             Status_Receiver_Stub(),
             recv_pin,
-            emit_pin,
-            1,
-            0.25,
-            data_callback,
+            pull_up_down=1,
+            poll_interval=0.25,
+            async_data_callback = data_callback,
+            emitter_power_pin = emit_pin
         )
