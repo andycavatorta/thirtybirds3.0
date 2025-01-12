@@ -97,8 +97,13 @@ class SHT30(threading.Thread):
         """
         self.set_power(True)
         time.sleep(0.1)
-        self.bus.write_i2c_block_data(
-            I2C_ADDRESS, REQUEST_DATA_COMMAND, [USE_HIGH_REPEATABILITY]
+        #.bus.write_i2c_block_data(
+        #    I2C_ADDRESS, REQUEST_DATA_COMMAND, [USE_HIGH_REPEATABILITY]
+        #)
+        self.bus.write_byte_data(
+            I2C_ADDRESS,
+            REQUEST_DATA_COMMAND,
+            USE_HIGH_REPEATABILITY
         )
         time.sleep(0.5)
         data = self.bus.read_i2c_block_data(I2C_ADDRESS, FETCH_DATA_COMMAND, 6)
