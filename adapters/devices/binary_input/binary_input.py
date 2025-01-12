@@ -61,6 +61,7 @@ class Input(threading.Thread):
         to do: finish docstring
         """
         current_value = self.get_value()
+        print(">>>>",current_value)
         if current_value != self.last_value:
             self.last_value = current_value
             return (True, current_value)
