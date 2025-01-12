@@ -16,11 +16,12 @@ class Output:
     def __init__(
             self,
             status_receiver,
-            gpio,
+            pin_number,
         ):
         """
         to do: finish docstring
         """
+        self.pin_number = pin_number
         GPIO.setup(gpio, GPIO.OUT)
         self.last_value = None
         status_receiver.collect(status_receiver.capture_local_details.get_location(self),"started",status_receiver.Types.INITIALIZATIONS)
@@ -30,7 +31,7 @@ class Output:
         to do: finish docstring
         """
         self.last_value = value
-        return GPIO.output(value)
+        GPIO.output(self.pin_number,value)
 
     def get_last_value(self):
         """
