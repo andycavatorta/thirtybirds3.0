@@ -62,6 +62,7 @@ class SHT30(threading.Thread):
         self.async_data_callback = async_data_callback
 
         self.bus = smbus.SMBus(1)
+        time.sleep(1)
         self.last_temperature = -1
         self.last_humidity = -1
         self.last_read_time = time.time()
