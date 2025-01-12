@@ -166,7 +166,7 @@ class Status_Receiver_Stub:
 def data_callback(name, current_value):
     print(current_value)
 
-def make_r(recv_pin):
+def make_r(er_data):
     return EmittersReceivers(
             Status_Receiver_Stub(),
             er_data,
