@@ -113,8 +113,8 @@ class EmittersReceivers(threading.Thread):
             )
             self.emitters_receivers[emitter_receiver_name] = EmitterReceiver(
                 status_receiver,
-                self.emitters_receivers[emitter_receiver_name]["receiver_pin"],
-                self.emitters_receivers[emitter_receiver_name]["pull_up_down"],
+                self.emitter_receiver_data[emitter_receiver_name]["receiver_pin"],
+                self.emitter_receiver_data[emitter_receiver_name]["pull_up_down"],
                 emitter_power_pin,
             )
 
