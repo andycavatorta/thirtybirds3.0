@@ -113,4 +113,3 @@ def make_input(pin, up_down):
             up_down,
             poll_interval=0.5
     )
-"""
