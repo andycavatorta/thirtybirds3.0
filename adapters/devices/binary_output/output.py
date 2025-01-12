@@ -22,7 +22,7 @@ class Output:
         to do: finish docstring
         """
         self.pin_number = pin_number
-        GPIO.setup(gpio, GPIO.OUT)
+        GPIO.setup(pin_number, GPIO.OUT)
         self.last_value = None
         status_receiver.collect(status_receiver.capture_local_details.get_location(self),"started",status_receiver.Types.INITIALIZATIONS)
 
