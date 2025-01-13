@@ -103,7 +103,7 @@ class SingleChannels:
                     print("dd",name)
                     if name != "":
                         print("ee",name)
-                        self.named_channels[name] = NameMethods(self, elf.set_channel_level, i)
+                        self.named_channels[name] = NameMethods(self, self.set_channel_level, i)
                         #setattr(self, name, NameMethods(self.set_channel_level, i))
         self.status_receiver.collect(
             self.status_receiver.capture_local_details.get_location(self),
