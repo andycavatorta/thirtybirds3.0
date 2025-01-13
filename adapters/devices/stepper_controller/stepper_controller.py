@@ -20,10 +20,6 @@ import sys
 import threading
 import time
 
-try:
-    from RPi import GPIO
-except ImportError:
-    from Mock import GPIO
 
 sys.path.append(
     os.path.abspath(
@@ -43,8 +39,6 @@ CLOCKWISE = "CLOCKWISE"
 COUNTER_CLOCKWISE = "COUNTER_CLOCKWISE"
 SHORTEST = "SHORTEST"
 MOTION_COMPLETE = "MOTION_COMPLETE"
-
-GPIO.setmode(GPIO.BCM)
 
 
 class Position:
@@ -204,7 +198,7 @@ class Controller(threading.Thread):
         pulse_pin,
         enable_pin,
         pulses_per_revolution,
-        seconds_per_revolution=40,
+        seconds_per_revolution=400,
         positive_is_clockwise=True
     ):
         threading.Thread.__init__(self)
@@ -278,7 +272,7 @@ class Controller(threading.Thread):
         to do: finish docstring
         """
         self.enable = enable_bool
-        self.enable_output.set_value(-enable_bool)
+        self.enable_output.set_value(0 if enable_bool else 1)
 
     def get_holding_force(self):
         """
