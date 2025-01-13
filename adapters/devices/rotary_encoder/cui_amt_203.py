@@ -237,10 +237,7 @@ class Status_Receiver_Stub:
 def data_callback(name, position):
     print(name, position)
 
-def make_encoder(
-        names_and_chip_select_pins,
-        polling_interval = 0
-    )
+def make_encoder(names_and_chip_select_pins,polling_interval = 0):
     return Encoders(
         Status_Receiver_Stub(),
         names_and_chip_select_pins,
