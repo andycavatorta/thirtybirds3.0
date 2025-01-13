@@ -19,15 +19,17 @@ import adafruit_tlc59711
 import board
 import busio
 
+
 class NameMethods:
     """
     to do: finish docstring
     """
 
-    def __init__(self, channel_number, set_channel_level):
+    def __init__(self, parent, channel_number, set_channel_level):
         """
         to do: finish docstring
         """
+        self.parent = parent
         self.channel_number = channel_number
         self.set_channel_level = set_channel_level
 
@@ -35,13 +37,13 @@ class NameMethods:
         """
         to do: finish docstring
         """
-        self.set_channel_level(self.channel_number, level_f)
+        self.parent.set_channel_level(self.channel_number, level_f)
 
     def set_off(self):
         """
         to do: finish docstring
         """
-        self.set_channel_level(self.channel_number, 0)
+        self.parent.set_channel_level(self.channel_number, 0)
 
 
 def float_to_luminosity(luminosity_fl):
