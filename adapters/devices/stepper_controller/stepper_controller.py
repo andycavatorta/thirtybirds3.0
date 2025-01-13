@@ -217,9 +217,9 @@ class Controller(threading.Thread):
         self.positive_is_clockwise = positive_is_clockwise
 
         # gpios
-        self.direction_output = output.Output(direction_pin, status_receiver)
-        self.pulse_output = output.Output(pulse_pin, status_receiver)
-        self.enable_output = output.Output(enable_pin, status_receiver)
+        self.direction_output = output.Output(status_receiver, direction_pin)
+        self.pulse_output = output.Output(status_receiver, pulse_pin)
+        self.enable_output = output.Output(status_receiver, enable_pin)
 
         # motion_preferences
         self.enable = True
