@@ -323,9 +323,9 @@ class Controller(threading.Thread):
         """
         to do: finish docstring
         """
-        self.pulse_output.sef_value(True)
+        self.pulse_output.set_value(True)
         time.sleep(self.pulse_interval / 2)
-        self.pulse_output.sef_value(False)
+        self.pulse_output.set_value(False)
         time.sleep(self.pulse_interval / 2)
         if self.direction == self.CLOCKWISE:
             self.position.increment()
