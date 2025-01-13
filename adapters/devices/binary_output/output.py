@@ -65,10 +65,8 @@ class Status_Receiver_Stub:
         pass
 
 
-output = None
 def make_output(pin):
-    global output
-    output = Output(
+    return Output(
         Status_Receiver_Stub(),
         pin,
     )
