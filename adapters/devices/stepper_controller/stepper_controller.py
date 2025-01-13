@@ -466,35 +466,48 @@ class Controller(threading.Thread):
 ###############
 
 
-def data_callback(name, position):
-    """
-    to do: finish docstring
-    """
-    print(name, position)
+###############
+### T E S T ###
+###############
 
+class CaptureLocalDetails:
+    def __init__(self):
+        pass
 
-class StatusReceiverStub:
-    """
-    to do: finish docstring
-    """
+    def get_location(self, *args):
+        pass
+
+class Status_Receiver_Stub:
+    capture_local_details = CaptureLocalDetails()
 
     class Types:
-        """
-        to do: finish docstring
-        """
         INITIALIZATIONS = "INITIALIZATIONS"
 
     def __init__(self):
-        """
-        to do: finish docstring
-        """
         pass
 
     def collect(self, *args):
-        """
-        to do: finish docstring
-        """
         pass
+
+def data_callback(current_value):
+    print(current_value)
+
+
+def make_controller(
+        name,
+        dir_pin,
+        pulse_pin,
+        enable_pin,
+        ppr,
+    ):
+    controller = Controller(
+        Status_Receiver_Stub(),
+        name,
+        direction_pin,
+        pulse_pin,
+        enable_pin,
+        pulses_per_revolution,
+    )
 
 """
 controller = Controller(
