@@ -495,7 +495,7 @@ def data_callback(current_value):
 
 def make_controller(
         name,
-        dir_pin,
+        direction_pin,
         pulse_pin,
         enable_pin,
         ppr,
