@@ -71,8 +71,8 @@ class SingleChannels:
 
     def __init__(
         self,
-        channel_quantity,
         status_receiver,
+        channel_quantity,
         channel_names = None,
         mosi_pin=board.MOSI,
         clock_pin=board.SCK,
@@ -94,7 +94,8 @@ class SingleChannels:
             if len([name for name in self.channel_names if iskeyword(name)])== 0:
                 if ([name for name in self.channel_names if name.isidentifier()]) == 0:
                     for i, name in enumerate(self.channel_names):
-                        setattr(self, name, NameMethods(self.set_channel_level, i))
+                        if name != "":
+                            setattr(self, name, NameMethods(self.set_channel_level, i))
         self.status_receiver.collect(
             self.status_receiver.capture_local_details.get_location(self),
             "started",
@@ -129,6 +130,91 @@ class SingleChannels:
 ###############
 ### T E S T ###
 ###############
+
+class CaptureLocalDetails:
+    def __init__(self):
+        pass
+
+    def get_location(self, *args):
+        pass
+
+class Status_Receiver_Stub:
+    capture_local_details = CaptureLocalDetails()
+
+    class Types:
+        INITIALIZATIONS = "INITIALIZATIONS"
+
+    def __init__(self):
+        pass
+
+    def collect(self, *args):
+        pass
+
+def data_callback(current_value):
+    print(current_value)
+
+test_channel_names = [
+    "", # 0
+    "", # 1
+    "", # 2
+    "", # 3
+    "", # 4
+    "", # 5
+    "", # 6
+    "", # 7
+    "", # 8
+    "", # 9
+    "", # 0
+    "", # 11
+    "BALL_UNDERCOUNT", # 12
+    "TRAPDOOR_SENSOR", # 13
+    "TRAPDOOR_TEMP", # 14
+    "", # 15
+    "", # 16
+    "TRAPDOOR_MOTION", # 17
+    "", # 18
+    "", # 19
+    "", # 20
+    "", # 21
+    "", # 22
+    "", # 23
+    "TURNSTILE_TEMP", # 24
+    "TURNSTILE_BOTTOM", # 25
+    "TURNSTILE_ENCODER", # 26
+    "LIFTER_BOTTOM", # 27
+    "LIFTER_TEMP", # 28
+    "", # 29
+    "", # 30
+    "LIFTER_TOP", # 31
+    "", # 32
+    "", # 33
+    "", # 34
+    "", # 35
+    "HIGH_POWER", # 36
+    "RAY_STARTED", # 37
+    "CHARLES_STARTED", # 38
+    "TURNSTILE_TOP", # 39
+    "TURNSTILE_MOTION", # 40
+    "BALL_EXPECTED", # 41
+    "", # 42
+    "", # 43
+    "", # 44
+    "", # 45
+    "", # 46
+    "", # 47
+]
+
+
+
+def make_tlc(pin, up_down):
+    return Input(
+            Status_Receiver_Stub(),
+            48,
+            test_channel_names,
+    )
+
+
+
 """
 def data_callback(name, position):
     print(name, position)
