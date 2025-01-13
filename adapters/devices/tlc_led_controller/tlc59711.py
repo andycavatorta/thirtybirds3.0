@@ -99,7 +99,7 @@ class SingleChannels:
         self.status_receiver.collect(
             self.status_receiver.capture_local_details.get_location(self),
             "started",
-            self.status_receiver.types.INITIALIZATIONS,
+            self.status_receiver.Types.INITIALIZATIONS,
         )
 
     def set_channel_level(
