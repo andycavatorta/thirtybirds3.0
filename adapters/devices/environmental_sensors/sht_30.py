@@ -97,18 +97,22 @@ class SHT30(threading.Thread):
         """
         self.set_power(True)
         time.sleep(0.1)
-        self.bus.write_i2c_block_data(
-            I2C_ADDRESS, REQUEST_DATA_COMMAND, [USE_HIGH_REPEATABILITY]
-        )
-        #self.bus.write_byte_data(
-        #    I2C_ADDRESS,
-        #    REQUEST_DATA_COMMAND,
-        #    USE_HIGH_REPEATABILITY
-        #)
-        time.sleep(0.5)
-        data = self.bus.read_i2c_block_data(I2C_ADDRESS, FETCH_DATA_COMMAND, 6)
-        time.sleep(0.1)
-        self.set_power(False)
+        try:
+            self.bus.write_i2c_block_data(
+                I2C_ADDRESS, REQUEST_DATA_COMMAND, [USE_HIGH_REPEATABILITY]
+            )
+            #self.bus.write_byte_data(
+            #    I2C_ADDRESS,
+            #    REQUEST_DATA_COMMAND,
+            #    USE_HIGH_REPEATABILITY
+            #)
+            time.sleep(0.5)
+            data = self.bus.read_i2c_block_data(I2C_ADDRESS, FETCH_DATA_COMMAND, 6)
+            time.sleep(0.1)
+            self.set_power(False)
+        except TimeoutError:
+            status_receiver.collect(status_receiver.capture_local_details.get_location(self),"started",status_receiver.Types.TIMEOUT)
+
         temperature_c = ((((data[0] * 256.0) + data[1]) * 175) / 65535.0) - 45
         return temperature_c
 
@@ -268,12 +272,13 @@ class Status_Receiver_Stub:
 
     class Types:
         INITIALIZATIONS = "INITIALIZATIONS"
+        TIMEOUT = "TIMEOUT"
 
     def __init__(self):
         pass
 
     def collect(self, *args):
-        pass
+        print(args)
 
 def data_callback(current_value):
     print(current_value)
