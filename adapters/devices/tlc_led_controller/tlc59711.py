@@ -87,6 +87,7 @@ class SingleChannels:
         self.pixels = adafruit_tlc59711.TLC59711(
             self.spi, pixel_count=self.pixel_quantity
         )
+        self.named_channels = {}
         self.pixel_levels = []
         for i in range(self.pixel_quantity):
             self.pixel_levels.append([0, 0, 0])
@@ -95,7 +96,9 @@ class SingleChannels:
                 if ([name for name in self.channel_names if name.isidentifier()]) == 0:
                     for i, name in enumerate(self.channel_names):
                         if name != "":
-                            setattr(self, name, NameMethods(self.set_channel_level, i))
+                            print(name)
+                            self.named_channels[name] = NameMethods(self.set_channel_level, i)
+                            #setattr(self, name, NameMethods(self.set_channel_level, i))
         self.status_receiver.collect(
             self.status_receiver.capture_local_details.get_location(self),
             "started",
