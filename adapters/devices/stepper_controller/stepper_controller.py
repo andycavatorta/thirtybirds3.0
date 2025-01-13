@@ -498,7 +498,7 @@ def make_controller(
         direction_pin,
         pulse_pin,
         enable_pin,
-        ppr,
+        pulses_per_revolution,
     ):
     controller = Controller(
         Status_Receiver_Stub(),
