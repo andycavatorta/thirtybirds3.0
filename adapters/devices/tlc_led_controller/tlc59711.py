@@ -206,8 +206,8 @@ test_channel_names = [
 
 
 
-def make_tlc(pin, up_down):
-    return Input(
+def make_tlc():
+    return SingleChannels(
             Status_Receiver_Stub(),
             48,
             test_channel_names,
