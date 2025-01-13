@@ -278,7 +278,7 @@ class Controller(threading.Thread):
         to do: finish docstring
         """
         self.enable = enable_bool
-        self.enable_output.set_value(enable_bool)
+        self.enable_output.set_value(-enable_bool)
 
     def get_holding_force(self):
         """
@@ -298,7 +298,7 @@ class Controller(threading.Thread):
             self.direction = (
                 self.COUNTER_CLOCKWISE if self.positive_is_clockwise else self.CLOCKWISE
             )
-        self.direction_output.sef_value(self.direction == self.CLOCKWISE)
+        self.direction_output.set_value(self.direction == self.CLOCKWISE)
 
     def get_direction(self):
         """
