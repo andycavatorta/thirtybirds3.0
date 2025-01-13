@@ -95,14 +95,14 @@ class SingleChannels:
             print("aa")
             if len([name for name in self.channel_names if iskeyword(name)])== 0:
                 print("bb")
-                if ([name for name in self.channel_names if name.isidentifier()]) == 0:
-                    print("cc")
-                    for i, name in enumerate(self.channel_names):
-                        print("dd",name)
-                        if name != "":
-                            print("ee",name)
-                            self.named_channels[name] = NameMethods(self.set_channel_level, i)
-                            #setattr(self, name, NameMethods(self.set_channel_level, i))
+                #if ([name for name in self.channel_names if name.isidentifier()]) == 0:
+                #    print("cc")
+                for i, name in enumerate(self.channel_names):
+                    print("dd",name)
+                    if name != "":
+                        print("ee",name)
+                        self.named_channels[name] = NameMethods(self.set_channel_level, i)
+                        #setattr(self, name, NameMethods(self.set_channel_level, i))
         self.status_receiver.collect(
             self.status_receiver.capture_local_details.get_location(self),
             "started",
