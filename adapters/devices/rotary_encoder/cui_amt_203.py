@@ -72,8 +72,8 @@ class Encoders(threading.Thread):
 
     def __init__(
         self,
-        names_and_chip_select_pins,
         status_receiver,
+        names_and_chip_select_pins,
         async_data_callback=lambda x: None,
         polling_interval=0,
         bus_number=0,
@@ -109,7 +109,7 @@ class Encoders(threading.Thread):
             self.start()
 
         self.status_receiver.collect(
-            "started", self.status_receiver.types.INITIALIZATIONS
+            "started", self.status_receiver.Types.INITIALIZATIONS
         )
 
     def close(self):
@@ -210,27 +210,39 @@ class Encoders(threading.Thread):
 ###############
 ### T E S T ###
 ###############
-"""
-def data_callback(name, position):
-    print(name, position)
+
+# format for names_and_chip_select_pins {"a":13,"b":5}
+
+
+class CaptureLocalDetails:
+    def __init__(self):
+        pass
+
+    def get_location(self, *args):
+        pass
 
 class Status_Receiver_Stub:
-    class types:
+    capture_local_details = CaptureLocalDetails()
+
+    class Types:
         INITIALIZATIONS = "INITIALIZATIONS"
+        TIMEOUT = "TIMEOUT"
 
     def __init__(self):
         pass
 
     def collect(self, *args):
-        pass
+        print(args)
 
-# format for names_and_chip_select_pins {"a":13,"b":5}
+def data_callback(name, position):
+    print(name, position)
 
-def test(names_and_chip_select_pins):
-    return Encoders(
+def make_encoder(
         names_and_chip_select_pins,
-        Status_Receiver_Stub(),
-        data_callback,
-        0.5
+        polling_interval = 0
     )
-"""
+    return Encoders(
+        Status_Receiver_Stub(),
+        names_and_chip_select_pins,
+        data_callback
+    )
