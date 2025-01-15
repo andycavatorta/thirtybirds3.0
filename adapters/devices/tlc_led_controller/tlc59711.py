@@ -231,7 +231,7 @@ test_channel_names = [
 
 def make_tlc():
     return SingleChannels(
-        status_receiver,
-        exception_receiver,
+        Status_Receiver_Stub(),
+        exception_callback,
         channel_quantity=36,
     )
