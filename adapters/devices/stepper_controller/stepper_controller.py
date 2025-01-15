@@ -22,15 +22,7 @@ import time
 
 
 sys.path.append(
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(
-                __file__
-            ),
-        '..',
-        'binary_output'
-        )
-    )
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "binary_output"))
 )
 
 import output
@@ -40,16 +32,17 @@ COUNTER_CLOCKWISE = "COUNTER_CLOCKWISE"
 SHORTEST = "SHORTEST"
 MOTION_COMPLETE = "MOTION_COMPLETE"
 
+NAME = __name__
 
 class Position:
     """
     to do: finish docstring
     """
+
     CLOCKWISE = "CLOCKWISE"
     COUNTER_CLOCKWISE = "COUNTER_CLOCKWISE"
     SHORTEST = "SHORTEST"
     MOTION_COMPLETE = "MOTION_COMPLETE"
-
 
     def __init__(self, pulses_per_revolution, position=0):
         """
@@ -146,6 +139,7 @@ class Position:
         """
         to do: finish docstring
         """
+
         def calculate_clockwise_distance(start, end):
             return (end - start) + 0 if end > start else self.pulses_per_revolution
 
@@ -184,22 +178,23 @@ class Controller(threading.Thread):
     """
     to do: finish docstring
     """
+
     CLOCKWISE = "CLOCKWISE"
     COUNTER_CLOCKWISE = "COUNTER_CLOCKWISE"
     SHORTEST = "SHORTEST"
     MOTION_COMPLETE = "MOTION_COMPLETE"
 
-
     def __init__(
         self,
         status_receiver,
+        exception_receiver,
         name,
         direction_pin,
         pulse_pin,
         enable_pin,
         pulses_per_revolution,
         seconds_per_revolution=400,
-        positive_is_clockwise=True
+        positive_is_clockwise=True,
     ):
         threading.Thread.__init__(self)
         self.command_queue = queue.Queue()
@@ -211,9 +206,15 @@ class Controller(threading.Thread):
         self.positive_is_clockwise = positive_is_clockwise
 
         # gpios
-        self.direction_output = output.Output(status_receiver, direction_pin)
-        self.pulse_output = output.Output(status_receiver, pulse_pin)
-        self.enable_output = output.Output(status_receiver, enable_pin)
+        self.direction_output = output.Output(
+            status_receiver, exception_receiver, direction_pin
+        )
+        self.pulse_output = output.Output(
+            status_receiver, exception_receiver, pulse_pin
+        )
+        self.enable_output = output.Output(
+            status_receiver, exception_receiver, enable_pin
+        )
 
         # motion_preferences
         self.enable = True
@@ -460,11 +461,6 @@ class Controller(threading.Thread):
 ### T E S T ###
 ###############
 
-
-###############
-### T E S T ###
-###############
-
 class CaptureLocalDetails:
     def __init__(self):
         pass
@@ -488,6 +484,10 @@ def data_callback(current_value):
     print(current_value)
 
 
+def exception_callback(name, e):
+    print(name, e)
+
+
 def make_controller(
         name,
         direction_pin,
@@ -497,24 +497,10 @@ def make_controller(
     ):
     return Controller(
         Status_Receiver_Stub(),
+        exception_callback,
         name,
         direction_pin,
         pulse_pin,
         enable_pin,
         pulses_per_revolution,
     )
-
-"""
-controller = Controller(
-    name,
-    direction_pin,
-    pulse_pin,
-    enable_pin,
-    pulses_per_revolution,
-    status_receiver,
-    seconds_per_revolution=400,
-    positive_is_clockwise=True,
-)
-"""
-
-# ?????? finish writing tests

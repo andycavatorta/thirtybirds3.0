@@ -23,7 +23,7 @@ class Thumbwheels:
     """
     The variable gpios_2l is a nested .
     There is one outer cycle for each thumbwheel.
-    These represent decimal digits starting with the 1s place.
+    These represent decimal digits starting " = " the 1s place.
     The inner cycle of each represents the gpios for BDC binary digits 0001 through 1000
     The gpios_2l for 4-digit decimal thumbwheel might look like
     [
@@ -41,9 +41,9 @@ class Thumbwheels:
 
     def __init__(
         self,
+        status_receiver,
         gpios_2l,  # 2-dimensional list
         data_callback,
-        status_receiver,
         poll_interval=1,
     ):
         """
@@ -69,16 +69,21 @@ class Thumbwheels:
                 )
             )
 
+    def get_value(self):
+        return self.calculate_total()
+
+    def calculate_total(self):
+        return sum(
+            self.decimal_place_values[i] * (10**i)
+            for i in range(len(self.decimal_place_values))
+        )
+
     def tw_callback(self, place_name_ordinal, value):
         """
         to do: finish docstring
         """
         self.decimal_place_values[place_name_ordinal] = value
-        total = sum(
-            self.decimal_place_values[i] * (10**i)
-            for i in range(len(self.decimal_place_values))
-        )
-        self.data_callback(total)
+        self.data_callback(self.calculate_total())
 
 
 class Thumbwheel:

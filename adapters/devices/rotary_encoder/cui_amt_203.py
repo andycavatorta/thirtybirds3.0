@@ -1,6 +1,7 @@
 """
 to do:
     add cumulative position counter
+    replace all raw GPIOs with output.Output
 
 format for names_and_chip_select_pins:
 {
@@ -8,12 +9,22 @@ format for names_and_chip_select_pins:
     "b":5,
     "c":21
 }
+
+
 """
 
+import os
+import sys
 import threading
 import time
 
 import spidev
+
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "binary_output"))
+)
+
+import output
 
 try:
     from RPi import GPIO
@@ -28,12 +39,13 @@ class Encoder:
     to do: finish docstring
     """
 
-    def __init__(self, name, pin, initial_value):
+    def __init__(self, name, pin, chip_select_output, initial_value):
         """
         to do: finish docstring
         """
         self.name = name
         self.pin = pin
+        self.chip_select_output = chip_select_output
         self.last_value = initial_value
 
     def get_pin(self):
@@ -73,6 +85,7 @@ class Encoders(threading.Thread):
     def __init__(
         self,
         status_receiver,
+        exception_receiver,
         names_and_chip_select_pins,
         async_data_callback=lambda x: None,
         polling_interval=0,
@@ -83,24 +96,35 @@ class Encoders(threading.Thread):
     ):
         # scope arguments to self
         self.status_receiver = status_receiver
+        self.exception_receiver = exception_receiver
         self.speed_hz = speed_hz
         self.delay_usec = spi_delay  # microseconds
         self.delay_sec = spi_delay / 1e3
 
         # init spidev
-        self.spi = spidev.SpiDev()
-        self.spi.open(bus_number, device_number)
-        self.spi_speed = speed_hz
-        self.spi.mode = 0b00
-        self.spi.no_cs = True
+        try:
+            self.spi = spidev.SpiDev()
+            self.spi.open(bus_number, device_number)
+            self.spi_speed = speed_hz
+            self.spi.mode = 0b00
+            self.spi.no_cs = True
+        except Exception as e:
+            self.exception_receiver(NAME, type(e))
 
         self.encoders = {}
         # initialize pins
         for name in names_and_chip_select_pins:
-            pin = names_and_chip_select_pins[name]
-            GPIO.setup(pin, GPIO.OUT)
-            GPIO.output(pin, GPIO.HIGH)
-            self.encoders[name] = Encoder(name, pin, self.get_position(pin))
+
+            chip_select_output = self.outputs[name] = output.Output(
+                status_receiver, exception_receiver, names_and_chip_select_pins[name]
+            )
+
+            # pin = names_and_chip_select_pins[name]
+            # GPIO.setup(pin, GPIO.OUT)
+            # GPIO.output(pin, GPIO.HIGH)
+            self.encoders[name] = Encoder(
+                name, pin, chip_select_output, self.get_position(name)
+            )
 
         if polling_interval > 0:
             self.async_data_callback = async_data_callback
@@ -116,7 +140,10 @@ class Encoders(threading.Thread):
         """
         to do: finish docstring
         """
-        self.spi.close()
+        try:
+            self.spi.close()
+        except Exception as e:
+            self.exception_receiver(NAME, type(e))
 
     def from_bytes(self, value: bytes) -> int:
         """
@@ -124,55 +151,73 @@ class Encoders(threading.Thread):
         """
         return int.from_bytes(value, self.BYTEORDER)
 
-    def spi_write_read(self, chip_select_pin, output_bytes) -> bytes:
+    def spi_write_read(self, name, output_bytes) -> bytes:
         """
         to do: finish docstring
         """
-        GPIO.output(chip_select_pin, GPIO.LOW)
+        self.encoders[name].self.chip_select_output.set_value(False)
+        # GPIO.output(chip_select_pin, GPIO.LOW)
         time.sleep(self.delay_sec)
-        received_bytes = self.spi.xfer(output_bytes, self.speed_hz, self.delay_usec)
-        GPIO.output(chip_select_pin, GPIO.HIGH)
+
+        try:
+            received_bytes = self.spi.xfer(output_bytes, self.speed_hz, self.delay_usec)
+        except Exception as e:
+            self.exception_receiver(NAME, type(e))
+
+        self.encoders[name].self.chip_select_output.set_value(True)
+        # GPIO.output(chip_select_pin, GPIO.HIGH)
         return received_bytes
 
-    def spi_clean_buffer(self, chip_select_pin):
+    def spi_clean_buffer(self, name):
         """
         to do: finish docstring
         """
-        first_result = self.spi_write_read(chip_select_pin, [self.NO_OP])
-        while first_result[0] != self.WAIT:
-            first_result = self.spi_write_read(chip_select_pin, [self.NO_OP])
+        try:
+            first_result = self.spi_write_read(name, [self.NO_OP])
+            while first_result[0] != self.WAIT:
+                first_result = self.spi_write_read(name, [self.NO_OP])
+        except Exception as e:
+            self.exception_receiver(NAME, type(e))
 
-    def get_position(self, chip_select_pin) -> int:
+    def get_position(self, name) -> int:
         """
         to do: finish docstring
         """
-        request = self.spi_write_read(chip_select_pin, [self.READ_POS])
-        counter = 0
-        while request[0] != self.READ_POS:
-            request = self.spi_write_read(chip_select_pin, [self.NO_OP])
-            counter += 1
-            if counter == 100:
-                return -1
-        position_bytes = self.spi_write_read(chip_select_pin, [self.NO_OP])
-        position_bytes += self.spi_write_read(chip_select_pin, [self.NO_OP])
-        return self.from_bytes(position_bytes)
+        try:
+            request = self.spi_write_read(name, [self.READ_POS])
+            counter = 0
+            while request[0] != self.READ_POS:
+                request = self.spi_write_read(name, [self.NO_OP])
+                counter += 1
+                if counter == 100:
+                    return -1
+            position_bytes = self.spi_write_read(name, [self.NO_OP])
+            position_bytes += self.spi_write_read(name, [self.NO_OP])
+            return self.from_bytes(position_bytes)
+        except Exception as e:
+            self.exception_receiver(NAME, type(e))
+            return None
 
-    def get_presence(self, chip_select_pin) -> bool:
+    def get_presence(self, name) -> bool:
         """
         to do: finish docstring
         """
-        return self.get_position(chip_select_pin) > -1
+        return self.get_position(name) > -1
 
-    def set_zero(self, chip_select_pin) -> bool:
+    def set_zero(self, name) -> bool:
         """Must power-cycle to start using new zero point"""
-        request = self.spi_write_read(chip_select_pin, [self.SET_ZERO])
-        counter = 0
-        while request[0] != self.ACK_ZERO:
-            request = self.spi_write_read(chip_select_pin, [self.NO_OP])
-            counter += 1
-            if counter == 100:
-                return False
-        return True
+        try:
+            request = self.spi_write_read(name, [self.SET_ZERO])
+            counter = 0
+            while request[0] != self.ACK_ZERO:
+                request = self.spi_write_read(name, [self.NO_OP])
+                counter += 1
+                if counter == 100:
+                    return False
+            return True
+        except Exception as e:
+            self.exception_receiver(NAME, type(e))
+            return None
 
     def get_positions(self) -> list:
         """
@@ -180,7 +225,7 @@ class Encoders(threading.Thread):
         """
         positions = []
         for name in self.encoders:
-            positions.append(self.get_position(self.encoders[name].get_pin()))
+            positions.append(self.get_position(name))
         return positions
 
     def get_presences(self) -> list:
@@ -199,7 +244,7 @@ class Encoders(threading.Thread):
         while True:
             time.sleep(self.polling_interval)
             for name in self.encoders:
-                position = self.get_position(self.encoders[name].get_pin())
+                position = self.get_position(name)
 
                 position_is_new = self.encoders[name].set_new_value(position)
 
@@ -212,7 +257,6 @@ class Encoders(threading.Thread):
 ###############
 
 # format for names_and_chip_select_pins {"a":13,"b":5}
-
 
 class CaptureLocalDetails:
     def __init__(self):
@@ -234,12 +278,17 @@ class Status_Receiver_Stub:
     def collect(self, *args):
         print(args)
 
+def exception_callback(name, e):
+    print(name, e)
+
+
 def data_callback(name, position):
     print(name, position)
 
 def make_encoder(names_and_chip_select_pins,polling_interval = 0):
     return Encoders(
         Status_Receiver_Stub(),
+        exception_callback,
         names_and_chip_select_pins,
         data_callback
     )

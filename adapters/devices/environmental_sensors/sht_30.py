@@ -15,6 +15,9 @@ sys.path.append(
 
 import output
 
+
+NAME = __name__
+
 I2C_ADDRESS = 0x44
 REQUEST_DATA_COMMAND = 0x2C
 USE_HIGH_REPEATABILITY = 0x06
@@ -36,6 +39,7 @@ class SHT30(threading.Thread):
     def __init__(
         self,
         status_receiver,
+        exception_receiver,
         minimum_temp_change_for_callback=0,
         minimum_temp_for_callback=-1,
         maximum_temp_for_callback=-1,
@@ -51,6 +55,7 @@ class SHT30(threading.Thread):
         """
         threading.Thread.__init__(self)
         self.status_receiver = status_receiver
+        self.exception_receiver = exception_receiver
         self.minimum_temp_change_for_callback = minimum_temp_change_for_callback
         self.minimum_temp_for_callback = minimum_temp_for_callback
         self.maximum_temp_for_callback = maximum_temp_for_callback
@@ -61,14 +66,20 @@ class SHT30(threading.Thread):
         self.poll_interval = max(poll_interval, 5)
         self.async_data_callback = async_data_callback
 
-        self.bus = smbus2.SMBus(1)
+        try:
+            self.bus = smbus2.SMBus(1)
+        except Exception as e:
+            self.exception_receiver(NAME, type(e))
+
         time.sleep(1)
         self.last_temperature = -1
         self.last_humidity = -1
         self.last_read_time = time.time()
 
         if self.optional_power_pin > -1:
-            self.device_power = output.Output(optional_power_pin, status_receiver)
+            self.device_power = output.Output(
+                status_receiver, exception_receiver, optional_power_pin
+            )
 
         if poll_interval > 0:
             self.start()
@@ -101,17 +112,17 @@ class SHT30(threading.Thread):
             self.bus.write_i2c_block_data(
                 I2C_ADDRESS, REQUEST_DATA_COMMAND, [USE_HIGH_REPEATABILITY]
             )
-            #self.bus.write_byte_data(
+            # self.bus.write_byte_data(
             #    I2C_ADDRESS,
             #    REQUEST_DATA_COMMAND,
             #    USE_HIGH_REPEATABILITY
-            #)
+            # )
             time.sleep(0.5)
             data = self.bus.read_i2c_block_data(I2C_ADDRESS, FETCH_DATA_COMMAND, 6)
             time.sleep(0.1)
             self.set_power(False)
-        except TimeoutError:
-            status_receiver.collect(status_receiver.capture_local_details.get_location(self),"started",status_receiver.Types.TIMEOUT)
+        except Exception as e:
+            self.exception_receiver(NAME, type(e))
 
         temperature_c = ((((data[0] * 256.0) + data[1]) * 175) / 65535.0) - 45
         return temperature_c
@@ -120,17 +131,21 @@ class SHT30(threading.Thread):
         """
         to do: finish docstring
         """
-        self.set_power(True)
-        time.sleep(0.1)
-        self.bus.write_i2c_block_data(
-            I2C_ADDRESS, REQUEST_DATA_COMMAND, [USE_HIGH_REPEATABILITY]
-        )
-        time.sleep(0.5)
-        data = self.bus.read_i2c_block_data(I2C_ADDRESS, FETCH_DATA_COMMAND, 6)
-        time.sleep(0.1)
-        self.set_power(False)
-        humidity = 100 * (data[3] * 256 + data[4]) / 65535.0
-        return humidity
+        try:
+            self.set_power(True)
+            time.sleep(0.1)
+            self.bus.write_i2c_block_data(
+                I2C_ADDRESS, REQUEST_DATA_COMMAND, [USE_HIGH_REPEATABILITY]
+            )
+            time.sleep(0.5)
+            data = self.bus.read_i2c_block_data(I2C_ADDRESS, FETCH_DATA_COMMAND, 6)
+            time.sleep(0.1)
+            self.set_power(False)
+            humidity = 100 * (data[3] * 256 + data[4]) / 65535.0
+            return humidity
+        except Exception as e:
+            self.exception_receiver(NAME, type(e))
+            return None
 
     def get_temperature_change(self):
         """
@@ -283,13 +298,16 @@ class Status_Receiver_Stub:
 def data_callback(current_value):
     print(current_value)
 
+def exception_callback(name, e):
+    print(name, e)
+
 
 def make_sht():
     return SHT30(
             Status_Receiver_Stub(),
+            exception_callback,
             async_data_callback = data_callback
     )
-
 """
         status_receiver,
         minimum_temp_change_for_callback=0,

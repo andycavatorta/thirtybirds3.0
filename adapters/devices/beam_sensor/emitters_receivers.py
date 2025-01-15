@@ -50,6 +50,7 @@ class EmitterReceiver:
     def __init__(
         self,
         status_receiver,
+        exception_receiver,
         receiver_pin,
         pull_up_down=0,
         emitter_power_pin=-1,
@@ -58,11 +59,13 @@ class EmitterReceiver:
         to do: finish docstring
         """
         self.binary_input = binary_input.Input(
-            status_receiver, receiver_pin, pull_up_down
+            status_receiver, exception_receiver, receiver_pin, pull_up_down
         )
         self.control_emitter_power = emitter_power_pin > -1
         if self.control_emitter_power:
-            self.emitter_power = output.Output(status_receiver, emitter_power_pin)
+            self.emitter_power = output.Output(
+                status_receiver, exception_receiver, emitter_power_pin
+            )
         else:
             self.emitter_power = None
 
@@ -94,6 +97,7 @@ class EmittersReceivers(threading.Thread):
     def __init__(
         self,
         status_receiver,
+        exception_receiver,
         emitter_receiver_data,
         poll_interval,
         async_data_callback,
@@ -102,6 +106,7 @@ class EmittersReceivers(threading.Thread):
         to do: finish docstring
         """
         self.status_receiver = status_receiver
+        self.exception_receiver = exception_receiver
         self.emitter_receiver_data = emitter_receiver_data
         self.poll_interval = poll_interval
         self.async_data_callback = async_data_callback
@@ -110,11 +115,13 @@ class EmittersReceivers(threading.Thread):
         for emitter_receiver_name in emitter_receiver_data:
             emitter_power_pin = (
                 self.emitter_receiver_data[emitter_receiver_name]["emitter_power_pin"]
-                if "emitter_power_pin" in self.emitter_receiver_data[emitter_receiver_name]
+                if "emitter_power_pin"
+                in self.emitter_receiver_data[emitter_receiver_name]
                 else -1
             )
             self.emitters_receivers[emitter_receiver_name] = EmitterReceiver(
                 status_receiver,
+                exception_receiver,
                 self.emitter_receiver_data[emitter_receiver_name]["receiver_pin"],
                 self.emitter_receiver_data[emitter_receiver_name]["pull_up_down"],
                 emitter_power_pin,
@@ -169,11 +176,16 @@ class Status_Receiver_Stub:
 def data_callback(name, current_value):
     print(name, current_value)
 
+def exception_callback(name, e):
+    print(name, e)
+
 def make_r(er_data):
     return EmittersReceivers(
-            Status_Receiver_Stub(),
-            er_data,
-            poll_interval=0.25,
-            async_data_callback = data_callback,
-        )
+        Status_Receiver_Stub(),
+        exception_callback,
+        er_data,
+        poll_interval=0.25,
+        async_data_callback = data_callback,
+    )
+
 

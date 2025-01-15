@@ -9,29 +9,46 @@ except ImportError:
 
 GPIO.setmode(GPIO.BCM)
 
+NAME = __name__
+
+
 class Output:
     """
     to do: finish docstring
     """
+
     def __init__(
-            self,
-            status_receiver,
-            pin_number,
-        ):
+        self,
+        status_receiver,
+        exception_receiver,
+        pin_number,
+    ):
         """
         to do: finish docstring
         """
+        self.status_receiver = status_receiver
+        self.exception_receiver = exception_receiver
         self.pin_number = pin_number
-        GPIO.setup(pin_number, GPIO.OUT)
         self.last_value = None
-        status_receiver.collect(status_receiver.capture_local_details.get_location(self),"started",status_receiver.Types.INITIALIZATIONS)
+        try:
+            GPIO.setup(pin_number, GPIO.OUT)
+        except Exception as e:
+            self.exception_receiver(NAME, type(e))
+        status_receiver.collect(
+            status_receiver.capture_local_details.get_location(self),
+            "started",
+            status_receiver.Types.INITIALIZATIONS,
+        )
 
-    def set_value(self,value):
+    def set_value(self, value):
         """
         to do: finish docstring
         """
         self.last_value = value
-        GPIO.output(self.pin_number,value)
+        try:
+            GPIO.output(self.pin_number, value)
+        except Exception as e:
+            self.exception_receiver(NAME, type(e))
 
     def get_last_value(self):
         """
@@ -65,8 +82,14 @@ class Status_Receiver_Stub:
         pass
 
 
+def exception_callback(name, e):
+    print(name, e)
+
+
 def make_output(pin):
     return Output(
         Status_Receiver_Stub(),
+        exception_callback,
         pin,
     )
+

@@ -30,6 +30,8 @@ except ImportError:
 
 GPIO.setmode(GPIO.BCM)
 
+NAME = __name__
+
 
 class Inputs(threading.Thread):
     """
@@ -39,6 +41,7 @@ class Inputs(threading.Thread):
     def __init__(
         self,
         status_receiver,
+        exception_receiver,
         named_gpios_d,
         data_callback=lambda x: None,
         poll_interval=0,
@@ -46,18 +49,23 @@ class Inputs(threading.Thread):
         """
         to do: finish docstring
         """
+        self.status_receiver = status_receiver
+        self.exception_receiver = exception_receiver
         self.named_gpios_d = named_gpios_d
         self.data_callback = data_callback
-        self.status_receiver = status_receiver
         self.poll_interval = poll_interval
+        self.pin_access_lock = threading.Lock()
         for name, params in self.named_gpios_d.items():
-            match params["pull_up_down"]:
-                case -1:
-                    GPIO.setup(params["gpio"], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-                case 0:
-                    GPIO.setup(params["gpio"], GPIO.IN)
-                case 1:
-                    GPIO.setup(params["gpio"], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            try:
+                match params["pull_up_down"]:
+                    case -1:
+                        GPIO.setup(params["gpio"], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+                    case 0:
+                        GPIO.setup(params["gpio"], GPIO.IN)
+                    case 1:
+                        GPIO.setup(params["gpio"], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            except Exception as e:
+                self.exception_receiver(NAME, type(e))
         if poll_interval > 0:
             # collect first batch of values
             for name, params in self.named_gpios_d.items():
@@ -73,7 +81,12 @@ class Inputs(threading.Thread):
         """
         to do: finish docstring
         """
-        return GPIO.input(self.named_gpios_d[name]["gpio"])
+        try:
+            with self.pin_access_lock:
+                return GPIO.input(self.named_gpios_d[name]["gpio"])
+        except Exception as e:
+            self.exception_receiver(NAME, type(e))
+        return None
 
     def run(self):
         """
@@ -114,10 +127,15 @@ class Status_Receiver_Stub:
 def data_callback(current_value):
     print(current_value)
 
+def exception_callback(name, e):
+    print(name, e)
+
 def make_inputs(named_gpios_d):
     return Inputs(
         Status_Receiver_Stub(),
+        exception_callback,
         named_gpios_d,
         data_callback,
         0.5
     )
+

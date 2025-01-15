@@ -23,7 +23,12 @@ class Thumbwheel:
     """
     to do: finish docstring
     """
-    def __init__(self, gpios, data_callback, status_receiver, poll_interval=1):
+    def __init__(
+        self,
+        status_receiver,
+        gpios,
+        data_callback,
+        poll_interval=1):
         """
         to do: finish docstring
         """
