@@ -128,6 +128,5 @@ def make_input(pin, up_down):
             pin,
             data_callback,
             up_down,
-            poll_interval=0.5
+            poll_interval=0.05
     )
-
