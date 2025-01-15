@@ -229,11 +229,9 @@ test_channel_names = [
     "", # 47
 ]
 
-def make_tlc(
-        36
-    ):
+def make_tlc():
     return SingleChannels(
         status_receiver,
         exception_receiver,
-        channel_quantity,
+        channel_quantity=36,
     )
