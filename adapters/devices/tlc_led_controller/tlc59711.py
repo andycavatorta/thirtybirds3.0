@@ -113,7 +113,7 @@ class SingleChannels:
         self.status_receiver.collect(
             self.status_receiver.capture_local_details.get_location(self),
             "started",
-            self.status_receiver.Types.INITIALIZATIONS,
+            self.status_receiver.EventTypes.INITIALIZED,
         )
 
     def set_channel_level(
@@ -150,7 +150,7 @@ class SingleChannels:
 ###############
 ### T E S T ###
 ###############
-
+"""
 class CaptureLocalDetails:
     def __init__(self):
         pass
@@ -235,3 +235,4 @@ def make_tlc():
         exception_callback,
         channel_quantity=36,
     )
+"""

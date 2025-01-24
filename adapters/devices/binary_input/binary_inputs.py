@@ -74,7 +74,7 @@ class Inputs(threading.Thread):
             threading.Thread.__init__(self)
             self.start()
         self.status_receiver.collect(
-            "started", self.status_receiver.Types.INITIALIZATIONS
+            "started", self.status_receiver.EventTypes.INITIALIZED
         )
 
     def get_value(self, name):

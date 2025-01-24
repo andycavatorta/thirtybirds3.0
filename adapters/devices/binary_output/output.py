@@ -37,7 +37,7 @@ class Output:
         status_receiver.collect(
             status_receiver.capture_local_details.get_location(self),
             "started",
-            status_receiver.Types.INITIALIZATIONS,
+            status_receiver.EventTypes.INITIALIZED,
         )
 
     def set_value(self, value):

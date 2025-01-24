@@ -56,7 +56,7 @@ class Input(threading.Thread):
         status_receiver.collect(
             status_receiver.capture_local_details.get_location(self),
             "started",
-            status_receiver.Types.INITIALIZATIONS,
+            status_receiver.EventTypes.INITIALIZED,
         )
 
     def get_value(self):

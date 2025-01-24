@@ -27,30 +27,34 @@ sys.path.append(
 
 import output
 
-CLOCKWISE = "CLOCKWISE"
-COUNTER_CLOCKWISE = "COUNTER_CLOCKWISE"
-SHORTEST = "SHORTEST"
-MOTION_COMPLETE = "MOTION_COMPLETE"
 
 NAME = __name__
+
 
 class Position:
     """
     to do: finish docstring
     """
-
-    CLOCKWISE = "CLOCKWISE"
-    COUNTER_CLOCKWISE = "COUNTER_CLOCKWISE"
-    SHORTEST = "SHORTEST"
-    MOTION_COMPLETE = "MOTION_COMPLETE"
-
-    def __init__(self, pulses_per_revolution, position=0):
+    def __init__(self, settings, name, pulses_per_revolution, position=0, callback=None):
         """
         to do: finish docstring
         """
+        self.settings = settings
+        self.name = name
         self.pulses_per_revolution = pulses_per_revolution
         self.position = position
+        self.callback = callback
         self.position_lock = threading.Lock()
+
+    def send_callback(self, event_type):
+        if self.callback is not None:
+            self.callback(
+                self.name,
+                event_type,
+                self.get_degrees_orientation(),
+                self.get_steps_orientation(),
+                self.get_steps_cumulative(),
+            )
 
     def translate_steps_to_degrees(self, steps):
         """
@@ -70,6 +74,15 @@ class Position:
         """
         with self.position_lock:
             self.position = 0
+        self.send_callback(self.settings.EventTypes.MOTION_UPDATE)
+
+    def set_zero_degrees(self):
+        """
+        to do: finish docstring
+        """
+        with self.position_lock:
+            self.position = 0
+        self.send_callback(self.settings.EventTypes.MOTION_UPDATE)
 
     def increment(self, steps=1):
         """
@@ -77,6 +90,7 @@ class Position:
         """
         with self.position_lock:
             self.position += steps
+        self.send_callback(self.settings.EventTypes.MOTION_UPDATE)
 
     def decrement(self, steps=1):
         """
@@ -84,6 +98,7 @@ class Position:
         """
         with self.position_lock:
             self.position -= steps
+        self.send_callback(self.settings.EventTypes.MOTION_UPDATE)
 
     def set_steps_orientation(self, position):
         """
@@ -91,6 +106,7 @@ class Position:
         """
         with self.position_lock:
             self.position = position % self.pulses_per_revolution
+        self.send_callback(self.settings.EventTypes.MOTION_UPDATE)
 
     def get_steps_orientation(self):
         """
@@ -104,6 +120,7 @@ class Position:
         """
         with self.position_lock:
             self.position = position
+        self.send_callback(self.settings.EventTypes.MOTION_UPDATE)
 
     def get_steps_cumulative(self):
         """
@@ -154,15 +171,15 @@ class Position:
 
         current_orientation = self.get_steps_orientation()
         match (direction):
-            case self.CLOCKWISE:
+            case self.settings.Directions.CLOCKWISE:
                 return calculate_clockwise_distance(
                     current_orientation, target_orientation
                 )
-            case self.SHORTEST:
+            case self.settings.Directions.SHORTEST:
                 return calculate_shortest_distance(
                     current_orientation, target_orientation
                 )
-            case self.COUNTER_CLOCKWISE:
+            case self.settings.Directions.COUNTER_CLOCKWISE:
                 return calculate_clockwise_distance(
                     current_orientation, target_orientation
                 )
@@ -179,27 +196,26 @@ class Controller(threading.Thread):
     to do: finish docstring
     """
 
-    CLOCKWISE = "CLOCKWISE"
-    COUNTER_CLOCKWISE = "COUNTER_CLOCKWISE"
-    SHORTEST = "SHORTEST"
-    MOTION_COMPLETE = "MOTION_COMPLETE"
-
     def __init__(
         self,
         status_receiver,
         exception_receiver,
+        settings,
         name,
         direction_pin,
         pulse_pin,
         enable_pin,
         pulses_per_revolution,
-        seconds_per_revolution=400,
+        callback=None,
+        seconds_per_revolution=40,
         positive_is_clockwise=True,
     ):
         threading.Thread.__init__(self)
+        self.settings = settings
         self.command_queue = queue.Queue()
         self.interrupt_queue = queue.Queue()
         self.name = name
+        self.callback = self.callback
 
         # motor properties
         self.pulses_per_revolution = pulses_per_revolution
@@ -218,12 +234,12 @@ class Controller(threading.Thread):
 
         # motion_preferences
         self.enable = True
-        self.direction = self.CLOCKWISE
+        self.direction = self.settings.Directions.CLOCKWISE
         self.seconds_per_revolution = seconds_per_revolution
         self.update_pulse_interval()
 
         # motion state
-        self.position = Position(pulses_per_revolution)
+        self.position = Position(settings, name, pulses_per_revolution, callback=callback)
 
         # upstream connections
         self.status_receiver = status_receiver
@@ -232,8 +248,20 @@ class Controller(threading.Thread):
         status_receiver.collect(
             status_receiver.capture_local_details.get_location(self),
             "started",
-            self.status_receiver.Types.INITIALIZATIONS,
+            self.status_receiver.EventTypes.INITIALIZED,
         )
+
+    def set_callback(self, event_receiver):
+        """
+        There are use cases in which it's possible to add the callback only after instantiation
+        """
+        self.callback = event_receiver
+
+    def set_zero(self):
+        """
+        to do: finish docstring
+        """
+        self.position.set_zero()
 
     def update_pulse_interval(self):
         """
@@ -285,15 +313,15 @@ class Controller(threading.Thread):
         """
         to do: finish docstring
         """
-        if dir_str == self.CLOCKWISE:
+        if dir_str == self.settings.Directions.CLOCKWISE:
             self.direction = (
-                self.CLOCKWISE if self.positive_is_clockwise else self.COUNTER_CLOCKWISE
+                self.settings.Directions.CLOCKWISE if self.positive_is_clockwise else self.settings.Directions.COUNTER_CLOCKWISE
             )
-        if dir_str == self.COUNTER_CLOCKWISE:
+        if dir_str == self.settings.Directions.COUNTER_CLOCKWISE:
             self.direction = (
-                self.COUNTER_CLOCKWISE if self.positive_is_clockwise else self.CLOCKWISE
+                self.settings.Directions.COUNTER_CLOCKWISE if self.positive_is_clockwise else self.settings.Directions.CLOCKWISE
             )
-        self.direction_output.set_value(self.direction == self.CLOCKWISE)
+        self.direction_output.set_value(self.direction == self.settings.Directions.CLOCKWISE)
 
     def get_direction(self):
         """
@@ -322,39 +350,39 @@ class Controller(threading.Thread):
         time.sleep(self.pulse_interval / 2)
         self.pulse_output.set_value(True)
         time.sleep(self.pulse_interval / 2)
-        if self.direction == self.CLOCKWISE:
+        if self.direction == self.settings.Directions.CLOCKWISE:
             self.position.increment()
         else:
             self.position.decrement()
 
-    def __move_by_steps(self, steps, async_callback):
+    def __move_by_steps(self, steps):
         """
         to do: finish docstring
         """
-        self.set_direction(self.CLOCKWISE if steps < 0 else self.COUNTER_CLOCKWISE)
+        self.set_direction(self.settings.Directions.CLOCKWISE if steps < 0 else self.settings.Directions.COUNTER_CLOCKWISE)
         for step in range(steps):
             try:
                 self.interrupt_queue.get(False)
                 break
             except queue.Empty:
                 self.pulse()
-        if async_callback is not None:
-            async_callback(self.name, MOTION_COMPLETE)
+        if self.callback is not None:
+            self.position.send_callback(self.settings.EventTypes.MOTION_COMPLETE)
 
-    def move_by_steps(self, steps, async_callback=None):
+    def move_by_steps(self, steps, async_task=False):
         """
         to do: finish docstring
         """
-        if async_callback is None:
-            self.__move_by_steps(steps, None)
+        if async_task is None:
+            self.__move_by_steps(steps)
         else:
-            self.add_to_command_queue(self.__move_by_steps, steps, async_callback)
+            self.add_to_command_queue(self.__move_by_steps, steps)
 
-    def __move_by_degrees(self, degrees, async_callback=None):
+    def __move_by_degrees(self, degrees):
         """
         to do: finish docstring
         """
-        self.set_direction(self.CLOCKWISE if degrees < 0 else self.COUNTER_CLOCKWISE)
+        self.set_direction(self.settings.Directions.CLOCKWISE if degrees < 0 else self.settings.Directions.COUNTER_CLOCKWISE)
         steps = self.position.translate_degrees_to_steps(degrees)
         for step in range(steps):
             try:
@@ -362,20 +390,21 @@ class Controller(threading.Thread):
                 break
             except queue.Empty:
                 self.pulse()
-        if async_callback is not None:
-            async_callback(self.name, MOTION_COMPLETE)
+        if self.callback is not None:
+            self.position.send_callback(self.settings.EventTypes.MOTION_COMPLETE)
 
-    def move_by_degrees(self, degrees, async_callback=None):
+
+    def move_by_degrees(self, degrees, async_task=False):
         """
         to do: finish docstring
         """
-        if async_callback is None:
-            self.__move_by_steps(degrees, None)
+        if async_task is None:
+            self.__move_by_steps(degrees)
         else:
-            self.add_to_command_queue(self.__move_by_degrees, degrees, async_callback)
+            self.add_to_command_queue(self.__move_by_degrees, degrees)
 
     def move_to_step_orientation(
-        self, target_orientation, direction=SHORTEST, async_callback=None
+        self, target_orientation, direction=self.settings.Directions.SHORTEST, async_task=False
     ):
         """
         to do: finish docstring
@@ -383,19 +412,22 @@ class Controller(threading.Thread):
         distance = self.position.calculate_steps_to_target_orientation(
             target_orientation, direction
         )
-        self.move_by_steps(distance, async_callback)
+        self.move_by_steps(distance, async_task)
 
-    def move_to_step_cumulative(self, target_orientation, async_callback=None):
+    def move_to_step_cumulative(self, target_orientation, async_task=False):
         """
         to do: finish docstring
         """
         distance = self.position.calculate_steps_to_target_cumulative(
             target_orientation
         )
-        self.move_by_steps(distance, async_callback)
+        self.move_by_steps(distance, async_task)
 
     def move_to_degree_orientation(
-        self, target_orientation_degrees, direction=SHORTEST, async_callback=None
+        self,
+        target_orientation_degrees,
+        direction=self.settings.Directions.SHORTEST,
+        async_task=False
     ):
         """
         to do: finish docstring
@@ -406,11 +438,9 @@ class Controller(threading.Thread):
         distance = self.position.calculate_steps_to_target_orientation(
             target_orientation_steps, direction
         )
-        self.move_by_steps(distance, async_callback)
+        self.move_by_steps(distance, async_task)
 
-    def move_to_degree_cumulative(
-        self, target_orientation_degrees, async_callback=None
-    ):
+    def move_to_degree_cumulative(self, target_orientation_degrees, async_task=False):
         """
         to do: finish docstring
         """
@@ -420,7 +450,7 @@ class Controller(threading.Thread):
         distance = self.position.calculate_steps_to_target_cumulative(
             target_orientation_steps
         )
-        self.move_by_steps(distance, async_callback)
+        self.move_by_steps(distance, async_task)
 
     def cancel_movement(self):
         """
@@ -430,7 +460,7 @@ class Controller(threading.Thread):
         self.status_receiver.collect(
             self.status_receiver.capture_local_details.get_location(self),
             "started",
-            self.status_receiver.Types.INITIALIZATIONS,
+            self.status_receiver.EventTypes.INITIALIZED,
         )
 
     def add_to_interrupt_queue(self):
@@ -439,34 +469,36 @@ class Controller(threading.Thread):
         """
         self.interrupt_queue.put(True)
 
-    def add_to_command_queue(self, command, quantity, async_callback):
+    def add_to_command_queue(self, command, quantity):
         """
         to do: finish docstring
         """
-        self.command_queue.put((command, quantity, async_callback))
+        self.command_queue.put((command, quantity))
 
     def run(self):
         """
         to do: finish docstring
         """
         while True:
-            command, quantity, async_callback = self.command_queue.get(True)
-            if command == self.__move_by_steps:
-                self.__move_by_steps(quantity, async_callback)
+            command, quantity = self.command_queue.get(True)
+            if command == self.move_by_steps:
+                self.__move_by_steps(quantity)
             if command == self.__move_by_degrees:
-                self.__move_by_degrees(quantity, async_callback)
+                self.__move_by_degrees(quantity)
 
 
 ###############
 ### T E S T ###
 ###############
 
+"""
 class CaptureLocalDetails:
     def __init__(self):
         pass
 
     def get_location(self, *args):
         pass
+
 
 class Status_Receiver_Stub:
     capture_local_details = CaptureLocalDetails()
@@ -480,6 +512,7 @@ class Status_Receiver_Stub:
     def collect(self, *args):
         pass
 
+
 def data_callback(current_value):
     print(current_value)
 
@@ -489,12 +522,12 @@ def exception_callback(name, e):
 
 
 def make_controller(
-        name,
-        direction_pin,
-        pulse_pin,
-        enable_pin,
-        pulses_per_revolution,
-    ):
+    name,
+    direction_pin,
+    pulse_pin,
+    enable_pin,
+    pulses_per_revolution,
+):
     return Controller(
         Status_Receiver_Stub(),
         exception_callback,
@@ -504,3 +537,4 @@ def make_controller(
         enable_pin,
         pulses_per_revolution,
     )
+"""
