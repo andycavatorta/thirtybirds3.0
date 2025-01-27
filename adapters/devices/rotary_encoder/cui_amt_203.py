@@ -176,7 +176,7 @@ class Encoder(threading.Thread):
         """
         to do: finish docstring
         """
-        return int.__from_bytes(value, self.BYTEORDER)
+        return int.from_bytes(value, self.BYTEORDER)
 
     def __spi_write_read(self, output_bytes) -> bytes:
         """
