@@ -234,6 +234,9 @@ class Controller(threading.Thread):
             status_receiver, exception_receiver, enable_pin
         )
 
+        print(":::::::::::::::::",self.settings.Directions)
+
+
         # motion_preferences
         self.enable = True
         self.direction = self.settings.Directions.CLOCKWISE
@@ -440,7 +443,6 @@ class Controller(threading.Thread):
         """
         to do: finish docstring
         """
-        print(":::::::::::::::::",self.settings.Directions)
         if direction is None:
             direction = self.settings.Directions.SHORTEST
         target_orientation_steps = self.position.translate_degrees_to_steps(
