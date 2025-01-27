@@ -215,7 +215,7 @@ class Controller(threading.Thread):
         self.command_queue = queue.Queue()
         self.interrupt_queue = queue.Queue()
         self.name = name
-        self.callback = self.callback
+        self.callback = callback
 
         # motor properties
         self.pulses_per_revolution = pulses_per_revolution
