@@ -386,7 +386,7 @@ class Controller(threading.Thread):
         """
         to do: finish docstring
         """
-        if async_task is True:
+        if async_task is False:
             print("+++++++++++++++++")
             self.__move_by_steps(steps)
         else:
