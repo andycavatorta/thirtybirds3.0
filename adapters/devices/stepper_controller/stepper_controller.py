@@ -223,6 +223,10 @@ class Controller(threading.Thread):
         self.pulses_per_revolution = pulses_per_revolution
         self.positive_is_clockwise = positive_is_clockwise
 
+
+        print("++++++++++++",direction_pin,pulse_pin,enable_pin)
+
+
         # gpios
         self.direction_output = output.Output(
             status_receiver, exception_receiver, direction_pin
