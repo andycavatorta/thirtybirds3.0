@@ -406,7 +406,7 @@ class Controller(threading.Thread):
     def move_to_step_orientation(
         self,
         target_orientation,
-        direction=self.settings.Directions.SHORTEST,
+        direction,
         async_task=False
     ):
         """
