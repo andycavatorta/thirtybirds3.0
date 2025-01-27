@@ -42,6 +42,7 @@ class Encoder(threading.Thread):
         self,
         status_receiver,
         exception_receiver,
+        settings,
         name,
         chip_select_pin,
         positions_per_revolution,
