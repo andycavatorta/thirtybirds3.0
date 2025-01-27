@@ -369,11 +369,11 @@ class Controller(threading.Thread):
         """
         to do: finish docstring
         """
-        print("__move_by_steps")
+        #print("__move_by_steps")
         self.set_direction(self.settings.Directions.CLOCKWISE if steps < 0 else self.settings.Directions.COUNTER_CLOCKWISE)
-        print("self.direction", self.direction)
+        #print("self.direction", self.direction)
         for step in range(steps):
-            print("step", step)
+            #print("step", step)
             try:
                 self.interrupt_queue.get(False)
                 break
@@ -387,10 +387,8 @@ class Controller(threading.Thread):
         to do: finish docstring
         """
         if async_task is False:
-            print("+++++++++++++++++")
             self.__move_by_steps(steps)
         else:
-            print("------------------")
             self.add_to_command_queue(self.__move_by_steps, steps)
 
     def __move_by_degrees(self, degrees):
