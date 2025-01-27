@@ -162,7 +162,7 @@ class StepperControllerAndAbsoluteEncoder:
                         self.last_controller_orientation_degrees
                     )
                 if (
-                    abs(self.last_controller_orientation - degrees_orientation)
+                    abs(\last_controller_orientation - degrees_orientation)
                     > self.misalignment_threshold
                 ):
                     self.event_receiver(
