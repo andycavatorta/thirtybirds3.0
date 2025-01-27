@@ -64,6 +64,7 @@ class StepperControllerAndAbsoluteEncoder:
         self.event_receiver = event_receiver
         self.misalignment_threshold = misalignment_threshold
         self.initialized = False
+        self.name = name
 
         self.controller = stepper_controller.Controller(
             status_receiver,
