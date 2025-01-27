@@ -47,6 +47,7 @@ class Position:
         self.position_lock = threading.Lock()
 
     def send_callback(self, event_type):
+        return
         if self.callback is not None:
             self.callback(
                 self.name,
@@ -373,7 +374,6 @@ class Controller(threading.Thread):
         print("self.direction", self.direction)
         for step in range(steps):
             print("step", step)
-
             try:
                 self.interrupt_queue.get(False)
                 break
