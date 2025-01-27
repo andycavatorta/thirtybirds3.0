@@ -404,7 +404,10 @@ class Controller(threading.Thread):
             self.add_to_command_queue(self.__move_by_degrees, degrees)
 
     def move_to_step_orientation(
-        self, target_orientation, direction=self.settings.Directions.SHORTEST, async_task=False
+        self,
+        target_orientation,
+        direction=self.settings.Directions.SHORTEST,
+        async_task=False
     ):
         """
         to do: finish docstring
