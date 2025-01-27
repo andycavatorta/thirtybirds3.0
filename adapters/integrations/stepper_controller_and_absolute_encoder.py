@@ -143,6 +143,7 @@ class StepperControllerAndAbsoluteEncoder:
 
     def __encoder_callback(
         self,
+        name,
         degrees_orientation,
         steps_orientation,
     ):
