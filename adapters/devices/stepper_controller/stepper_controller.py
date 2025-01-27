@@ -210,6 +210,13 @@ class Controller(threading.Thread):
         seconds_per_revolution=40,
         positive_is_clockwise=True,
     ):
+
+        print("")
+        print("pulse_pin",pulse_pin)
+        print("direction_pin",direction_pin)
+        print("enable_pin",enable_pin)
+        print("")
+
         threading.Thread.__init__(self)
         self.status_receiver = status_receiver
         self.exception_receiver = exception_receiver
