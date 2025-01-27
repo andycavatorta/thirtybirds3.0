@@ -32,6 +32,8 @@ class Input(threading.Thread):
         """
         to do: finish docstring
         """
+
+        threading.Thread.__init__(self)
         self.status_receiver = status_receiver
         self.exception_receiver = exception_receiver
         self.pin_number = pin_number
@@ -51,7 +53,6 @@ class Input(threading.Thread):
         self.last_value = self.get_value()
         if poll_interval > 0:
             self.data_callback(self.last_value)
-            threading.Thread.__init__(self)
             self.start()
         status_receiver.collect(
             status_receiver.capture_local_details.get_location(self),
