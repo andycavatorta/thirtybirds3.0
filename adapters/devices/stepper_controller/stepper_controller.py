@@ -406,12 +406,15 @@ class Controller(threading.Thread):
     def move_to_step_orientation(
         self,
         target_orientation,
-        direction,
+        direction=None,
         async_task=False
     ):
         """
         to do: finish docstring
         """
+        if direction is None:
+            direction = self.settings.Directions.SHORTEST
+
         distance = self.position.calculate_steps_to_target_orientation(
             target_orientation, direction
         )
@@ -429,12 +432,14 @@ class Controller(threading.Thread):
     def move_to_degree_orientation(
         self,
         target_orientation_degrees,
-        direction=self.settings.Directions.SHORTEST,
+        direction=None,
         async_task=False
     ):
         """
         to do: finish docstring
         """
+        if direction is None:
+            direction = self.settings.Directions.SHORTEST
         target_orientation_steps = self.position.translate_degrees_to_steps(
             target_orientation_degrees
         )
