@@ -375,7 +375,7 @@ class Controller(threading.Thread):
         """
         to do: finish docstring
         """
-        if async_task is None:
+        if async_task is True:
             self.__move_by_steps(steps)
         else:
             self.add_to_command_queue(self.__move_by_steps, steps)
