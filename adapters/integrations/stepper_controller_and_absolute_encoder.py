@@ -107,7 +107,7 @@ class StepperControllerAndAbsoluteEncoder:
         self.zero()
         with self.last_controller_orientation_lock:
             self.last_controller_orientation_degrees = (
-                self.controller.get_degrees_orientation()
+                self.controller.position.get_degrees_orientation()
             )
         self.initialized = True
 
