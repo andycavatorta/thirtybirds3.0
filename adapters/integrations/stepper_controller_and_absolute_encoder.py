@@ -66,6 +66,7 @@ class StepperControllerAndAbsoluteEncoder:
         self.controller = stepper_controller.Controller(
             status_receiver,
             exception_receiver,
+            settings,
             name,
             controller_direction_pin,
             controller_pulse_pin,
