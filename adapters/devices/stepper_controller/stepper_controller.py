@@ -211,6 +211,8 @@ class Controller(threading.Thread):
         positive_is_clockwise=True,
     ):
         threading.Thread.__init__(self)
+        self.status_receiver = status_receiver
+        self.exception_receiver = exception_receiver
         self.settings = settings
         self.command_queue = queue.Queue()
         self.interrupt_queue = queue.Queue()
