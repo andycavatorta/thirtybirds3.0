@@ -387,8 +387,10 @@ class Controller(threading.Thread):
         to do: finish docstring
         """
         if async_task is True:
+            print("+++++++++++++++++")
             self.__move_by_steps(steps)
         else:
+            print("------------------")
             self.add_to_command_queue(self.__move_by_steps, steps)
 
     def __move_by_degrees(self, degrees):
