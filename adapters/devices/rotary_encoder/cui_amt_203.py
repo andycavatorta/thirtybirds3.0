@@ -118,6 +118,11 @@ class Encoder(threading.Thread):
             position_bytes += self.__spi_write_read([self.NO_OP])
             return self.__from_bytes(position_bytes)
         except Exception as e:
+            print("")
+            print("")
+            print(e)
+            print("")
+            print("")
             self.exception_receiver(NAME, type(e))
             return None
 
