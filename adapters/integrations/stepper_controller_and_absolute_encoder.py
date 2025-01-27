@@ -59,7 +59,6 @@ class StepperControllerAndAbsoluteEncoder:
         misalignment_threshold=3,  # degrees
     ):
 
-        print("_________",encoder_positions_per_revolution)
 
         self.settings = settings
         self.event_receiver = event_receiver
@@ -119,7 +118,7 @@ class StepperControllerAndAbsoluteEncoder:
         return self.encoder.set_zero()
 
     def zero(self):
-        self.controller.set_degrees_orientation(self.encoder.get_position_degrees())
+        self.controller.position.set_degrees_orientation(self.encoder.get_position_degrees())
 
     def __controller_callback(
         self,

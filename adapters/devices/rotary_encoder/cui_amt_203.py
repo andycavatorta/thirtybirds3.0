@@ -42,7 +42,6 @@ class Encoder(threading.Thread):
         self,
         status_receiver,
         exception_receiver,
-        settings,
         name,
         chip_select_pin,
         positions_per_revolution,
@@ -53,6 +52,9 @@ class Encoder(threading.Thread):
         speed_hz=1953125,
         spi_delay=40,
     ):
+
+        print("_________",positions_per_revolution)
+
         # scope arguments to self
         self.status_receiver = status_receiver
         self.exception_receiver = exception_receiver
