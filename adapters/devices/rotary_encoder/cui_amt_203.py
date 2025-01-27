@@ -53,8 +53,6 @@ class Encoder(threading.Thread):
         spi_delay=40,
     ):
 
-        print("_________",positions_per_revolution)
-
         # scope arguments to self
         self.status_receiver = status_receiver
         self.exception_receiver = exception_receiver
@@ -116,18 +114,8 @@ class Encoder(threading.Thread):
                     return -1
             position_bytes = self.__spi_write_read([self.NO_OP])
             position_bytes += self.__spi_write_read([self.NO_OP])
-            print("")
-            print("")
-            print(position_bytes)
-            print("")
-            print("")
             return self.__from_bytes(position_bytes)
         except Exception as e:
-            print("")
-            print("")
-            print(e)
-            print("")
-            print("")
             self.exception_receiver(NAME, type(e))
             return None
 

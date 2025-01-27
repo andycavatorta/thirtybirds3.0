@@ -130,7 +130,7 @@ class StepperControllerAndAbsoluteEncoder:
     ):
         with self.last_controller_orientation_lock:
             self.last_controller_orientation_degrees = degrees_orientation
-        if event_type == self.controller.MOTION_COMPLETE:
+        if event_type == self.settings.EventTypes.MOTION_COMPLETE:
             self.event_receiver(
                 name,
                 event_type,
