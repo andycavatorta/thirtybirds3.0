@@ -440,6 +440,7 @@ class Controller(threading.Thread):
         """
         to do: finish docstring
         """
+        print(":::::::::::::::::",self.settings.Directions)
         if direction is None:
             direction = self.settings.Directions.SHORTEST
         target_orientation_steps = self.position.translate_degrees_to_steps(
