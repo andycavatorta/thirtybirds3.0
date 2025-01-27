@@ -58,6 +58,9 @@ class StepperControllerAndAbsoluteEncoder:
         encoder_polling_interval=0.1,
         misalignment_threshold=3,  # degrees
     ):
+
+        print("_________",encoder_positions_per_revolution)
+
         self.settings = settings
         self.event_receiver = event_receiver
         self.misalignment_threshold = misalignment_threshold

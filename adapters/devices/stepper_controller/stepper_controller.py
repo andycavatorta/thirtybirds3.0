@@ -234,9 +234,6 @@ class Controller(threading.Thread):
             status_receiver, exception_receiver, enable_pin
         )
 
-        print(":::::::::::::::::",self.settings.Directions)
-
-
         # motion_preferences
         self.enable = True
         self.direction = self.settings.Directions.CLOCKWISE
