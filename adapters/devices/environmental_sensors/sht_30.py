@@ -131,7 +131,7 @@ class SHT30(threading.Thread):
             return temperature_c
         except OSError:
             self.retries_for_bad_read += 1
-            self.send_cmd(RESET_CMD, None)
+            self.bus.write_i2c_block_data(RESET_CMD, None)
             print(f"sht_30 bad read {self.retries_for_bad_read} / {self.maximum_retries_for_bad_read}")
             if self.retries_for_bad_read > self.maximum_retries_for_bad_read:
                 self.exception_receiver(NAME, type(e))
