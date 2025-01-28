@@ -119,7 +119,9 @@ class StepperControllerAndAbsoluteEncoder:
         return self.encoder.set_zero()
 
     def zero(self):
+        print("setpper_controller_and_absolute_encoder zero",self.encoder.get_position_degrees(), self.encoder.get_position_degrees() % 360)
         self.controller.position.set_degrees_orientation(self.encoder.get_position_degrees())
+        print("setpper_controller_and_absolute_encoder zero",self.controller.position.get_degrees_orientation(), self.controller.position.get_steps_orientation())
 
     def __controller_callback(
         self,
