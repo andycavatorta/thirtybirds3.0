@@ -131,7 +131,9 @@ class SHT30(threading.Thread):
             return temperature_c
         except OSError:
             self.retries_for_bad_read += 1
-            self.bus.write_i2c_block_data(I2C_ADDRESS, RESET_CMD, None)
+            reset_command = [0x30, 0xA2]
+            self.bus.write_i2c_block_data(i2c_address, reset_command[0], [reset_command[1]])
+            time.sleep(2)
             print(f"sht_30 bad read {self.retries_for_bad_read} / {self.maximum_retries_for_bad_read}")
             if self.retries_for_bad_read > self.maximum_retries_for_bad_read:
                 self.exception_receiver(NAME, type(e))
@@ -162,7 +164,10 @@ class SHT30(threading.Thread):
             return humidity
         except OSError:
             self.retries_for_bad_read += 1
-            self.bus.write_i2c_block_data(I2C_ADDRESS, RESET_CMD, None)
+            reset_command = [0x30, 0xA2]
+            self.bus.write_i2c_block_data(i2c_address, reset_command[0], [reset_command[1]])
+            time.sleep(2)
+            # self.bus.write_i2c_block_data(I2C_ADDRESS, RESET_CMD, 0)
             print(f"sht_30 bad read {self.retries_for_bad_read} / {self.maximum_retries_for_bad_read}")
             if self.retries_for_bad_read > self.maximum_retries_for_bad_read:
                 self.exception_receiver(NAME, type(e))
