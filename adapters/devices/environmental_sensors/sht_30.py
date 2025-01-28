@@ -69,12 +69,7 @@ class SHT30(threading.Thread):
         self.optional_power_pin = optional_power_pin
         self.poll_interval = max(poll_interval, 5)
         self.async_data_callback = async_data_callback
-
-        try:
-            self.bus = smbus2.SMBus(1)
-        except Exception as e:
-            self.exception_receiver(NAME, type(e))
-
+        self.initilize()
         time.sleep(1)
         self.last_temperature = -1
         self.last_humidity = -1
@@ -88,6 +83,13 @@ class SHT30(threading.Thread):
 
         if poll_interval > 0:
             self.start()
+
+    def initilize(self):
+        try:
+            self.bus = smbus2.SMBus(1)
+        except Exception as e:
+            self.exception_receiver(NAME, type(e))
+
 
     def set_power(self, on_off):
         """
@@ -131,8 +133,10 @@ class SHT30(threading.Thread):
             self.retries_for_bad_read = 0
             return temperature_c
         except OSError:
-            self.retries_for_bad_read += 1
-            self.bus.write_i2c_block_data(I2C_ADDRESS, RESET_COMMAND[0], RESET_COMMAND[1:])
+            #self.retries_for_bad_read += 1
+            #self.bus.write_i2c_block_data(I2C_ADDRESS, RESET_COMMAND[0], RESET_COMMAND[1:])
+            time.sleep(2)
+            self.initilize()
             time.sleep(2)
             print(f"sht_30 bad read {self.retries_for_bad_read} / {self.maximum_retries_for_bad_read}")
             if self.retries_for_bad_read > self.maximum_retries_for_bad_read:
@@ -159,8 +163,10 @@ class SHT30(threading.Thread):
             self.retries_for_bad_read = 0
             return humidity
         except OSError:
-            self.retries_for_bad_read += 1
-            self.bus.write_i2c_block_data(I2C_ADDRESS, RESET_COMMAND[0], RESET_COMMAND[1:])
+            #self.retries_for_bad_read += 1
+            #self.bus.write_i2c_block_data(I2C_ADDRESS, RESET_COMMAND[0], RESET_COMMAND[1:])
+            time.sleep(2)
+            self.initilize()
             time.sleep(2)
             # self.bus.write_i2c_block_data(I2C_ADDRESS, RESET_CMD, 0)
             print(f"sht_30 bad read {self.retries_for_bad_read} / {self.maximum_retries_for_bad_read}")
