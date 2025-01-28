@@ -141,10 +141,6 @@ class SHT30(threading.Thread):
         except Exception as e:
             self.exception_receiver(NAME, type(e))
 
-
-        temperature_c = ((((data[0] * 256.0) + data[1]) * 175) / 65535.0) - 45
-        return temperature_c
-
     def get_humidity(self):
         """
         to do: finish docstring
