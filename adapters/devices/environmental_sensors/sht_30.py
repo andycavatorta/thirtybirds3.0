@@ -22,6 +22,7 @@ I2C_ADDRESS = 0x44
 REQUEST_DATA_COMMAND = 0x2C
 USE_HIGH_REPEATABILITY = 0x06
 FETCH_DATA_COMMAND = 0x00
+RESET_CMD = b'\x30\xA2'
 
 OVER_TEMPERATURE = "OVER_TEMPERATURE"
 UNDER_TEMPERATURE = "UNDER_TEMPERATURE"
@@ -40,6 +41,7 @@ class SHT30(threading.Thread):
         self,
         status_receiver,
         exception_receiver,
+        maximum_retries_for_bad_read,
         minimum_temp_change_for_callback=0,
         minimum_temp_for_callback=-1,
         maximum_temp_for_callback=-1,
@@ -56,6 +58,7 @@ class SHT30(threading.Thread):
         threading.Thread.__init__(self)
         self.status_receiver = status_receiver
         self.exception_receiver = exception_receiver
+        self.maximum_retries_for_bad_read = maximum_retries_for_bad_read
         self.minimum_temp_change_for_callback = minimum_temp_change_for_callback
         self.minimum_temp_for_callback = minimum_temp_for_callback
         self.maximum_temp_for_callback = maximum_temp_for_callback
@@ -75,6 +78,7 @@ class SHT30(threading.Thread):
         self.last_temperature = -1
         self.last_humidity = -1
         self.last_read_time = time.time()
+        self.retries_for_bad_read = 0
 
         if self.optional_power_pin > -1:
             self.device_power = output.Output(
@@ -121,10 +125,20 @@ class SHT30(threading.Thread):
             data = self.bus.read_i2c_block_data(I2C_ADDRESS, FETCH_DATA_COMMAND, 6)
             time.sleep(0.1)
             self.set_power(False)
+            temperature_c = ((((data[0] * 256.0) + data[1]) * 175) / 65535.0) - 45
+            print("temp=",data)
+            self.retries_for_bad_read = 0
+            return temperature_c
+        except OSError:
+            self.retries_for_bad_read += 1
+            self.send_cmd(RESET_CMD, None)
+            print(f"sht_30 bad read {self.retries_for_bad_read} / {self.maximum_retries_for_bad_read}")
+            if self.retries_for_bad_read > self.maximum_retries_for_bad_read:
+                self.exception_receiver(NAME, type(e))
+                return None
         except Exception as e:
             self.exception_receiver(NAME, type(e))
 
-        print("temp=",data)
 
         temperature_c = ((((data[0] * 256.0) + data[1]) * 175) / 65535.0) - 45
         return temperature_c
@@ -144,7 +158,15 @@ class SHT30(threading.Thread):
             time.sleep(0.1)
             self.set_power(False)
             humidity = 100 * (data[3] * 256 + data[4]) / 65535.0
+            self.retries_for_bad_read = 0
             return humidity
+        except OSError:
+            self.retries_for_bad_read += 1
+            self.send_cmd(RESET_CMD, None)
+            print(f"sht_30 bad read {self.retries_for_bad_read} / {self.maximum_retries_for_bad_read}")
+            if self.retries_for_bad_read > self.maximum_retries_for_bad_read:
+                self.exception_receiver(NAME, type(e))
+                return None
         except Exception as e:
             self.exception_receiver(NAME, type(e))
             return None
