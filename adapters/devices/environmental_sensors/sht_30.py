@@ -22,7 +22,8 @@ I2C_ADDRESS = 0x44
 REQUEST_DATA_COMMAND = 0x2C
 USE_HIGH_REPEATABILITY = 0x06
 FETCH_DATA_COMMAND = 0x00
-RESET_CMD = b'\x30\xA2'
+RESET_COMMAND = [0x30, 0xA2]
+
 
 OVER_TEMPERATURE = "OVER_TEMPERATURE"
 UNDER_TEMPERATURE = "UNDER_TEMPERATURE"
@@ -131,9 +132,8 @@ class SHT30(threading.Thread):
             return temperature_c
         except OSError:
             self.retries_for_bad_read += 1
-            #reset_command = [0x30, 0xA2]
-            #self.bus.write_i2c_block_data(I2C_ADDRESS, reset_command[0], [reset_command[1]])
-            #time.sleep(2)
+            self.bus.write_i2c_block_data(I2C_ADDRESS, RESET_COMMAND[0], RESET_COMMAND[1:])
+            time.sleep(2)
             print(f"sht_30 bad read {self.retries_for_bad_read} / {self.maximum_retries_for_bad_read}")
             if self.retries_for_bad_read > self.maximum_retries_for_bad_read:
                 self.exception_receiver(NAME, type(e))
@@ -160,9 +160,8 @@ class SHT30(threading.Thread):
             return humidity
         except OSError:
             self.retries_for_bad_read += 1
-            #reset_command = [0x30, 0xA2]
-            #self.bus.write_i2c_block_data(I2C_ADDRESS, reset_command[0], [reset_command[1]])
-            #time.sleep(2)
+            self.bus.write_i2c_block_data(I2C_ADDRESS, RESET_COMMAND[0], RESET_COMMAND[1:])
+            time.sleep(2)
             # self.bus.write_i2c_block_data(I2C_ADDRESS, RESET_CMD, 0)
             print(f"sht_30 bad read {self.retries_for_bad_read} / {self.maximum_retries_for_bad_read}")
             if self.retries_for_bad_read > self.maximum_retries_for_bad_read:
@@ -240,7 +239,11 @@ class SHT30(threading.Thread):
         """
         if self.maximum_temp_for_callback == -1:
             return False
-        if self.get_temperature() >= self.maximum_temp_for_callback:
+        temperature = self.get_temperature()
+        if temperature is None:
+            print("temperature is None. to do: reset on error")
+            return False
+        if temperature >= self.maximum_temp_for_callback:
             return True
         return False
 
