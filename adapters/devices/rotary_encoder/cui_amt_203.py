@@ -67,7 +67,7 @@ class Encoder(threading.Thread):
         try:
             self.spi = spidev.SpiDev()
             self.spi.open(bus_number, device_number)
-            self.spi_speed = speed_hz
+            #self.spi_speed = speed_hz
             self.spi.mode = 0b00
             self.spi.no_cs = True
         except Exception as e:
@@ -177,7 +177,8 @@ class Encoder(threading.Thread):
         time.sleep(self.delay_sec)
 
         try:
-            received_bytes = self.spi.xfer(output_bytes, self.speed_hz, self.delay_usec)
+            received_bytes = self.spi.xfer(output_bytes, 0, self.delay_usec)
+            #received_bytes = self.spi.xfer(output_bytes, self.speed_hz, self.delay_usec)
         except Exception as e:
             self.exception_receiver(NAME, type(e))
 
