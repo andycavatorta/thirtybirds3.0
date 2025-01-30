@@ -113,10 +113,8 @@ class Encoder(threading.Thread):
                 if counter == 100:
                     return -1
             position_bytes = self.__spi_write_read([self.NO_OP])
-            print("first:",position_bytes, type(position_bytes))
             position_bytes += self.__spi_write_read([self.NO_OP])
-            print("second:",position_bytes,type(position_bytes))
-            print("old bit shift", (position_bytes[0]<<8 | position_bytes[1]))
+            print("bytes:",position_bytes, (position_bytes[0]<<8 | position_bytes[1]))
             #self.__spi_clean_buffer()
             return self.__from_bytes(position_bytes)
         except Exception as e:
