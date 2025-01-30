@@ -179,6 +179,7 @@ class Encoder(threading.Thread):
         except Exception as e:
             self.exception_receiver(NAME, type(e))
 
+        self.__spi_clean_buffer()
         self.chip_select_output.set_value(True)
         # GPIO.output(chip_select_pin, GPIO.HIGH)
         return received_bytes
