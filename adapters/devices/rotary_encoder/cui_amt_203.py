@@ -113,7 +113,9 @@ class Encoder(threading.Thread):
                 if counter == 100:
                     return -1
             position_bytes = self.__spi_write_read([self.NO_OP])
+            print("first:",position_bytes)
             position_bytes += self.__spi_write_read([self.NO_OP])
+            print("second:",position_bytes)
             self.__spi_clean_buffer()
             return self.__from_bytes(position_bytes)
         except Exception as e:
@@ -174,13 +176,6 @@ class Encoder(threading.Thread):
         """
         self.chip_select_output.set_value(False)
         # GPIO.output(chip_select_pin, GPIO.LOW)
-        time.sleep(self.delay_sec)
-        time.sleep(self.delay_sec)
-        time.sleep(self.delay_sec)
-        time.sleep(self.delay_sec)
-        time.sleep(self.delay_sec)
-        time.sleep(self.delay_sec)
-        time.sleep(self.delay_sec)
         time.sleep(self.delay_sec)
 
         try:
