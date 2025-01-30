@@ -114,7 +114,7 @@ class Encoder(threading.Thread):
                     return -1
             position_bytes = self.__spi_write_read([self.NO_OP])
             position_bytes += self.__spi_write_read([self.NO_OP])
-            print("bytes:",position_bytes, (position_bytes[0]<<8 | position_bytes[1]))
+            print("bytes:",position_bytes, (position_bytes[0]<<8 | position_bytes[1]),self.__from_bytes(position_bytes))
             #self.__spi_clean_buffer()
             return self.__from_bytes(position_bytes)
         except Exception as e:
