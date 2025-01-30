@@ -114,9 +114,11 @@ class Encoder(threading.Thread):
                     return -1
             position_bytes = self.__spi_write_read([self.NO_OP])
             position_bytes += self.__spi_write_read([self.NO_OP])
+            self.__spi_clean_buffer()
             return self.__from_bytes(position_bytes)
         except Exception as e:
             self.exception_receiver(NAME, type(e))
+            self.__spi_clean_buffer()
             return None
 
     def get_position_degrees(self):
@@ -179,7 +181,6 @@ class Encoder(threading.Thread):
         except Exception as e:
             self.exception_receiver(NAME, type(e))
 
-        self.__spi_clean_buffer()
         self.chip_select_output.set_value(True)
         # GPIO.output(chip_select_pin, GPIO.HIGH)
         return received_bytes
