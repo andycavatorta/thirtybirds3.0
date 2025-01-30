@@ -175,6 +175,13 @@ class Encoder(threading.Thread):
         self.chip_select_output.set_value(False)
         # GPIO.output(chip_select_pin, GPIO.LOW)
         time.sleep(self.delay_sec)
+        time.sleep(self.delay_sec)
+        time.sleep(self.delay_sec)
+        time.sleep(self.delay_sec)
+        time.sleep(self.delay_sec)
+        time.sleep(self.delay_sec)
+        time.sleep(self.delay_sec)
+        time.sleep(self.delay_sec)
 
         try:
             received_bytes = self.spi.xfer(output_bytes, self.speed_hz, self.delay_usec)
