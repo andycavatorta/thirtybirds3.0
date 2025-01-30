@@ -78,9 +78,6 @@ class Encoder(threading.Thread):
             status_receiver, exception_receiver, chip_select_pin
         )
 
-        # to do: does this need to be specified in this single-encoder module?
-        self.chip_select_output.set_value(False)
-
         if polling_interval > 0:
             self.async_data_callback = async_data_callback
             self.polling_interval = polling_interval
@@ -116,9 +113,10 @@ class Encoder(threading.Thread):
                 if counter == 100:
                     return -1
             position_bytes = self.__spi_write_read([self.NO_OP])
-            print("first:",position_bytes)
+            print("first:",position_bytes, type(position_bytes))
             position_bytes += self.__spi_write_read([self.NO_OP])
-            print("second:",position_bytes)
+            print("second:",position_bytes,type(position_bytes))
+            print("old bit shift", (position_bytes[0]<<8 | position_bytes[1]))
             #self.__spi_clean_buffer()
             return self.__from_bytes(position_bytes)
         except Exception as e:
@@ -177,7 +175,7 @@ class Encoder(threading.Thread):
         """
         to do: finish docstring
         """
-        #self.chip_select_output.set_value(False)
+        self.chip_select_output.set_value(False)
         # GPIO.output(chip_select_pin, GPIO.LOW)
         time.sleep(self.delay_sec)
 
@@ -186,7 +184,7 @@ class Encoder(threading.Thread):
         except Exception as e:
             self.exception_receiver(NAME, type(e))
 
-        #self.chip_select_output.set_value(True)
+        self.chip_select_output.set_value(True)
         # GPIO.output(chip_select_pin, GPIO.HIGH)
         return received_bytes
 
