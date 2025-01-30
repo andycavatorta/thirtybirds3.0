@@ -49,8 +49,8 @@ class Encoder(threading.Thread):
         polling_interval=0,
         bus_number=0,
         device_number=0,
-        speed_hz=100000, # 1953125,
-        spi_delay=100,
+        speed_hz=1953125,
+        spi_delay=40,
     ):
 
         # scope arguments to self
@@ -77,6 +77,9 @@ class Encoder(threading.Thread):
         self.chip_select_output = output.Output(
             status_receiver, exception_receiver, chip_select_pin
         )
+
+        # to do: does this need to be specified in this single-encoder module?
+        self.chip_select_output.set_value(False)
 
         if polling_interval > 0:
             self.async_data_callback = async_data_callback
@@ -116,11 +119,11 @@ class Encoder(threading.Thread):
             print("first:",position_bytes)
             position_bytes += self.__spi_write_read([self.NO_OP])
             print("second:",position_bytes)
-            self.__spi_clean_buffer()
+            #self.__spi_clean_buffer()
             return self.__from_bytes(position_bytes)
         except Exception as e:
             self.exception_receiver(NAME, type(e))
-            self.__spi_clean_buffer()
+            #self.__spi_clean_buffer()
             return None
 
     def get_position_degrees(self):
@@ -174,7 +177,7 @@ class Encoder(threading.Thread):
         """
         to do: finish docstring
         """
-        self.chip_select_output.set_value(False)
+        #self.chip_select_output.set_value(False)
         # GPIO.output(chip_select_pin, GPIO.LOW)
         time.sleep(self.delay_sec)
 
@@ -183,7 +186,7 @@ class Encoder(threading.Thread):
         except Exception as e:
             self.exception_receiver(NAME, type(e))
 
-        self.chip_select_output.set_value(True)
+        #self.chip_select_output.set_value(True)
         # GPIO.output(chip_select_pin, GPIO.HIGH)
         return received_bytes
 
