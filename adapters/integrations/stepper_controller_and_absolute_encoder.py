@@ -164,6 +164,7 @@ class StepperControllerAndAbsoluteEncoder:
                     last_controller_orientation = float(
                         self.last_controller_orientation_degrees
                     )
+                """
                 if (
                     abs(last_controller_orientation - degrees_orientation)
                     > self.misalignment_threshold
@@ -173,3 +174,4 @@ class StepperControllerAndAbsoluteEncoder:
                         self.settings.EventTypes.MEASUREMENT_DISPARITY,
                         (degrees_orientation, last_controller_orientation),
                     )
+                """
