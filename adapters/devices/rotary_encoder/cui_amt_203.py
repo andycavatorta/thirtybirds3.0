@@ -73,6 +73,8 @@ class Encoder(threading.Thread):
         except Exception as e:
             self.exception_receiver(NAME, type(e))
 
+        self.spi_lock = threading.Lock()
+
         # initialize pins
         self.chip_select_output = output.Output(
             status_receiver, exception_receiver, chip_select_pin
@@ -104,23 +106,24 @@ class Encoder(threading.Thread):
         """
         to do: finish docstring
         """
-        try:
-            request = self.__spi_write_read([self.READ_POS])
-            counter = 0
-            while request[0] != self.READ_POS:
-                request = self.__spi_write_read([self.NO_OP])
-                counter += 1
-                if counter == 100:
-                    return -1
-            position_bytes = self.__spi_write_read([self.NO_OP])
-            position_bytes += self.__spi_write_read([self.NO_OP])
-            #print("bytes:",position_bytes, (position_bytes[0]<<8 | position_bytes[1]),self.__from_bytes(position_bytes))
-            #self.__spi_clean_buffer()
-            return self.__from_bytes(position_bytes)
-        except Exception as e:
-            self.exception_receiver(NAME, type(e))
-            #self.__spi_clean_buffer()
-            return None
+        with self.spi_lock:
+            try:
+                request = self.__spi_write_read([self.READ_POS])
+                counter = 0
+                while request[0] != self.READ_POS:
+                    request = self.__spi_write_read([self.NO_OP])
+                    counter += 1
+                    if counter == 100:
+                        return -1
+                position_bytes = self.__spi_write_read([self.NO_OP])
+                position_bytes += self.__spi_write_read([self.NO_OP])
+                #print("bytes:",position_bytes, (position_bytes[0]<<8 | position_bytes[1]),self.__from_bytes(position_bytes))
+                #self.__spi_clean_buffer()
+                return self.__from_bytes(position_bytes)
+            except Exception as e:
+                self.exception_receiver(NAME, type(e))
+                #self.__spi_clean_buffer()
+                return None
 
     def get_position_degrees(self):
         return (self.get_position() / self.positions_per_revolution) * 360.0
@@ -205,10 +208,6 @@ class Encoder(threading.Thread):
         while True:
             time.sleep(self.polling_interval)
             position = self.get_position()
-            position_2 = self.get_position()
-            position_3 = self.get_position()
-            position_4 = self.get_position()
-            print(position,position_2,position_3,position_4)
             position_is_new = self.set_new_value(position)
             if position_is_new:
                 self.async_data_callback(self.name, self.get_position_degrees(), position)
