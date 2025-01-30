@@ -205,6 +205,10 @@ class Encoder(threading.Thread):
         while True:
             time.sleep(self.polling_interval)
             position = self.get_position()
+            position_2 = self.get_position()
+            position_3 = self.get_position()
+            position_4 = self.get_position()
+            print(position,position_2,position_3,position_4)
             position_is_new = self.set_new_value(position)
             if position_is_new:
                 self.async_data_callback(self.name, self.get_position_degrees(), position)
