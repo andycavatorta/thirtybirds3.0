@@ -163,6 +163,8 @@ class Position:
         """
 
         def calculate_clockwise_distance(start, end):
+            print("calculate_clockwise_distance start, end", start, end)
+            print("calculate_clockwise_distance formula", (end - start) + 0 if end > start else self.pulses_per_revolution)
             return (end - start) + 0 if end > start else self.pulses_per_revolution
 
         def calculate_counter_clockwise_distance(start, end):
@@ -175,6 +177,8 @@ class Position:
             )
 
         current_orientation = self.get_steps_orientation()
+        print("calculate_steps_to_target_orientation current_orientation", current_orientation)
+        print("calculate_steps_to_target_orientation direction", direction)
         match (direction):
             case self.settings.Directions.CLOCKWISE:
                 return calculate_clockwise_distance(
