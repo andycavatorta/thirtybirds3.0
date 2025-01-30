@@ -50,7 +50,7 @@ class Encoder(threading.Thread):
         bus_number=0,
         device_number=0,
         speed_hz=100000, # 1953125,
-        spi_delay=40,
+        spi_delay=100,
     ):
 
         # scope arguments to self
