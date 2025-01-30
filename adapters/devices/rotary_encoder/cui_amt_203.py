@@ -49,7 +49,7 @@ class Encoder(threading.Thread):
         polling_interval=0,
         bus_number=0,
         device_number=0,
-        speed_hz=1953125,
+        speed_hz=1048576, # 1953125,
         spi_delay=40,
     ):
 
@@ -177,8 +177,7 @@ class Encoder(threading.Thread):
         time.sleep(self.delay_sec)
 
         try:
-            received_bytes = self.spi.xfer(output_bytes, 0, self.delay_usec)
-            #received_bytes = self.spi.xfer(output_bytes, self.speed_hz, self.delay_usec)
+            received_bytes = self.spi.xfer(output_bytes, self.speed_hz, self.delay_usec)
         except Exception as e:
             self.exception_receiver(NAME, type(e))
 
