@@ -67,6 +67,10 @@ class Position:
         """
         to do: finish docstring
         """
+        print("translate_degrees_to_steps degrees", degrees)
+        print("translate_degrees_to_steps self.pulses_per_revolution", self.pulses_per_revolution)
+        print("translate_degrees_to_steps formula 1", degrees / 360.0 * float(self.pulses_per_revolution))
+        print("translate_degrees_to_steps formula 2", int(degrees / 360.0 * float(self.pulses_per_revolution)))
         return int(degrees / 360.0 * float(self.pulses_per_revolution))
 
     def set_zero(self):
