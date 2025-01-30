@@ -49,7 +49,7 @@ class Encoder(threading.Thread):
         polling_interval=0,
         bus_number=0,
         device_number=0,
-        speed_hz=500000, # 1953125,
+        speed_hz=100000, # 1953125,
         spi_delay=40,
     ):
 
