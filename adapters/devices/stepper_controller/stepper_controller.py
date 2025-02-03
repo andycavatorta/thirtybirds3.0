@@ -163,7 +163,9 @@ class Position:
         focus only on clockwise motion for now
         """
         current_orientation = self.get_steps_orientation()
+        current_cumulative = self.get_steps_cumulative()
         print("calculate_steps_to_target_orientation current_orientation",current_orientation)
+        print("calculate_steps_to_target_orientation current_cumulative",current_cumulative)
         print("calculate_steps_to_target_orientation target_orientation",target_orientation)
 
         """
