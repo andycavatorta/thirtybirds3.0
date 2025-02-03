@@ -162,7 +162,7 @@ class Position:
         """
         to do: finish docstring
         """
-        return math.floor(self.get_steps_cumulative() / self.pulses_per_revolution)
+        return math.floor(self.get_steps_cumulative() / self.pulses_per_revolution) - 1
 
 
     def calculate_steps_to_target_orientation(self, target_orientation, direction):
