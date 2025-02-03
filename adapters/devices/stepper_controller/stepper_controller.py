@@ -162,7 +162,7 @@ class Position:
         """
         to do: finish docstring
         """
-        return math.floor(self.get_steps_cumulative() / self.pulses_per_revolution) - 1
+        return math.floor(self.get_steps_cumulative() / self.pulses_per_revolution)
 
 
     def calculate_steps_to_target_orientation(self, target_orientation, direction):
@@ -176,8 +176,7 @@ class Position:
 
         current_orientation = self.get_steps_orientation()
         current_cumulative = self.get_steps_cumulative()
-        print("calculate_steps_to_target_orientation current_orientation",current_orientation)
-        print("calculate_steps_to_target_orientation current_cumulative",current_cumulative)
+        print("calculate_steps_to_target_orientation current_orientation",current_orientation, current_cumulative)
         print("calculate_steps_to_target_orientation target_orientation",target_orientation, target_orientation_cumulative)
         if target_orientation_cumulative == current_cumulative:
             distance = 0
@@ -186,6 +185,7 @@ class Position:
         else:
             distance = self.pulses_per_revolution + current_cumulative - target_orientation_cumulative
 
+        print("calculate_steps_to_target_orientation distance",distance)
         return distance
         """
         def calculate_clockwise_distance(start, end):
