@@ -170,11 +170,13 @@ class Position:
         to do: finish docstring
         focus only on clockwise motion for now
         """
+        target_orientation_cumulative = (self.get_turns() * self.pulses_per_revolution)
+
         current_orientation = self.get_steps_orientation()
         current_cumulative = self.get_steps_cumulative()
         print("calculate_steps_to_target_orientation current_orientation",current_orientation)
         print("calculate_steps_to_target_orientation current_cumulative",current_cumulative)
-        print("calculate_steps_to_target_orientation target_orientation",target_orientation)
+        print("calculate_steps_to_target_orientation target_orientation",target_orientation, target_orientation_cumulative)
 
         """
         def calculate_clockwise_distance(start, end):
