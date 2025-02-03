@@ -69,9 +69,7 @@ class Position:
         to do: finish docstring
         """
         print("translate_degrees_to_steps degrees", degrees)
-        print("translate_degrees_to_steps self.pulses_per_revolution", self.pulses_per_revolution)
-        print("translate_degrees_to_steps formula 1", degrees / 360.0 * float(self.pulses_per_revolution))
-        print("translate_degrees_to_steps formula 2", int(degrees / 360.0 * float(self.pulses_per_revolution)))
+        print("translate_degrees_to_steps steps", int(degrees / 360.0 * float(self.pulses_per_revolution)))
         return int(degrees / 360.0 * float(self.pulses_per_revolution))
 
     def set_zero(self):
@@ -179,13 +177,15 @@ class Position:
         print("calculate_steps_to_target_orientation current_orientation",current_orientation, current_cumulative)
         print("calculate_steps_to_target_orientation target_orientation",target_orientation, target_orientation_cumulative)
         if target_orientation_cumulative == current_cumulative:
+            print("--a")
             distance = 0
         if target_orientation_cumulative > current_cumulative:
+            print("--b")
             distance = target_orientation_cumulative - current_cumulative
         else:
+            print("--c")
             distance = self.pulses_per_revolution + current_cumulative - target_orientation_cumulative
 
-        distance = distance % self.pulses_per_revolution
         print("calculate_steps_to_target_orientation distance",distance)
         return distance
         """
