@@ -384,9 +384,9 @@ class Controller(threading.Thread):
         self.pulse_output.set_value(True)
         time.sleep(self.pulse_interval / 2)
         if self.direction == self.settings.Directions.CLOCKWISE:
-            self.position.increment()
-        else:
             self.position.decrement()
+        else:
+            self.position.increment()
 
     def __move_by_steps(self, steps):
         """
