@@ -160,8 +160,13 @@ class Position:
     def calculate_steps_to_target_orientation(self, target_orientation, direction):
         """
         to do: finish docstring
+        focus only on clockwise motion for now
         """
+        current_orientation = self.get_steps_orientation()
+        print("calculate_steps_to_target_orientation current_orientation",current_orientation)
+        print("calculate_steps_to_target_orientation target_orientation",target_orientation)
 
+        """
         def calculate_clockwise_distance(start, end):
             print("calculate_clockwise_distance start, end", start, end)
             if end == start:
@@ -199,6 +204,7 @@ class Position:
                 return calculate_clockwise_distance(
                     current_orientation, target_orientation
                 )
+        """
 
     def calculate_steps_to_target_cumulative(self, target_cumulative):
         """
