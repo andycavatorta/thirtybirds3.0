@@ -169,6 +169,7 @@ class Position:
         """
         to do: finish docstring
         focus only on clockwise motion for now
+        do not deal with zero crossing
         """
 
         target_orientation_cumulative = (self.get_turns() * self.pulses_per_revolution) + target_orientation
@@ -178,7 +179,14 @@ class Position:
         print("calculate_steps_to_target_orientation current_orientation",current_orientation)
         print("calculate_steps_to_target_orientation current_cumulative",current_cumulative)
         print("calculate_steps_to_target_orientation target_orientation",target_orientation, target_orientation_cumulative)
+        if target_orientation_cumulative == current_cumulative:
+            distance = 0
+        if target_orientation_cumulative > current_cumulative:
+            distance = target_orientation_cumulative - current_cumulative
+        else:
+            distance = self.pulses_per_revolution + current_cumulative - target_orientation_cumulative
 
+        return distance
         """
         def calculate_clockwise_distance(start, end):
             print("calculate_clockwise_distance start, end", start, end)
