@@ -163,8 +163,11 @@ class Position:
         """
 
         def calculate_clockwise_distance(start, end):
+            #if end == start:
+            #    return 0
+            #if end > start:
             print("calculate_clockwise_distance start, end", start, end)
-            print("calculate_clockwise_distance formula", (self.pulses_per_revolution - start) + end if end > start else end - start)
+            print("calculate_clockwise_distance formula", (self.pulses_per_revolution - start) + end if end > start else start - end)
 
             return (self.pulses_per_revolution - start) + end if end > start else end - start
 
