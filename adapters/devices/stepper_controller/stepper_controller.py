@@ -168,11 +168,11 @@ class Position:
                 return 0
                 print("-- equal", 0)
             if end > start:
-                print("-- end > start>", (self.pulses_per_revolution - start) + end)
-                return (self.pulses_per_revolution - start) + end
+                print("-- end > start>", start - end)
+                return end - start
             else:
-                print("-- end < start>", start - end)
-                return start - end
+                print("-- end < start>", (self.pulses_per_revolution - start) + end)
+                return (self.pulses_per_revolution - start) + end
 
         def calculate_counter_clockwise_distance(start, end):
             return -((start - end) + 0 if end > start else self.pulses_per_revolution)
