@@ -15,6 +15,7 @@ my_motor.set_zero(-100)
 """
 
 import queue
+import math
 import os
 import sys
 import threading
@@ -156,6 +157,13 @@ class Position:
         to do: finish docstring
         """
         return self.translate_steps_to_degrees(self.position)
+
+    def get_turns(self):
+        """
+        to do: finish docstring
+        """
+        return math.floor(self.get_steps_cumulative() / self.pulses_per_revolution)
+
 
     def calculate_steps_to_target_orientation(self, target_orientation, direction):
         """
