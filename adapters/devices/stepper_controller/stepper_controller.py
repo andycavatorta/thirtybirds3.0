@@ -185,6 +185,7 @@ class Position:
         else:
             distance = self.pulses_per_revolution + current_cumulative - target_orientation_cumulative
 
+        distance = distance % self.pulses_per_revolution
         print("calculate_steps_to_target_orientation distance",distance)
         return distance
         """
