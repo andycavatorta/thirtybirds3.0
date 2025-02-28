@@ -140,8 +140,10 @@ class Thumbwheels:
         self.value_lock = threading.Lock()
 
         ### D E V I C E S ###
-        for place_name_zeros, thumbwheel_pins in pin_numbers_by_place.enumerate():
-            place_name = str(10**place_name_zeros)
+        for index in range(len(pin_numbers_by_place)):
+            #for place_name_zeros, thumbwheel_pins in pin_numbers_by_place.enumerate():
+            thumbwheel_pins = pin_numbers_by_place[index]
+            place_name = str(10**index)
             self.thumbwheels_by_place_name[place_name] = Thumbwheel(
                 thumbwheel_pins, exception_receiver, event_receiver, 1, place_name
             )
