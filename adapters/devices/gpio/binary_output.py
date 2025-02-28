@@ -23,6 +23,11 @@ except ImportError:
 class Output:
     def __init__(self, pin_number, exception_receiver, device_name=None):
         ### S C O P I N G ###
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("pin_number", pin_number)
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         self.pin_number = pin_number
         self.exception_receiver = exception_receiver
         self.last_value = None
