@@ -39,6 +39,7 @@ class Encoders(threading.Thread):
         positions_per_revolution,
         polling_interval=0,
     ):
+        threading.Thread.__init__(self)
 
         ### S C O P E   P A R A M S   T O   S E L F ###
         self.exception_receiver = exception_receiver
@@ -62,7 +63,6 @@ class Encoders(threading.Thread):
         ### T H R E A D   S T U F F  ###
         if polling_interval > 0:
             self.polling_interval = polling_interval
-            threading.Thread.__init__(self)
             self.start()
 
         self.rotary_unit_converter = unit_names.Rotary_Unit_Converter(self.positions_per_revolution)
