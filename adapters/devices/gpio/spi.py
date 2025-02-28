@@ -15,11 +15,12 @@ Thirtybirds Style Requirements:
 
     https://pypi.org/project/spidev/
 """
-
+import inspect
 import os
 import sys
 import threading
 import time
+import traceback
 
 import spidev
 
@@ -94,6 +95,7 @@ class SPI():
     ####################
 
     def transfer(self, _name_, _list_of_values_):
+        response = None
         with self.spi_lock:
             self.chip_select_by_name[_name_].set_value(False)
             time.sleep(self.delay_sec)
@@ -101,6 +103,18 @@ class SPI():
                 response = self.spi.xfer(_list_of_values_, self.delay_usec)
             except Exception as e:
                 self.exception_receiver(self.name, e)
+
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                #print(decorator_self.__class__.__name__, function_ref.__name__)
+                exception_details = {
+                    "script_name":__file__,
+                    "class_name":self.__class__.__name__,
+                    "method_name":inspect.currentframe().f_code.co_name,
+                    "stacktrace":traceback.format_exception(exc_type, exc_value,exc_traceback)
+                }
+
+                self.exception_receiver("captured exception", exception_details)
+
             time.sleep(self.delay_sec)
             self.chip_select_by_name[_name_].set_value(True)
             return response
