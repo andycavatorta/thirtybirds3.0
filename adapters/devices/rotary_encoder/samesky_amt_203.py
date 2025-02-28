@@ -16,7 +16,6 @@ sys.path.append(
 from gpio import spi
 
 import event_names
-import direction_names
 import unit_names
 
 class Encoders(threading.Thread):
@@ -47,6 +46,7 @@ class Encoders(threading.Thread):
         self.name = name
         self.chip_select_pins_by_name = chip_select_pins_by_name
         self.positions_per_revolution = positions_per_revolution
+        self.encoders = {}
 
         ### C R E A T E   D E V I C E S ###
         self.spi_connections = spi.SPI(
@@ -65,8 +65,8 @@ class Encoders(threading.Thread):
             threading.Thread.__init__(self)
             self.start()
 
-        self.rotary_unit_converter = unit_names.Rotary_Unit_Converter(self.pulses_per_revolution)
-        self.rotary_distance_to_orientation_converter = unit_names.Rotary_Distance_To_Orientation_Converter(self.pulses_per_revolution)
+        self.rotary_unit_converter = unit_names.Rotary_Unit_Converter(self.positions_per_revolution)
+        self.rotary_distance_to_orientation_converter = unit_names.Rotary_Distance_To_Orientation_Converter(self.positions_per_revolution)
 
     ####################
     ###  P U B L I C ###
@@ -78,6 +78,7 @@ class Encoders(threading.Thread):
         """
         self.spi_connections.transfer(_name_, [self.READ_POS])
         counter = 0
+        response = [None]
         while response[0] != self.READ_POS:
             response = self.spi_connections.transfer(_name_, [self.NO_OP])
             counter += 1
@@ -93,6 +94,7 @@ class Encoders(threading.Thread):
         """
         self.spi_connections.transfer(_name_, [self.READ_POS])
         counter = 0
+        response = [None]
         while response[0] != self.READ_POS:
             response = self.spi_connections.transfer(_name_, [self.NO_OP])
             counter += 1
@@ -106,21 +108,22 @@ class Encoders(threading.Thread):
                 return None
         position_bytes = self.spi_connections.transfer(_name_, [self.NO_OP])
         position_bytes += self.spi_connections.transfer(_name_, [self.NO_OP])
-        return int.from_bytes(position_bytes, self.BYTEORDER)
+        position_int = int.from_bytes(position_bytes, self.BYTEORDER)
+        return self.rotary_unit_converter(position_int, unit_names.PULSE, unit)
 
-    def set_zero(self, _name_ = None)
+    def set_zero(self, _name_ = None):
         """Must power-cycle to start using new zero point"""
         try:
-            request = self.__spi_write_read([self.SET_ZERO])
+            request = self.spi_connections.transfer([self.SET_ZERO])
             counter = 0
             while request[0] != self.ACK_ZERO:
-                request = self.__spi_write_read([self.NO_OP])
+                request = self.spi_connections.transfer([self.NO_OP])
                 counter += 1
                 if counter == 100:
                     return False
             return True
         except Exception as e:
-            self.exception_receiver(NAME, type(e))
+            self.exception_receiver(self.name, type(e))
             return None
 
     def run(self):
@@ -135,5 +138,3 @@ class Encoders(threading.Thread):
                         (_name_, position)
                     )
                     self.encoders[_name_] = position
-
-
