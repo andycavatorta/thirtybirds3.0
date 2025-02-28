@@ -68,8 +68,8 @@ class Position:
         """
         to do: finish docstring
         """
-        print("translate_degrees_to_steps degrees", degrees)
-        print("translate_degrees_to_steps steps", int(degrees / 360.0 * float(self.pulses_per_revolution)))
+        # print("translate_degrees_to_steps degrees", degrees)
+        # print("translate_degrees_to_steps steps", int(degrees / 360.0 * float(self.pulses_per_revolution)))
         return int(degrees / 360.0 * float(self.pulses_per_revolution))
 
     def set_zero(self):
@@ -170,9 +170,16 @@ class Position:
         do not deal with zero crossing
         """
 
+        current_orientation = self.get_steps_orientation()
+        if current_orientation < target_orientation:
+            target_orientation_cumulative = (self.get_turns() * self.pulses_per_revolution) + target_orientation
+        else:
+            target_orientation_cumulative = (self.get_turns() * self.pulses_per_revolution) + target_orientation
+
+
+
         target_orientation_cumulative = (self.get_turns() * self.pulses_per_revolution) + target_orientation
 
-        current_orientation = self.get_steps_orientation()
         current_cumulative = self.get_steps_cumulative()
         print("calculate_steps_to_target_orientation current_orientation",current_orientation, current_cumulative)
         print("calculate_steps_to_target_orientation target_orientation",target_orientation, target_orientation_cumulative)
