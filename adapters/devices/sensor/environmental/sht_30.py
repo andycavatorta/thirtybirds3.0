@@ -53,7 +53,7 @@ class SHT30(threading.Thread):
         self.exception_receiver = exception_receiver
         self.event_receiver = event_receiver
         self.maximum_retries_for_bad_read = maximum_retries_for_bad_read
-        self.name = name
+        self.deveice_name = name
         self.optional_power_pin = optional_power_pin
         self.poll_interval = poll_interval
         self.nominal_temp_range = nominal_temp_range
@@ -83,14 +83,14 @@ class SHT30(threading.Thread):
             self.power_output = binary_output(
                 self.optional_power_pin,
                 self.exception_receiver,
-                device_name=f"{self.name}_output_{self.optional_power_pin}",
+                device_name=f"{self.deveice_name}_output_{self.optional_power_pin}",
             )
             self.__cycle_power()
 
         try:
             self.bus = smbus2.SMBus(1)
         except Exception as e:
-            self.exception_receiver(self.name, e)
+            self.exception_receiver(self.deveice_name, e)
 
     def __cycle_power(self):
         if self.optional_power_pin > -1:
@@ -125,12 +125,12 @@ class SHT30(threading.Thread):
                     return (temperature_c, humidity)
                 except OSError:
                     self.event_receiver(
-                        self.name, event_names.COMMUNICATION_ERROR, retry
+                        self.deveice_name, event_names.COMMUNICATION_ERROR, retry
                     )
                     self.__cycle_power()
                 except Exception as e:
-                    self.exception_receiver(self.name, e)
-            self.event_receiver(self.name, event_names.COMMUNICATION_FAILED, retry)
+                    self.exception_receiver(self.deveice_name, e)
+            self.event_receiver(self.deveice_name, event_names.COMMUNICATION_FAILED, retry)
             return None
 
     def get_presence(self):
@@ -168,14 +168,14 @@ class SHT30(threading.Thread):
         if self.nominal_temp_range[0] is not None:
             if temperature_c < self.nominal_temp_range[0]:
                 self.event_receiver(
-                    self.name,
+                    self.deveice_name,
                     event_names.MIN_THRESHOLD_EXCEEDED,
                     ("temperature", temperature_c),
                 )
         if self.nominal_temp_range[1] is not None:
             if temperature_c > self.nominal_temp_range[1]:
                 self.event_receiver(
-                    self.name,
+                    self.deveice_name,
                     event_names.MAX_THRESHOLD_EXCEEDED,
                     ("temperature", temperature_c),
                 )
@@ -183,14 +183,14 @@ class SHT30(threading.Thread):
         if self.nominal_humidity_range[0] is not None:
             if humidity < self.nominal_humidity_range[0]:
                 self.event_receiver(
-                    self.name,
+                    self.deveice_name,
                     event_names.MIN_THRESHOLD_EXCEEDED,
                     ("humidity", humidity),
                 )
         if self.nominal_humidity_range[1] is not None:
             if humidity > self.nominal_humidity_range[1]:
                 self.event_receiver(
-                    self.name,
+                    self.deveice_name,
                     event_names.MAX_THRESHOLD_EXCEEDED,
                     ("humidity", humidity),
                 )
@@ -198,14 +198,14 @@ class SHT30(threading.Thread):
         if self.minimum_temp_change_for_report == 0:
             if self.last_reported_temp != temperature_c:
                 self.event_receiver(
-                    self.name, event_names.CHANGE, ("temperature", temperature_c)
+                    self.deveice_name, event_names.CHANGE, ("temperature", temperature_c)
                 )
             self.last_reported_temp = temperature_c
 
         if self.minimum_humidity_change_for_report == 0:
             if self.last_reported_humidity != humidity:
                 self.event_receiver(
-                    self.name, event_names.CHANGE, ("humidity", humidity)
+                    self.deveice_name, event_names.CHANGE, ("humidity", humidity)
                 )
             self.last_reported_humidity = humidity
 
@@ -215,7 +215,7 @@ class SHT30(threading.Thread):
                 > self.minimum_temp_change_for_report
             ):
                 self.event_receiver(
-                    self.name, event_names.CHANGE, ("temperature", temperature_c)
+                    self.deveice_name, event_names.CHANGE, ("temperature", temperature_c)
                 )
             self.last_reported_temp = temperature_c
 
@@ -225,7 +225,7 @@ class SHT30(threading.Thread):
                 > self.minimum_humidity_change_for_report
             ):
                 self.event_receiver(
-                    self.name, event_names.CHANGE, ("humidity", humidity)
+                    self.deveice_name, event_names.CHANGE, ("humidity", humidity)
                 )
             self.last_reported_humidity = humidity
 
