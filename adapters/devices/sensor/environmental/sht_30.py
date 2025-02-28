@@ -49,6 +49,8 @@ class SHT30(threading.Thread):
         """
         to do: finish docstring
         """
+        threading.Thread.__init__(self)
+
         ### S E L F   V A R S ###
         self.exception_receiver = exception_receiver
         self.event_receiver = event_receiver
@@ -68,7 +70,6 @@ class SHT30(threading.Thread):
         self.fault_flag = False
 
         ### T H R E A D   S T U F F  ###
-        threading.Thread.__init__(self)
         self.request_lock = threading.Lock()
         self.fault_flag_lock = threading.Lock()
         if poll_interval > 0:
