@@ -47,7 +47,7 @@ class SPI():
         self.name = name
 
         self.speed_hz = speed_hz
-        self.delay_usec = spi_delay  # microseconds
+        self.delay_sec = spi_delay  # microseconds
 
         ### C R E A T E   C H I P   S E L E C T   O U T P U T S ###
         # to do: replace with dict comprehension if result is legible
