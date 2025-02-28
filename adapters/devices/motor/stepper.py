@@ -73,6 +73,7 @@ class Stepper(threading.Thread):
         positive_is_clockwise=True,
         name=None,
     ):
+        threading.Thread.__init__(self)
         ### S C O P E   P A R A M S   T O   S E L F ###
         self.exception_receiver = exception_receiver
         self.event_receiver = event_receiver
@@ -81,7 +82,6 @@ class Stepper(threading.Thread):
         self.name = self.__class__.__name__ if name is None else name
 
         ### T H R E A D - S P A N N i N G   V A R S  &  L O C K S ###
-        threading.Thread.__init__(self)
         self.command_queue = queue.Queue()
         self.start()
 
