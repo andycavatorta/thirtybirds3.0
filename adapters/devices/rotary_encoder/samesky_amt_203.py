@@ -88,7 +88,7 @@ class Encoders(threading.Thread):
         self.spi_connections.transfer(_name_, [self.NO_OP])
         return True
 
-    def get_position(self, _name_ = None, unit=unit_names.PULSE):
+    def get_position(self, _name_ = None, unit=unit_names.PULSES):
         """
         ---
         """
@@ -109,7 +109,7 @@ class Encoders(threading.Thread):
         position_bytes = self.spi_connections.transfer(_name_, [self.NO_OP])
         position_bytes += self.spi_connections.transfer(_name_, [self.NO_OP])
         position_int = int.from_bytes(position_bytes, self.BYTEORDER)
-        return self.rotary_unit_converter(position_int, unit_names.PULSE, unit)
+        return self.rotary_unit_converter(position_int, unit_names.PULSES, unit)
 
     def set_zero(self, _name_ = None):
         """Must power-cycle to start using new zero point"""
