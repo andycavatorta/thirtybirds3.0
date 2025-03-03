@@ -116,7 +116,7 @@ class SPI():
             self.chip_select_by_name[_name_].set_value(False)
             time.sleep(self.delay_sec)
             try:
-                response = self.spi.xfer(_list_of_values_, self.delay_usec)
+                response = self.spi.xfer(_list_of_values_, self.delay_sec)
             except Exception as e:
                 self.exception_receiver(self.name, e)
 
