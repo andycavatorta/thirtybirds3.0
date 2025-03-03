@@ -40,7 +40,7 @@ class SPI():
         bus_number=0,
         device_number=0,
         speed_hz=1953125,
-        spi_delay=40 / 1e3,
+        spi_delay=40,
     ):
         ### S C O P E   P A R A M S   T O   S E L F ###
         self.exception_receiver = exception_receiver
@@ -48,7 +48,7 @@ class SPI():
         self.name = name
 
         self.speed_hz = speed_hz
-        self.delay_sec = spi_delay  # microseconds
+        self.delay_usec = spi_delay  # microseconds
 
         ### C R E A T E   C H I P   S E L E C T   O U T P U T S ###
         # to do: replace with dict comprehension if result is legible
@@ -114,9 +114,9 @@ class SPI():
         response = None
         with self.spi_lock:
             self.chip_select_by_name[_name_].set_value(False)
-            time.sleep(self.delay_sec)
+            time.sleep(self.delay_usec)
             try:
-                response = self.spi.xfer(_list_of_values_, self.delay_sec)
+                response = self.spi.xfer(_list_of_values_, self.delay_usec)
             except Exception as e:
                 self.exception_receiver(self.name, e)
 
@@ -131,7 +131,7 @@ class SPI():
 
                 self.exception_receiver("captured exception", exception_details)
 
-            time.sleep(self.delay_sec)
+            time.sleep(self.delay_usec)
             self.chip_select_by_name[_name_].set_value(True)
             return response
 
