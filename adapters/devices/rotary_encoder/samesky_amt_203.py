@@ -94,12 +94,14 @@ class Encoders(threading.Thread):
         """
         ---
         """
-        self.spi_connections.transfer(_name_, [self.READ_POS])
+        print("get_position ")
+        response = self.spi_connections.transfer(_name_, [self.READ_POS])
+        print("get_position 0 response=",response)
         counter = 0
-        response = self.spi_connections.transfer(_name_, [self.NO_OP])
+        #response = self.spi_connections.transfer(_name_, [self.NO_OP])
         while response[0] != self.READ_POS:
             response = self.spi_connections.transfer(_name_, [self.NO_OP])
-            print("response=",response)
+            print("get_position", counter,"response=",response)
             counter += 1
             if counter == 100:
                 self.event_receiver(
