@@ -117,8 +117,8 @@ class Encoders(threading.Thread):
         print("position_bytes=",position_bytes)
         position_int = int.from_bytes(position_bytes, self.BYTEORDER)
         print("position_int=",position_int)
-        print(self.rotary_unit_converter(position_int, unit_names.PULSES, unit))
-        return self.rotary_unit_converter(position_int, unit_names.PULSES, unit)
+        print(self.rotary_unit_converter.convert(position_int, unit_names.PULSES, unit))
+        return self.rotary_unit_converter.convert(position_int, unit_names.PULSES, unit)
 
     def set_zero(self, _name_ = None):
         """Must power-cycle to start using new zero point"""
