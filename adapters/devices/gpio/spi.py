@@ -117,7 +117,7 @@ class SPI():
             print("spi transfer 1")
             self.chip_select_by_name[_name_].set_value(False)
             print("spi transfer 2")
-            time.sleep(self.delay_usec)
+            #time.sleep(self.delay_usec)
             print("spi transfer 3")
             try:
                 print("spi transfer 4")
@@ -138,7 +138,7 @@ class SPI():
 
                 self.exception_receiver("captured exception", exception_details)
             print("spi transfer 7")
-            time.sleep(self.delay_usec)
+            #time.sleep(self.delay_usec)
             self.chip_select_by_name[_name_].set_value(True)
             print("spi transfer 8")
             return response
