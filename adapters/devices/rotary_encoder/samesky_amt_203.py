@@ -99,6 +99,7 @@ class Encoders(threading.Thread):
         response = self.spi_connections.transfer(_name_, [self.NO_OP])
         while response[0] != self.READ_POS:
             response = self.spi_connections.transfer(_name_, [self.NO_OP])
+            print("response=",response)
             counter += 1
             if counter == 100:
                 self.event_receiver(
@@ -109,8 +110,12 @@ class Encoders(threading.Thread):
                 # call error in event_receiver
                 return None
         position_bytes = self.spi_connections.transfer(_name_, [self.NO_OP])
+        print("position_bytes=",position_bytes)
         position_bytes += self.spi_connections.transfer(_name_, [self.NO_OP])
+        print("position_bytes=",position_bytes)
         position_int = int.from_bytes(position_bytes, self.BYTEORDER)
+        print("position_int=",position_int)
+        print(self.rotary_unit_converter(position_int, unit_names.PULSES, unit))
         return self.rotary_unit_converter(position_int, unit_names.PULSES, unit)
 
     def set_zero(self, _name_ = None):
