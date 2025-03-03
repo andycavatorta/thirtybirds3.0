@@ -80,7 +80,7 @@ class Encoders(threading.Thread):
         """
         self.spi_connections.transfer(_name_, [self.READ_POS])
         counter = 0
-        response = [None]
+        response = [None, None]
         while response[0] != self.READ_POS:
             response = self.spi_connections.transfer(_name_, [self.NO_OP])
             counter += 1
@@ -96,7 +96,7 @@ class Encoders(threading.Thread):
         """
         self.spi_connections.transfer(_name_, [self.READ_POS])
         counter = 0
-        response = [None]
+        response = [None, None]
         while response[0] != self.READ_POS:
             response = self.spi_connections.transfer(_name_, [self.NO_OP])
             counter += 1
