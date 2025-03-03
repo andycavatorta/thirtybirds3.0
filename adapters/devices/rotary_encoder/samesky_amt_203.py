@@ -4,6 +4,8 @@ asdf
 
 """
 
+import inspect
+import traceback
 import os
 import sys
 import threading
@@ -123,7 +125,15 @@ class Encoders(threading.Thread):
                     return False
             return True
         except Exception as e:
-            self.exception_receiver(self.name, type(e))
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            #print(decorator_self.__class__.__name__, function_ref.__name__)
+            exception_details = {
+                "script_name":__file__,
+                "class_name":self.__class__.__name__,
+                "method_name":inspect.currentframe().f_code.co_name,
+                "stacktrace":traceback.format_exception(exc_type, exc_value,exc_traceback)
+            }
+            self.exception_receiver(__file__, exception_details)
             return None
 
     def run(self):

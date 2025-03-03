@@ -14,6 +14,9 @@ Thirtybirds Style Requirements:
     devices do not call fault states
 """
 
+import inspect
+import traceback
+
 try:
     from RPi import GPIO
 except ImportError:
@@ -33,18 +36,35 @@ class Output:
         )
 
         ### G P I O   S T U F F ###
+        GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
         try:
             GPIO.setup(pin_number, GPIO.OUT)
         except Exception as e:
-            self.exception_receiver(self.device_name, e)
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            #print(decorator_self.__class__.__name__, function_ref.__name__)
+            exception_details = {
+                "script_name":__file__,
+                "class_name":self.__class__.__name__,
+                "method_name":inspect.currentframe().f_code.co_name,
+                "stacktrace":traceback.format_exception(exc_type, exc_value,exc_traceback)
+            }
+            self.exception_receiver("main instantiation exception", exception_details)
 
     def set_value(self, value):
         self.last_value = value
         try:
             GPIO.output(self.pin_number, value)
         except Exception as e:
-            self.exception_receiver(self.device_name, e)
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            #print(decorator_self.__class__.__name__, function_ref.__name__)
+            exception_details = {
+                "script_name":__file__,
+                "class_name":self.__class__.__name__,
+                "method_name":inspect.currentframe().f_code.co_name,
+                "stacktrace":traceback.format_exception(exc_type, exc_value,exc_traceback)
+            }
+            self.exception_receiver(__file__, exception_details)
 
     def get_last_value(self):
         """

@@ -14,6 +14,8 @@ Thirtybirds Style Requirements:
     devices do not call fault states
 """
 
+import inspect
+import traceback
 import threading
 import time
 import os
@@ -46,6 +48,7 @@ class Input(threading.Thread):
         device_name=None,
     ):
         ### S C O P I N G ###
+        threading.Thread.__init__(self)
         self.exception_receiver = exception_receiver
         self.event_receiver = event_receiver
         self.poll_interval = poll_interval
@@ -60,6 +63,7 @@ class Input(threading.Thread):
         self.last_value = None
 
         ### G P I O   S T U F F ###
+        GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
         try:
             match pull_up_down:
@@ -70,12 +74,19 @@ class Input(threading.Thread):
                 case 1:
                     GPIO.setup(pin_number, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         except Exception as e:
-            self.exception_receiver(self.device_name, type(e))
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            #print(decorator_self.__class__.__name__, function_ref.__name__)
+            exception_details = {
+                "script_name":__file__,
+                "class_name":self.__class__.__name__,
+                "method_name":inspect.currentframe().f_code.co_name,
+                "stacktrace":traceback.format_exception(exc_type, exc_value,exc_traceback)
+            }
+            self.exception_receiver(__file__, exception_details)
 
         ### T H R E A D   S T U F F ###
         self.pin_access_lock = threading.Lock()
         if self.poll_interval > 0:
-            threading.Thread.__init__(self)
             self.start()
 
     def get_value(self):
@@ -88,7 +99,15 @@ class Input(threading.Thread):
                 self.last_value = not value if self.invert_value else value
                 return self.last_value
         except Exception as e:
-            self.exception_receiver(self.device_name, type(e))
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            #print(decorator_self.__class__.__name__, function_ref.__name__)
+            exception_details = {
+                "script_name":__file__,
+                "class_name":self.__class__.__name__,
+                "method_name":inspect.currentframe().f_code.co_name,
+                "stacktrace":traceback.format_exception(exc_type, exc_value,exc_traceback)
+            }
+            self.exception_receiver(__file__, exception_details)
             return None
 
     def get_change(self):

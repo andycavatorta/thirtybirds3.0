@@ -14,6 +14,8 @@ Thirtybirds Style Requirements:
     devices do not call fault states
 """
 
+import inspect
+import traceback
 import threading
 import os
 import sys

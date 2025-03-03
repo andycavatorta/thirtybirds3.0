@@ -69,7 +69,15 @@ class SPI():
             self.spi.max_speed_hz = speed_hz
             self.spi.no_cs = True
         except Exception as e:
-            self.exception_receiver(name, e)
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            #print(decorator_self.__class__.__name__, function_ref.__name__)
+            exception_details = {
+                "script_name":__file__,
+                "class_name":self.__class__.__name__,
+                "method_name":inspect.currentframe().f_code.co_name,
+                "stacktrace":traceback.format_exception(exc_type, exc_value,exc_traceback)
+            }
+            self.exception_receiver(__file__, exception_details)
             return
         self.__release_all_chip_selects()
 
@@ -80,7 +88,15 @@ class SPI():
         try:
             self.spi.close()
         except Exception as e:
-            self.exception_receiver(self.name, e)
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            #print(decorator_self.__class__.__name__, function_ref.__name__)
+            exception_details = {
+                "script_name":__file__,
+                "class_name":self.__class__.__name__,
+                "method_name":inspect.currentframe().f_code.co_name,
+                "stacktrace":traceback.format_exception(exc_type, exc_value,exc_traceback)
+            }
+            self.exception_receiver(__file__, exception_details)
 
     ######################
     ###  P R I V A T E ###

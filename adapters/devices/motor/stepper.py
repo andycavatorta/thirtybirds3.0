@@ -46,6 +46,8 @@ typical usage:
 
 """
 
+import inspect
+import traceback
 import queue
 import os
 import sys

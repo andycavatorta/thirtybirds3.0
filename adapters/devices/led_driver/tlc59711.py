@@ -24,6 +24,8 @@ usage:
 
 """
 
+import inspect
+import traceback
 import math
 import time
 
@@ -56,7 +58,15 @@ class TLC():
                 self.spi, pixel_count=self.pixel_quantity
             )
         except Exception as e:
-            self.exception_receiver(self.device_name, e)
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            #print(decorator_self.__class__.__name__, function_ref.__name__)
+            exception_details = {
+                "script_name":__file__,
+                "class_name":self.__class__.__name__,
+                "method_name":inspect.currentframe().f_code.co_name,
+                "stacktrace":traceback.format_exception(exc_type, exc_value,exc_traceback)
+            }
+            self.exception_receiver(__file__, exception_details)
 
         self.pixel_levels = []
         for i in range(self.pixel_quantity):
@@ -96,7 +106,15 @@ class TLC():
             time.sleep(0.01)
             self.pixels.show()
         except Exception as e:
-            self.exception_receiver(self.device_name, e)
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            #print(decorator_self.__class__.__name__, function_ref.__name__)
+            exception_details = {
+                "script_name":__file__,
+                "class_name":self.__class__.__name__,
+                "method_name":inspect.currentframe().f_code.co_name,
+                "stacktrace":traceback.format_exception(exc_type, exc_value,exc_traceback)
+            }
+            self.exception_receiver(__file__, exception_details)
 
 
     def set_all_off(self):
@@ -104,4 +122,12 @@ class TLC():
             self.pixel_levels = [[0, 0, 0]] * self.pixel_quantity
             self.pixels.show()
         except Exception as e:
-            self.exception_receiver(self.device_name, e)
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            #print(decorator_self.__class__.__name__, function_ref.__name__)
+            exception_details = {
+                "script_name":__file__,
+                "class_name":self.__class__.__name__,
+                "method_name":inspect.currentframe().f_code.co_name,
+                "stacktrace":traceback.format_exception(exc_type, exc_value,exc_traceback)
+            }
+            self.exception_receiver(__file__, exception_details)
