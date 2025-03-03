@@ -363,7 +363,7 @@ class Stepper(threading.Thread):
                 self.MOVE_TO, (quantity, units, direction, rotation_or_distance)
             )
         else:
-            self.__move_by((quantity, units))
+            self.__move_to((quantity, units))
             #self.__move_by((quantity, units, direction, rotation_or_distance))
 
     def add_to_command_queue(self, command, content):
