@@ -255,7 +255,7 @@ class Stepper(threading.Thread):
                         self.__move_by((distance_positive, unit_names.PULSES))
 
     def __move_by(self, quantity_units):
-        print("__move_by", quantity_units)
+        print("__move_by 0", quantity_units)
         quantity, units = quantity_units
         self.__set_direction(
             direction_names.CLOCKWISE
@@ -263,13 +263,17 @@ class Stepper(threading.Thread):
             else direction_names.COUNTER_CLOCKWISE
         )
         steps = int(self.rotary_unit_converter.convert(quantity, units, unit_names.PULSES))
+        print("__move_by 1", steps)
 
         self.event_receiver(
             self.name, event_names.MOTION_START, self.__calculate_distance_summary()
         )
+        print("__move_by 2", self.pulse_interval)
 
         for step in range(steps):
             self.__pulse()
+
+        print("__move_by 3", step)
 
         self.event_receiver(
             self.name, event_names.MOTION_END, self.__calculate_distance_summary()
