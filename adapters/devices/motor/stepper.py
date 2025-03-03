@@ -255,6 +255,7 @@ class Stepper(threading.Thread):
                         self.__move_by((distance_positive, unit_names.PULSES))
 
     def __move_by(self, quantity_units):
+        print("__move_by", quantity_units)
         quantity, units = quantity_units
         self.__set_direction(
             direction_names.CLOCKWISE
