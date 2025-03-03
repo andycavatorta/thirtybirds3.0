@@ -112,19 +112,12 @@ class SPI():
 
     def transfer(self, _name_, _list_of_values_):
         response = None
-        print("spi transfer 0")
         with self.spi_lock:
-            print("spi transfer 1")
             self.chip_select_by_name[_name_].set_value(False)
-            print("spi transfer 2")
             #time.sleep(self.delay_usec)
-            print("spi transfer 3")
             try:
-                print("spi transfer 4")
                 response = self.spi.xfer(_list_of_values_, self.delay_usec)
-                print("spi transfer 5", response)
             except Exception as e:
-                print("spi transfer 6")
                 self.exception_receiver(self.name, e)
 
                 exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -137,10 +130,8 @@ class SPI():
                 }
 
                 self.exception_receiver("captured exception", exception_details)
-            print("spi transfer 7")
             #time.sleep(self.delay_usec)
             self.chip_select_by_name[_name_].set_value(True)
-            print("spi transfer 8")
             return response
 
     def readbytes(self):
