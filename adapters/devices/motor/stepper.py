@@ -261,7 +261,7 @@ class Stepper(threading.Thread):
             if quantity >= 0
             else direction_names.COUNTER_CLOCKWISE
         )
-        steps = self.rotary_unit_converter.convert(quantity, units, unit_names.PULSES)
+        steps = int(self.rotary_unit_converter.convert(quantity, units, unit_names.PULSES))
 
         self.event_receiver(
             self.name, event_names.MOTION_START, self.__calculate_distance_summary()
