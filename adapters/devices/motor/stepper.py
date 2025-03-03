@@ -290,8 +290,11 @@ class Stepper(threading.Thread):
 
     def set_zero(self, offset=0, unit=unit_names.PULSES):
         # to do: check if offset sign should be inverted
+        print("set_zero", offset, unit)
         pulses = self.rotary_unit_converter.convert(offset, unit, unit_names.PULSES)
+        print("set_zero", pulses)
         self.__set_cumulative_distance(pulses)
+        print("set_zero")
 
     def set_enable(self, enable_bool):
         self.enable_output.set_value(0 if enable_bool else 1)
