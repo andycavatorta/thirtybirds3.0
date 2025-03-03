@@ -111,7 +111,6 @@ class Encoders(threading.Thread):
         position_bytes = self.spi_connections.transfer(_name_, [self.NO_OP])
         position_bytes += self.spi_connections.transfer(_name_, [self.NO_OP])
         position_int = int.from_bytes(position_bytes, self.BYTEORDER)
-        print(self.rotary_unit_converter.convert(position_int, unit_names.PULSES, unit))
         return self.rotary_unit_converter.convert(position_int, unit_names.PULSES, unit)
 
     def set_zero(self, _name_ = None):
