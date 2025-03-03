@@ -175,11 +175,13 @@ class Stepper(threading.Thread):
             if self.fault_flag is True:
                 return
 
+        pre_time = time.time()
         # move one pulse
         self.pulse_output.set_value(False)
         time.sleep(self.pulse_interval / 2)
         self.pulse_output.set_value(True)
         time.sleep(self.pulse_interval / 2)
+        print(time.time()-pre_time)
 
         # update position
         if self.direction == direction_names.POSITIVE:
