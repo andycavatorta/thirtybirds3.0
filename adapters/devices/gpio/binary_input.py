@@ -96,6 +96,7 @@ class Input(threading.Thread):
         try:
             with self.pin_access_lock:
                 value = GPIO.input(self.pin_number) == 1
+                print("get_value", self.device_name, value)
                 self.last_value = not value if self.invert_value else value
                 return self.last_value
         except Exception as e:
