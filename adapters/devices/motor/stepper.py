@@ -351,7 +351,12 @@ class Stepper(threading.Thread):
             )
         return self.rotary_unit_converter.convert(distance, unit_names.PULSES, units)
 
-    def move_by(self, quantity, units=unit_names.PULSES, asyncronous=False):
+    def move_by(
+            self,
+            quantity,
+            units=unit_names.PULSES,
+            asyncronous=False
+        ):
         if asyncronous is True:
             self.add_to_command_queue(self.MOVE_BY, (quantity, units))
         else:
