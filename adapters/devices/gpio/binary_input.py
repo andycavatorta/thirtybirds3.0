@@ -125,7 +125,6 @@ class Input(threading.Thread):
         while True:
             time.sleep(self.poll_interval)
             changed, current_value = self.get_change()
-            print("run", self.device_name, changed, current_value)
             if changed:
                 self.event_receiver(self.device_name, event_names.CHANGE, current_value)
 
@@ -184,6 +183,7 @@ class Inputs(threading.Thread):
         collected_values = {}
         for name in self.pins:
             changed, value = self.pins[name].get_change()
+            print(name, changed, value)
             if changed:
                 collected_values[name] = self.pins[name].get_value()
         return collected_values
