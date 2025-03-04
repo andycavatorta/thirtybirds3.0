@@ -150,6 +150,9 @@ class Thumbwheels:
                 thumbwheel_pins, exception_receiver, event_receiver, 1, place_name
             )
 
+        for key, ref in self.thumbwheels_by_place_name[place_name].items():
+            print(key, ref.get_values() )
+
     def get_value(self):
         with self.value_lock:
             return self.value
