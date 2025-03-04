@@ -158,6 +158,7 @@ class Thumbwheels:
         """
         no matter what the changes are, request values from each Thumbwheel instance
         """
+        print("thumbwheels event_receiver",device_name, event_name, value)
         total = 0
         for place_name, thumbwheel_instance in self.thumbwheels_by_place_name.items():
             place_name_int = str(place_name)
