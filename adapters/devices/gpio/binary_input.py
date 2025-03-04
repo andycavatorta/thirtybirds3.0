@@ -125,9 +125,8 @@ class Input(threading.Thread):
         while True:
             time.sleep(self.poll_interval)
             changed, current_value = self.get_change()
+            print("run", self.device_name, changed, current_value)
             if changed:
-                print("run", self.device_name, changed, current_value)
-
                 self.event_receiver(self.device_name, event_names.CHANGE, current_value)
 
 
