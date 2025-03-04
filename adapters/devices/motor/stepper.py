@@ -1,4 +1,5 @@
 """
+
 Thirtybirds Style Requirements:
     Single and multiple devices: no
     Synchronous requests for value
@@ -123,8 +124,12 @@ class Stepper(threading.Thread):
         self.direction_output = binary_output.Output(
             direction_pin, self.exception_receiver
         )
-        self.pulse_output = binary_output.Output(pulse_pin, self.exception_receiver)
-        self.enable_output = binary_output.Output(enable_pin, self.exception_receiver)
+        self.pulse_output = binary_output.Output(
+            pulse_pin, self.exception_receiver
+        )
+        self.enable_output = binary_output.Output(
+            enable_pin, self.exception_receiver
+        )
 
         ### S T R I N G   C O N S T A N T S ###
         self.MOVE_BY = "MOVE_BY"
@@ -302,7 +307,7 @@ class Stepper(threading.Thread):
         print("set_zero")
 
     def set_enable(self, enable_bool):
-        self.enable_output.set_value(0 if enable_bool else 1)
+        self.enable_output.set_value(False if enable_bool else True)
         with self.enable_lock:
             self.enable = enable_bool
 
