@@ -151,7 +151,7 @@ class Thumbwheels:
             )
 
         for key, ref in self.thumbwheels_by_place_name.items():
-            print(key, ref.get_values() )
+            print(key, ref.get_value() )
 
     def get_value(self):
         with self.value_lock:
