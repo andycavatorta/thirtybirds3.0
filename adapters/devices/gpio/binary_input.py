@@ -196,5 +196,5 @@ class Inputs(threading.Thread):
             changes = self.get_changes()
             print(changes)
             for name, value in changes.items():
-                print(name, value)
+                print("name=", name, "value=", value)
                 self.event_receiver(name, event_names.CHANGE, value)
