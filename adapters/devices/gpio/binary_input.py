@@ -95,12 +95,9 @@ class Input(threading.Thread):
         """
         try:
             with self.pin_access_lock:
-                value = GPIO.input(self.pin_number)
-                value_b = value == 1
-                if self.invert_value:
-                    return value_b
-                else:
-                    return not value_b
+                value = GPIO.input(self.pin_number) == 1
+                self.last_value = not value if self.invert_value else value
+                return self.last_value
         except Exception as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             #print(decorator_self.__class__.__name__, function_ref.__name__)
