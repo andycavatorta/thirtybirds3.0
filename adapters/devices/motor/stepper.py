@@ -149,7 +149,6 @@ class Stepper(threading.Thread):
         return cumulative_distance
 
     def __set_cumulative_distance(self, cumulative_distance):
-        print("cumulative_distance=",cumulative_distance)
         with self.cumulative_distance_lock:
             self.cumulative_distance = cumulative_distance
 
@@ -189,9 +188,9 @@ class Stepper(threading.Thread):
 
         # update position
         if self.direction == direction_names.POSITIVE:
-            self.__set_cumulative_distance(self.__get_cumulative_distance() - 1)
-        else:  # self.direction == direction_names.NEGATIVE
             self.__set_cumulative_distance(self.__get_cumulative_distance() + 1)
+        else:  # self.direction == direction_names.NEGATIVE
+            self.__set_cumulative_distance(self.__get_cumulative_distance() - 1)
 
         # send position update
         self.event_receiver(
