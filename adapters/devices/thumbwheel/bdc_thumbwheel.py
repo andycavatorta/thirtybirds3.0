@@ -157,6 +157,10 @@ class Thumbwheels:
         #for key, ref in self.thumbwheels_by_place_name.items():
         #    print(key, ref.get_value() )
 
+    def set_value(self, value):
+        with self.value_lock:
+            self.value = value
+
     def get_value(self):
         with self.value_lock:
             return self.value
@@ -173,5 +177,5 @@ class Thumbwheels:
 
         #with self.value_lock:
         #    self.value = total
-
+        self.set_value(total)
         self.upstream_event_receiver(self.device_name, event_names.CHANGE, total)
