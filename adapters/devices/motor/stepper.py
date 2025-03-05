@@ -149,6 +149,7 @@ class Stepper(threading.Thread):
         return cumulative_distance
 
     def __set_cumulative_distance(self, cumulative_distance):
+        print("cumulative_distance=",cumulative_distance)
         with self.cumulative_distance_lock:
             self.cumulative_distance = cumulative_distance
 
