@@ -147,7 +147,11 @@ class Thumbwheels:
             thumbwheel_pins = pin_numbers_by_place[index]
             place_name = str(10**index)
             self.thumbwheels_by_place_name[place_name] = Thumbwheel(
-                thumbwheel_pins, exception_receiver, event_receiver, 1, place_name
+                thumbwheel_pins,
+                exception_receiver,
+                self.event_receiver,
+                1,
+                place_name
             )
 
         for key, ref in self.thumbwheels_by_place_name.items():
