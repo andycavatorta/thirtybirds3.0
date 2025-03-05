@@ -278,7 +278,7 @@ class Stepper(threading.Thread):
         for step in range(steps):
             self.__pulse()
 
-        print("__move_by 3", step)
+        print("__move_by 3", steps)
 
         self.event_receiver(
             self.name, event_names.MOTION_END, self.__calculate_distance_summary()
