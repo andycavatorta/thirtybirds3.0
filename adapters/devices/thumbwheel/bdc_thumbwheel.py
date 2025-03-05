@@ -168,11 +168,14 @@ class Thumbwheels:
         print("thumbwheels event_receiver",device_name, event_name, value)
         total = 0
         for place_name, thumbwheel_instance in self.thumbwheels_by_place_name.items():
+            print("111",place_name, thumbwheel_instance)
             place_name_int = str(place_name)
+            print("222",place_name_int)
             instance_value = thumbwheel_instance.get_value() * place_name_int
+            print("333",instance_value)
             total += instance_value
+            print("444",total)
 
-        print("total=", total)
         #with self.value_lock:
         #    self.value = total
 
