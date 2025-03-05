@@ -116,10 +116,10 @@ class Encoders(threading.Thread):
     def set_zero(self, _name_ = None):
         """Must power-cycle to start using new zero point"""
         try:
-            request = self.spi_connections.transfer([self.SET_ZERO])
+            request = self.spi_connections.transfer(_name_, [self.SET_ZERO])
             counter = 0
             while request[0] != self.ACK_ZERO:
-                request = self.spi_connections.transfer([self.NO_OP])
+                request = self.spi_connections.transfer(_name_, [self.NO_OP])
                 counter += 1
                 if counter == 100:
                     return False
