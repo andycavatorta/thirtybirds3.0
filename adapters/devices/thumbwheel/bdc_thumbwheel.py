@@ -154,12 +154,13 @@ class Thumbwheels:
                 place_name
             )
 
-        for key, ref in self.thumbwheels_by_place_name.items():
-            print(key, ref.get_value() )
+        #for key, ref in self.thumbwheels_by_place_name.items():
+        #    print(key, ref.get_value() )
 
     def get_value(self):
         with self.value_lock:
-            return self.value
+            value = int(self.value)
+        return value
 
     def event_receiver(self, device_name, event_name, value):
         """
