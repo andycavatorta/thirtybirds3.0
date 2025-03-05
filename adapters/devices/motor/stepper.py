@@ -260,7 +260,7 @@ class Stepper(threading.Thread):
                         self.__move_by((distance_positive, unit_names.PULSES))
 
     def __move_by(self, quantity_units):
-        print("__move_by 0", quantity_units)
+        #print("__move_by 0", quantity_units)
         quantity, units = quantity_units
         self.__set_direction(
             direction_names.CLOCKWISE
@@ -268,17 +268,17 @@ class Stepper(threading.Thread):
             else direction_names.COUNTERCLOCKWISE
         )
         steps = int(self.rotary_unit_converter.convert(quantity, units, unit_names.PULSES))
-        print("__move_by 1", steps)
+        #print("__move_by 1", steps)
 
         self.event_receiver(
             self.name, event_names.MOTION_START, self.__calculate_distance_summary()
         )
-        print("__move_by 2", self.pulse_interval)
+        #print("__move_by 2", self.pulse_interval)
 
         for step in range(steps):
             self.__pulse()
 
-        print("__move_by 3", steps)
+        #print("__move_by 3", steps)
 
         self.event_receiver(
             self.name, event_names.MOTION_END, self.__calculate_distance_summary()
@@ -300,11 +300,11 @@ class Stepper(threading.Thread):
 
     def set_zero(self, offset=0, unit=unit_names.PULSES):
         # to do: check if offset sign should be inverted
-        print("set_zero", offset, unit)
+        #print("set_zero", offset, unit)
         pulses = self.rotary_unit_converter.convert(offset, unit, unit_names.PULSES)
-        print("set_zero", pulses)
+        #print("set_zero", pulses)
         self.__set_cumulative_distance(pulses)
-        print("set_zero")
+        #print("set_zero")
 
     def set_enable(self, enable_bool):
         self.enable_output.set_value(False if enable_bool else True)
