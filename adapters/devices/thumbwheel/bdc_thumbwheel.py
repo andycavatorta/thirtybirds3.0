@@ -171,7 +171,7 @@ class Thumbwheels:
             print("111",place_name, thumbwheel_instance)
             place_name_int = str(place_name)
             print("222",place_name_int, thumbwheel_instance.get_value())
-            instance_value = thumbwheel_instance.get_value() * place_name_int
+            instance_value = thumbwheel_instance.get_value() * int(place_name_int)
             print("333",instance_value)
             total += int(instance_value)
             print("444",total)
