@@ -67,7 +67,8 @@ class Thumbwheel:
 
     def get_value(self):
         #with self.value_lock:
-        return int.from_bytes(self.binary_value, "big")
+        print(type(self.binary_value), self.binary_value)
+        return self.binary_value
 
     def event_receiver(self, device_name, event_name, value):
         with self.value_lock:
