@@ -265,7 +265,7 @@ class Stepper(threading.Thread):
         self.__set_direction(
             direction_names.CLOCKWISE
             if quantity >= 0
-            else direction_names.COUNTER_CLOCKWISE
+            else direction_names.COUNTERCLOCKWISE
         )
         steps = int(self.rotary_unit_converter.convert(quantity, units, unit_names.PULSES))
         print("__move_by 1", steps)
