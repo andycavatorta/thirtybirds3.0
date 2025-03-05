@@ -195,6 +195,6 @@ class Inputs(threading.Thread):
         while True:
             time.sleep(self.poll_interval)
             changes = self.get_changes()
-            print("changes=========================",changes)
             for name, value in changes.items():
+                print("changes=========================",name, event_names.CHANGE, value)
                 self.event_receiver(name, event_names.CHANGE, value)
