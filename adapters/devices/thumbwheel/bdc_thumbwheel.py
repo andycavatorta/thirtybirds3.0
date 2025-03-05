@@ -175,4 +175,4 @@ class Thumbwheels:
         with self.value_lock:
             self.value = total
 
-        self.upstream_event_receiver(self.device_name, event_names.CHANGE, total)
+        #self.upstream_event_receiver(self.device_name, event_names.CHANGE, total)
