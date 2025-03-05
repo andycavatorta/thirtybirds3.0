@@ -184,7 +184,8 @@ class Inputs(threading.Thread):
         for name in self.pins:
             changed, value = self.pins[name].get_change()
             if changed:
-                collected_values[name] = self.pins[name].get_value()
+                collected_values[name] = value
+                #collected_values[name] = self.pins[name].get_value()
         return collected_values
 
     def run(self):
