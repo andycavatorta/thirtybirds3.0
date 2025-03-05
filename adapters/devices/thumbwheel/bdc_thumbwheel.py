@@ -172,7 +172,8 @@ class Thumbwheels:
             instance_value = thumbwheel_instance.get_value() * place_name_int
             total += instance_value
 
-        with self.value_lock:
-            self.value = total
+        print("total=", total)
+        #with self.value_lock:
+        #    self.value = total
 
         #self.upstream_event_receiver(self.device_name, event_names.CHANGE, total)
