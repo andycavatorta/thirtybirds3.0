@@ -336,6 +336,9 @@ class Stepper(threading.Thread):
                 self.pulses_per_revolution
             )
 
+    def get_raw_position(self):
+        return self.__get_cumulative_distance()
+
     def get_position(
         self,
         units=unit_names.PULSES,
