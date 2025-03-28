@@ -76,7 +76,7 @@ class Actuator(threading.Thread):
         local _active_period_ms supercedes self.active_period_ms
         if both are 0, no action
         """
-        if _active_period_ms <= 0 and if self.active_period_ms <= 0:
+        if _active_period_ms <= 0 and self.active_period_ms <= 0:
             # fail quietly
             return
         active_period_ms = _active_period_ms if _active_period_ms <= 0 else self.active_period_ms
