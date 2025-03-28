@@ -81,7 +81,7 @@ class Actuator(threading.Thread):
             # fail quietly
             return
         print("_pulse 1")
-        active_period_ms = _active_period_ms if _active_period_ms <= 0 else self.active_period_ms
+        active_period_ms = _active_period_ms if _active_period_ms > 0 else self.active_period_ms
         print("_pulse 2")
         try:
             print("_pulse 3")
