@@ -102,13 +102,13 @@ class Actuator(threading.Thread):
     ###################
 
     def pulse(self, active_period_ms=0):
-        self.add_to_command_queue((self.PULSE, active_period_ms))
+        self.add_to_command_queue(self.PULSE, active_period_ms)
 
     def engage(self):
-        self.add_to_command_queue((self.ENGAGE, None))
+        self.add_to_command_queue(self.ENGAGE, None)
 
     def disngage(self):
-        self.add_to_command_queue((self.DISENGAGE, None))
+        self.add_to_command_queue(self.DISENGAGE, None)
 
     ################################
     ### T H R E A D   S T U F F  ###
