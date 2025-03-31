@@ -66,6 +66,8 @@ class Actuator(threading.Thread):
         self.power_output = binary_output.Output(
             output_pin, self.exception_receiver
         )
+        self.power_output.set_value(True)
+
 
     #####################
     ### P R I V A T E ###
@@ -85,10 +87,10 @@ class Actuator(threading.Thread):
         print("_pulse 2")
         try:
             print("_pulse 3")
-            self.power_output.set_value(True)
+            self.power_output.set_value(False)
             time.sleep(active_period_ms)
             print("_pulse 4")
-            self.power_output.set_value(False)
+            self.power_output.set_value(True)
         except Exception as e:
             print("_pulse 5")
             exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -101,7 +103,7 @@ class Actuator(threading.Thread):
             }
             self.exception_receiver(__file__, exception_details)
         finally:
-            self.power_output.set_value(False)
+            self.power_output.set_value(True)
 
     ###################
     ### P U B L I C ###
