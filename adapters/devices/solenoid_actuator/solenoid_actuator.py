@@ -68,7 +68,6 @@ class Actuator(threading.Thread):
         )
         self.power_output.set_value(True)
 
-
     #####################
     ### P R I V A T E ###
     #####################
