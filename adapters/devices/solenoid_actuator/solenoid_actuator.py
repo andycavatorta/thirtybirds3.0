@@ -77,21 +77,15 @@ class Actuator(threading.Thread):
         local _active_period_ms supercedes self.active_period_ms
         if both are 0, no action
         """
-        print("_pulse 0")
         if _active_period_ms <= 0 and self.active_period_ms <= 0:
             # fail quietly
             return
-        print("_pulse 1")
         active_period_ms = _active_period_ms if _active_period_ms > 0 else self.active_period_ms
-        print("_pulse 2")
         try:
-            print("_pulse 3")
             self.power_output.set_value(True)
             time.sleep(active_period_ms)
-            print("_pulse 4")
             self.power_output.set_value(False)
         except Exception as e:
-            print("_pulse 5")
             exc_type, exc_value, exc_traceback = sys.exc_info()
             #print(decorator_self.__class__.__name__, function_ref.__name__)
             exception_details = {
