@@ -606,8 +606,8 @@ class Motor():
         configuration parameters
         """
         #the following is just for safety while working on The Whale
-        if value > 350:
-            value = 350
+        if value > 400:
+            value = 400
         serial_command = "!G {} {}".format(self.channel, value)
         self.add_to_queue(serial_command)
 
