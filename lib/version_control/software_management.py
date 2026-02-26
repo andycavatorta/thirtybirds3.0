@@ -52,6 +52,9 @@ class Software_Management():
         return time.time() - START_TIME
 
     def get_os_version(self):
+        if sys.platform == "darwin":
+            return {"name": "darwin", "version": ""}
+
         name = ""
         version = ""
         lines_from_bash = []

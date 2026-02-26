@@ -5,7 +5,10 @@ import pickle
 import shutil
 import subprocess
 import sys
-import sensors #only needed for ubuntu
+try:
+    import sensors #only needed for ubuntu
+except ImportError:
+    sensors = None
 
 root_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(root_path[0:root_path.find("/thirtybirds")])

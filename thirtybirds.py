@@ -111,7 +111,8 @@ class Thirtybirds():
             app_path,
             network_message_callback=None,
             network_status_change_callback=None,
-            exception_callback=None
+            exception_callback=None,
+            hostname=None
         ):
         self.app_settings = app_settings
         self.app_path = app_path
@@ -140,6 +141,10 @@ class Thirtybirds():
         self.collate_settings(settings, self.app_settings)
         self.status_type_names = [i for i in dir(settings.Reporting.Status_Types) if not (i[:2]=="__" and i[-2:]=="__")] 
         self.apply_flags()
+
+        # overwrite hostname if passed in as argument.
+        if hostname:
+            self.hostname = hostname
 
         ###########################################################
         ## S T A R T   S T A T U S   M E S S A G E   S Y S T E M ##
